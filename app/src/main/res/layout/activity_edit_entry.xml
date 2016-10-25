@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/entry_goalid_lab"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <Spinner
             android:layout_width="match_parent"
@@ -31,14 +31,14 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="32dp" />
+            android:layout_height="24dp" />
 
         <TextView
             android:text="Date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -49,14 +49,14 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="32dp" />
+            android:layout_height="24dp" />
 
         <TextView
             android:text="Value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView3"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -67,14 +67,14 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="32dp" />
+            android:layout_height="24dp" />
 
         <TextView
             android:text="Comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView4"
-            android:textSize="24sp" />
+            android:textSize="18sp" />
 
         <EditText
             android:layout_width="match_parent"
@@ -89,17 +89,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <Button
+                android:text="Delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/entry_delete"
+                android:layout_weight="1" />
+
             <Space
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Button
-                android:text="Button"
+                android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/entry_save"
                 android:layout_weight="1" />
         </LinearLayout>
+
     </LinearLayout>
 </RelativeLayout>
