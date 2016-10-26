@@ -1,11 +1,15 @@
 package com.quaap.goaltender;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class PickDateTimeActivity extends AppCompatActivity {
 
@@ -13,17 +17,64 @@ public class PickDateTimeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_date_time);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        DatePicker datep = (DatePicker)findViewById(R.id.datePicker);
+        TimePicker timep = (TimePicker)findViewById(R.id.timePicker);
+
+        Intent intent = getIntent();
+        long datelong = intent.getLongExtra("date", new Date().getTime());
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTimeInMillis(datelong);
+
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        datep.init(year, month, day, null);
+
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int minute = cal.get(Calendar.MINUTE);
+        //int second = intent.getIntExtra("second", cal.get(Calendar.SECOND));
+
+        timep.setCurrentHour(hour);
+        timep.setCurrentMinute(minute);
+
+        Button pick_datetime = (Button)findViewById(R.id.datetime_save);
+        pick_datetime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                save();
             }
         });
+
     }
 
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_CANCELED);
+        finish();
+        super.onBackPressed();
+    }
+
+    private void save() {
+        Intent output = new Intent();
+        DatePicker datep = (DatePicker)findViewById(R.id.datePicker);
+        TimePicker timep = (TimePicker)findViewById(R.id.timePicker);
+
+        int year = datep.getYear();
+        int month = datep.getMonth();
+        int day = datep.getDayOfMonth();
+
+        int hour = timep.getCurrentHour();
+        int minute = timep.getCurrentMinute();
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day, hour, minute);
+
+        output.putExtra("date", cal.getTimeInMillis());
+
+        setResult(RESULT_OK, output);
+        finish();
+    }
 }

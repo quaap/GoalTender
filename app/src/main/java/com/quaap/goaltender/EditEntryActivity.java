@@ -18,12 +18,14 @@ import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
 public class EditEntryActivity extends AppCompatActivity {
 
     int entry_id = -1;
+    Entry entry = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,14 @@ public class EditEntryActivity extends AppCompatActivity {
             }
         });
 
+        Button pick_datetime = (Button)findViewById(R.id.pick_datetime);
+        pick_datetime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickdatetime();
+            }
+        });
+
         GoalDB db = MainActivity.getDatabase();
 
         List<Goal> goals = db.getAllGoals(true);
@@ -57,14 +67,14 @@ public class EditEntryActivity extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
         goalid.setAdapter(adapter);
 
-        EditText entry_date = (EditText) findViewById(R.id.entry_date);
+        TextView entry_date = (TextView) findViewById(R.id.entry_date);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
 
         Intent intent = getIntent();
         entry_id = intent.getIntExtra("entry_id", -1);
         if (entry_id>=0) {
-            Entry entry = db.getEntry(entry_id);
+            entry = db.getEntry(entry_id);
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
             entry_date.setText(GoalDB.formatDateTime(entry.getDate()));
             entry_value.setText(entry.getValue()+"");
@@ -73,8 +83,27 @@ public class EditEntryActivity extends AppCompatActivity {
         }
     }
 
-    private void showDatePicker(){
+    private void pickdatetime(){
+        Intent pickdatetime = new Intent(this, PickDateTimeActivity.class);
 
+        TextView entry_date = (TextView) findViewById(R.id.entry_date);
+
+        if (entry!=null) {
+            pickdatetime.putExtra("date", entry.getDate().getTime());
+        }
+
+        this.startActivityForResult(pickdatetime, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+
+            TextView entry_date = (TextView) findViewById(R.id.entry_date);
+
+            entry_date.setText(GoalDB.formatDateTime(data.getLongExtra("date", new Date().getTime())));
+
+        }
     }
 
     private void delete(){
@@ -105,7 +134,7 @@ public class EditEntryActivity extends AppCompatActivity {
         Intent output = new Intent();
 
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
-        EditText entry_date = (EditText) findViewById(R.id.entry_date);
+        TextView entry_date = (TextView) findViewById(R.id.entry_date);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
 
@@ -123,10 +152,6 @@ public class EditEntryActivity extends AppCompatActivity {
 
         db.addEntry(entry);
 
-//        output.putExtra("goalid", goalid.getSelectedItem().toString());
-//        output.putExtra("entry_date", entry_date.getText());
-//        output.putExtra("entry_value", entry_value.getText());
-//        output.putExtra("entry_comment", entry_comment.getText());
         setResult(RESULT_OK, output);
         finish();
     }
