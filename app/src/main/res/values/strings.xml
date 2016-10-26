@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">GoalTender</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_pick_date_time">PickDateTimeActivity</string>
+    <string name="title_activity_edit_goal">EditGoalActivity</string>
+</resources>
