@@ -79,7 +79,8 @@ public class EditEntryActivity extends AppCompatActivity {
             entry_date.setText(GoalDB.formatDateTime(entry.getDate()));
             entry_value.setText(entry.getValue()+"");
             entry_comment.setText(entry.getComment());
-
+        } else  {
+            entry_date.setText(GoalDB.formatDateTime(new Date()));
         }
     }
 
