@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     private static final String GOAL_TABLE = "goals";
-    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "start", "archived"};
-    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "DATETIME", "DATETIME"};
+    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "start", "archived"};
+    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "DATETIME", "DATETIME"};
     private static final String GOAL_TABLE_CREATE = buildCreateTableStmt(GOAL_TABLE, goalcolumns, goalcolumntypes);
 
 
@@ -37,6 +39,13 @@ public class GoalDB extends SQLiteOpenHelper {
     private static final String[] entrycolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "INTEGER", "float", "DATETIME", "TEXT"};
     private static final String ENTRY_TABLE_CREATE = buildCreateTableStmt(ENTRY_TABLE, entrycolumns, entrycolumntypes);
 
+    private static final String[] BASIC_UNITS = {"",
+                            "lbs", "pounds", "kg", "kilograms", "oz", "ounces", "nt",
+                            "calories", "cal", "kcal", "kilocalories", "kj", "bpm",
+                            "feet", "ft", "inches", "in", "cm", "meters", "m", "miles", "mi", "km", "kilometers", "yd",
+                            "reps", "sets",
+                            "seconds", "minutes", "hours", "days",
+                            "s",  "h", "rpm"};
 
     private Map<Integer,Goal> goals = new HashMap<>();
 
@@ -96,6 +105,7 @@ public class GoalDB extends SQLiteOpenHelper {
         values.put("name", goal.getName());
         values.put("type", goal.getType().getID());
         values.put("goalnum", goal.getGoalnum());
+        values.put("units", goal.getUnits());
         values.put("start", dateToLong(goal.getStartDate()));
         values.put("archived", dateToLong(goal.getArchiveDate()));
 
@@ -120,13 +130,15 @@ public class GoalDB extends SQLiteOpenHelper {
         Goal goal = null;//goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
-        //{"id", "name", "type", "goalnum", "start", "archived"}
+        //{"id", "name", "type", "goalnum", "units", "start", "archived"}
         goal.setId(id);
         goal.setName(cursor.getString(1));
         goal.setType(cursor.getInt(2));
         goal.setGoalnum(cursor.getFloat(3));
-        goal.setStartDate(longToDate(cursor.getLong(4)));
-        goal.setArchiveDate(longToDate(cursor.getLong(4)));
+        goal.setUnits(cursor.getString(4));
+        goal.setStartDate(longToDate(cursor.getLong(5)));
+        goal.setArchiveDate(longToDate(cursor.getLong(6)));
+
         return goal;
     }
 
@@ -167,6 +179,22 @@ public class GoalDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return goals;
+    }
+
+    public List<String> getAllUnits() {
+        List<String> units = new ArrayList<>();
+        units.addAll(Arrays.asList(BASIC_UNITS));
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(true, GOAL_TABLE, new String[]{"units"}, null , null, null, null, "units", null);
+        Goal goal;
+        if (cursor.moveToFirst()) {
+            do {
+                units.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        Collections.sort(units);
+        return units;
     }
 
     public void deleteEntry(int id) {

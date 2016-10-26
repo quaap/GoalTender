@@ -49,8 +49,14 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
         valuetext.setText(values.get(position).getValue() + "");
 
+        TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
+        unittext.setText(values.get(position).getGoal().getUnits());
+
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
         datetext.setText(formatDateTime(values.get(position).getDate()));
+
+
+
 
         return rowView;
     }

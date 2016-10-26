@@ -6,10 +6,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.quaap.goaltender.storage.Goal;
@@ -62,6 +65,11 @@ public class EditGoalActivity extends AppCompatActivity {
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
         goallist.setAdapter(adapter);
 
+        LinearLayout switchlayout = (LinearLayout) findViewById(R.id.editgoal_switchlayout);
+        if (goalnames.size()==0) {
+            switchlayout.setVisibility(View.INVISIBLE);
+        }
+
         Button switchgoal = (Button) findViewById(R.id.editgoal_switch_goal);
         switchgoal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +79,11 @@ public class EditGoalActivity extends AppCompatActivity {
                 loadGoal();
             }
         });
+
+        final ArrayAdapter unitsadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, db.getAllUnits());
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+        editgoal_units.setAdapter(unitsadapter);
+        editgoal_units.setThreshold(1);
 
 
 
@@ -100,12 +113,15 @@ public class EditGoalActivity extends AppCompatActivity {
 
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
 
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+
         Goal goal = db.getGoal(goalid);
 
         if (goal != null) {
             goalname.setText(goal.getName());
             goaltype.setSelection(goaltypeadapter.getPosition(goal.getType().name()));
             goalnum.setText(goal.getGoalnum() + "");
+            editgoal_units.setText(goal.getUnits());
 
         }
     }
@@ -116,6 +132,7 @@ public class EditGoalActivity extends AppCompatActivity {
         EditText goalname = (EditText) findViewById(R.id.editgoal_goalname);
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
 
         GoalDB db = MainActivity.getDatabase();
 
@@ -136,6 +153,8 @@ public class EditGoalActivity extends AppCompatActivity {
         }
 
         goal.setGoalnum(Float.parseFloat(goalnum.getText().toString()));
+
+        goal.setUnits(editgoal_units.getText().toString());
 
         db.addGoal(goal);
 

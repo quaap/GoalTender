@@ -17,6 +17,8 @@ public class Goal {
 
     private float goalnum;
 
+    private String units;
+
     private Date startDate = null;
     private Date archiveDate = null;
 
@@ -72,10 +74,20 @@ public class Goal {
         this.id = id;
     }
 
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
+    }
+
 
     public static enum Type {
-        Single(0),
-        Repeating(1);
+        NonCumulative(0),
+        DailyCumulative(1),
+        WeeklyCumulative(2),
+        MonthlyCumulative(3);
 
 
         private int id;
