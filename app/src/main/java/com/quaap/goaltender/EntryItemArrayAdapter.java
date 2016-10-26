@@ -43,17 +43,28 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.itemrowlayout, parent, false);
 
+        Entry entry = values.get(position);
+
         TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
-        goaltext.setText(values.get(position).getGoal().getName());
+        goaltext.setText(entry.getGoal().getName());
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
-        valuetext.setText(values.get(position).getValue() + "");
+        valuetext.setText(entry.getValue() + "");
 
         TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
-        unittext.setText(values.get(position).getGoal().getUnits());
+        unittext.setText(entry.getGoal().getUnits());
+
+        TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
+
+        float diff = entry.getValue() - entry.getGoal().getGoalnum();
+        if (diff>0) {
+            goaldiff.setText(diff + " over");
+        } else {
+            goaldiff.setText(Math.abs(diff) + " under");
+        }
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(formatDateTime(values.get(position).getDate()));
+        datetext.setText(formatDateTime(entry.getDate()));
 
 
 
