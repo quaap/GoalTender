@@ -33,8 +33,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     private static final String GOAL_TABLE = "goals";
-    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "start", "archived"};
-    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "DATETIME", "DATETIME"};
+    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "minmax", "start", "archived"};
+    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "DATETIME"};
     private static final String GOAL_TABLE_CREATE = buildCreateTableStmt(GOAL_TABLE, goalcolumns, goalcolumntypes);
 
 
@@ -110,6 +110,7 @@ public class GoalDB extends SQLiteOpenHelper {
         values.put("type", goal.getType().getID());
         values.put("goalnum", goal.getGoalnum());
         values.put("units", goal.getUnits());
+        values.put("minmax", goal.getMinmax().getID());
         values.put("start", dateToLong(goal.getStartDate()));
         values.put("archived", dateToLong(goal.getArchiveDate()));
 
@@ -134,14 +135,15 @@ public class GoalDB extends SQLiteOpenHelper {
         Goal goal = null;//goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
-        //{"id", "name", "type", "goalnum", "units", "start", "archived"}
+        //{"id", "name", "type", "goalnum", "units", "minmax", "start", "archived"};
         goal.setId(id);
         goal.setName(cursor.getString(1));
         goal.setType(cursor.getInt(2));
         goal.setGoalnum(cursor.getFloat(3));
         goal.setUnits(cursor.getString(4));
-        goal.setStartDate(longToDate(cursor.getLong(5)));
-        goal.setArchiveDate(longToDate(cursor.getLong(6)));
+        goal.setMinmax(cursor.getInt(5));
+        goal.setStartDate(longToDate(cursor.getLong(6)));
+        goal.setArchiveDate(longToDate(cursor.getLong(7)));
 
         return goal;
     }

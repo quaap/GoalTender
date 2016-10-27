@@ -107,9 +107,10 @@ public class MainActivity extends AppCompatActivity {
     int entry_edit_code = 1;
     private void showEntryEditor(long id, int pos) {
 
-        Entry entry = listitemadapter.getEntry(pos);
+        Entry entry = null;
+        if (!listitemadapter.isEmpty() && pos>=0) entry = listitemadapter.getEntry(pos);
 
-        if (entry.isCollapsed()) {
+        if (entry!=null && entry.isCollapsed()) {
             populateList(entry.getGoal());
         } else {
             Intent entry_edit = new Intent(this, EditEntryActivity.class);
@@ -132,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == entry_edit_code && resultCode == RESULT_OK) {
-            Toast.makeText(this,"Entry Saved", Toast.LENGTH_SHORT);
+            Toast.makeText(this,"Entry Saved", Toast.LENGTH_SHORT).show();
         } else  if (requestCode == goal_edit_code && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT).show();
         }
         populateList();
     }

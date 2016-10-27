@@ -113,10 +113,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editgoal_units"
-            android:layout_weight="0.03"
             android:lines="1"
             android:maxLines="1"
             android:singleLine="true" />
+
+        <CheckBox
+            android:text="Value is a mximum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/editgoal_ismax"
+            android:layout_weight="0.03" />
 
         <Space
             android:layout_width="match_parent"

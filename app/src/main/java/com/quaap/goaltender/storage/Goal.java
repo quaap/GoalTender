@@ -19,6 +19,8 @@ public class Goal {
 
     private String units;
 
+    private MinMax minmax;
+
     private Date startDate = null;
     private Date archiveDate = null;
 
@@ -82,8 +84,40 @@ public class Goal {
         this.units = units;
     }
 
+    public MinMax getMinmax() {
+        return minmax;
+    }
+
+    public void setMinmax(MinMax minmax) {
+        this.minmax = minmax;
+    }
+    public void setMinmax(int id) {
+        this.minmax = MinMax.get(id);
+    }
 
 
+    public static enum MinMax {
+        Minimum(0), Maximum(1);
+        private int id;
+        MinMax(int id) {
+            this.id = id;
+        }
+
+        public static MinMax get(int id) {
+            return lookup.get(id);
+        }
+
+        public int getID() {
+            return id;
+        }
+        private static final Map<Integer,MinMax> lookup = new HashMap<>();
+        // Populate the lookup table on loading time
+        static {
+            for (MinMax s : EnumSet.allOf(MinMax.class))
+                lookup.put(s.getID(), s);
+        }
+
+    };
     public static enum Type {
         Single(0),
         DailyTotal(1),

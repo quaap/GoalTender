@@ -6,6 +6,7 @@ package com.quaap.goaltender;
 
 
     import android.content.Context;
+    import android.graphics.Color;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
@@ -14,6 +15,7 @@ package com.quaap.goaltender;
     import android.widget.TextView;
 
     import com.quaap.goaltender.storage.Entry;
+    import com.quaap.goaltender.storage.Goal;
 
     import java.text.SimpleDateFormat;
     import java.util.Date;
@@ -57,11 +59,22 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 
         float diff = entry.getValue() - entry.getGoal().getGoalnum();
+
+        boolean max = entry.getGoal().getMinmax() == Goal.MinMax.Maximum;
+        int c;
         if (diff>0) {
             goaldiff.setText(diff + " over");
-        } else {
+            c = max?Color.RED:Color.GREEN;
+
+        } else if (diff<0) {
             goaldiff.setText(Math.abs(diff) + " under");
+            c = max?Color.GREEN:Color.RED;
+        } else { //==0
+            goaldiff.setText(" ");
+            c = Color.GREEN;
         }
+
+        goaldiff.setTextColor(c);
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
         datetext.setText(formatDateTime(entry.getDate()));

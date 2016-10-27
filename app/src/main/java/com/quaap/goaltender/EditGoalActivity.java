@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -113,6 +114,8 @@ public class EditGoalActivity extends AppCompatActivity {
 
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
 
+        CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
+
         AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
 
         Goal goal = db.getGoal(goalid);
@@ -122,6 +125,7 @@ public class EditGoalActivity extends AppCompatActivity {
             goaltype.setSelection(goaltypeadapter.getPosition(goal.getType().name()));
             goalnum.setText(goal.getGoalnum() + "");
             editgoal_units.setText(goal.getUnits());
+            ismax.setChecked(goal.getMinmax() == Goal.MinMax.Maximum);
 
         }
     }
@@ -133,6 +137,7 @@ public class EditGoalActivity extends AppCompatActivity {
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
         AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+        CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
 
         GoalDB db = MainActivity.getDatabase();
 
@@ -155,6 +160,7 @@ public class EditGoalActivity extends AppCompatActivity {
         goal.setGoalnum(Float.parseFloat(goalnum.getText().toString()));
 
         goal.setUnits(editgoal_units.getText().toString());
+        goal.setMinmax(ismax.isChecked()? Goal.MinMax.Maximum: Goal.MinMax.Minimum);
 
         db.addGoal(goal);
 
