@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEntryEditor(-1, -1);
+               // openOptionsMenu();
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                toolbar.showOverflowMenu();
 
             }
         });
@@ -123,6 +125,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showEntryEditor(int goalid) {
+
+
+            Intent entry_edit = new Intent(this, EditEntryActivity.class);
+
+            entry_edit.putExtra("goal_id", (int) goalid);
+
+            this.startActivityForResult(entry_edit, entry_edit_code);
+
+    }
+
+
     int goal_edit_code = 2;
     private void showGoalEditor(long id) {
         Intent goal_edit = new Intent(this, EditGoalActivity.class);
@@ -145,8 +159,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        GoalDB db = getDatabase();
+
+        for (Goal g: db.getAllGoals(true)) {
+            MenuItem item = menu.add(Menu.NONE, 1001 + g.getId(), Menu.NONE, "New " + g.getName() + " Entry");
+
+        }
         return true;
     }
 
@@ -161,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             showGoalEditor(-1);
             return true;
+        } else {
+            showEntryEditor(id - 1001);
         }
 
         return super.onOptionsItemSelected(item);

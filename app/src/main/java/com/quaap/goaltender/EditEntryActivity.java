@@ -77,7 +77,7 @@ public class EditEntryActivity extends AppCompatActivity {
         });
 
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
-        EditText entry_value = (EditText) findViewById(R.id.entry_value);
+        final EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
 
@@ -99,6 +99,7 @@ public class EditEntryActivity extends AppCompatActivity {
             entry_units.setText(entry.getGoal().getUnits());
             entry_comment.setText(entry.getComment());
         } else  {
+            delete.setVisibility(View.INVISIBLE);
             int goal_id= intent.getIntExtra("goal_id", -1);
             if (goal_id>=0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
@@ -106,8 +107,17 @@ public class EditEntryActivity extends AppCompatActivity {
             entry_date.setText(GoalDB.formatDateTime(new Date()));
             goalChanged();
         }
-        goalid.requestFocus();
-        entry_value.requestFocus();
+        //goalid.requestFocus();
+        //entry_value.requestFocus();
+
+        entry_value.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager keyboard = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(entry_value, 0);
+            }
+        },200);
     }
 
     private void goalChanged() {
