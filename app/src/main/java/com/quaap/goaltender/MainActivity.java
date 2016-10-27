@@ -23,6 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static GoalDB db;
+    private EntryItemArrayAdapter listitemadapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showEntryEditor(-1);
+                showEntryEditor(-1, -1);
 
             }
         });
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showEntryEditor(id);
+                showEntryEditor(id, position);
                 //Toast.makeText(getApplicationContext(), "Click ListItem Number " + position + ", with id " + id, Toast.LENGTH_LONG).show();
             }
         });
@@ -73,16 +74,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateList() {
+        populateList(null);
+    }
+    private void populateList(Goal g) {
         List<String> listitems = new ArrayList<>();
-        List<Entry> listentry = db.getAllEntries();
+        //List<Entry> listentry = db.getAllEntries();
+        List<Entry> listentry;
+        if (g==null) {
+            listentry = db.getAllEntriesCollapsed();
+        } else {
+            listentry = db.getAllEntries(g);
+        }
         for (Entry entry: listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
         }
         ListView mainList = (ListView) findViewById(R.id.mainList);
         //mainList.removeAllViews();
 
-        EntryItemArrayAdapter adapter = new EntryItemArrayAdapter(this,  listitems.toArray(new String[0]), listentry);
-        mainList.setAdapter(adapter);
+        listitemadapter = new EntryItemArrayAdapter(this,  listitems.toArray(new String[0]), listentry);
+        mainList.setAdapter(listitemadapter);
 
     }
 
@@ -95,12 +105,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     int entry_edit_code = 1;
-    private void showEntryEditor(long id) {
-        Intent entry_edit = new Intent(this, EditEntryActivity.class);
+    private void showEntryEditor(long id, int pos) {
 
-        entry_edit.putExtra("entry_id", (int)id);
+        Entry entry = listitemadapter.getEntry(pos);
 
-        this.startActivityForResult(entry_edit, entry_edit_code);
+        if (entry.isCollapsed()) {
+            populateList(entry.getGoal());
+        } else {
+            Intent entry_edit = new Intent(this, EditEntryActivity.class);
+
+            entry_edit.putExtra("entry_id", (int) id);
+
+            this.startActivityForResult(entry_edit, entry_edit_code);
+        }
     }
 
     int goal_edit_code = 2;

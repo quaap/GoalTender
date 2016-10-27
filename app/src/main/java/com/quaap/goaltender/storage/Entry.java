@@ -12,6 +12,16 @@ public class Entry {
     private Date date;
     private float value;
     private String comment;
+    private boolean collapsed = false;
+
+    public  Entry() {}
+
+    public Entry(Entry other) {
+        goal = other.getGoal();
+        date = other.getDate();
+        value = other.getValue();
+        comment = other.getComment();
+    }
 
     public Goal getGoal() {
         return goal;
@@ -51,5 +61,13 @@ public class Entry {
 
     void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isCollapsed() {
+        return collapsed;
+    }
+
+    public void setCollapsed(boolean collapsed) {
+        this.collapsed = collapsed;
     }
 }

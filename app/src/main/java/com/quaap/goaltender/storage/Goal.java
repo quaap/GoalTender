@@ -83,11 +83,12 @@ public class Goal {
     }
 
 
+
     public static enum Type {
-        NonCumulative(0),
-        DailyCumulative(1),
-        WeeklyCumulative(2),
-        MonthlyCumulative(3);
+        Single(0),
+        DailyTotal(1),
+        WeeklyTotal(2),
+        MonthlyTotal(3);
 
 
         private int id;

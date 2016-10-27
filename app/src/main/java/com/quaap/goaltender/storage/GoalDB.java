@@ -5,17 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.format.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -268,6 +272,59 @@ public class GoalDB extends SQLiteOpenHelper {
         }
         return null;
     }
+
+
+
+    public static String getRoundedDate(Date date, Goal.Type gtype) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date.getTime());
+
+
+        if(gtype!=Goal.Type.Single) {
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.HOUR, 0);
+            if(gtype!=Goal.Type.MonthlyTotal) { //month
+                cal.set(Calendar.DAY_OF_MONTH, 0);
+            } else if(gtype!=Goal.Type.WeeklyTotal) { //week
+                cal.set(Calendar.DAY_OF_WEEK, 0);
+            }
+            //day
+            date = new Date(cal.getTimeInMillis());
+        }
+        return formatDateTime(date);
+
+    }
+
+    public List<Entry> getAllEntriesCollapsed() {
+
+        Map<String, Entry> collapsedmap = new TreeMap<>();
+
+        for (Entry entry: getAllEntries()) {
+            Goal goal = entry.getGoal();
+            String key = getRoundedDate(entry.getDate(), goal.getType()) + goal.getName() + goal.getType().name();
+
+            Entry e = collapsedmap.get(key);
+            if (e!=null) {
+                e.setValue(e.getValue() + entry.getValue());
+            } else {
+                if(goal.getType()==Goal.Type.Single) {
+                    e = entry;
+                } else {
+                    e = new Entry(entry);
+                    e.setCollapsed(true);
+                }
+                collapsedmap.put(key,e);
+            }
+
+        }
+        List<Entry> collapsed = new ArrayList<>(collapsedmap.values());
+
+        Collections.reverse(collapsed);
+        return collapsed;
+    }
+
 
     public List<Entry> getAllEntries(Goal goal) {
         List<Entry> entries = new ArrayList<>();

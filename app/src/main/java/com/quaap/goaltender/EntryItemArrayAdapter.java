@@ -66,10 +66,11 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
         datetext.setText(formatDateTime(entry.getDate()));
 
-
-
-
         return rowView;
+    }
+
+    public Entry getEntry(int position) {
+        return values.get(position);
     }
 
     @Override

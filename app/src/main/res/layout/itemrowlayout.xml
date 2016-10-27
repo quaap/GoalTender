@@ -59,7 +59,6 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/goaldiff"
                     android:layout_weight="1"
-                    android:numeric="signed|decimal"
                     android:gravity="end" />
         </LinearLayout>
 
