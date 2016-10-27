@@ -88,8 +88,15 @@ public class MainActivity extends AppCompatActivity {
         if (currentGoal!=null) {
             populateList();
         } else {
+
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        db.close();
+        super.onStop();
     }
 
     public static GoalDB getDatabase() {
