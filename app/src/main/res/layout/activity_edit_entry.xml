@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:columnCount="2"
+    android:columnCount="3"
     android:orientation="horizontal"
     tools:context="com.quaap.goaltender.EditEntryActivity">
 
@@ -24,7 +24,8 @@
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/entry_goalid"/>
+            android:id="@+id/entry_goalid"
+            android:layout_columnSpan="2" />
 
         <TextView
             android:text="Date"
@@ -37,7 +38,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:id="@+id/entry_date"/>
+            android:id="@+id/entry_date"
+            android:layout_columnSpan="2" />
 
         <TextView
             android:text="Value"
@@ -50,9 +52,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal"
-            android:ems="10"
+            android:ems="6"
             android:id="@+id/entry_value"
             android:selectAllOnFocus="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editentry_units" />
 
         <TextView
             android:text="Comment"
@@ -70,7 +77,8 @@
             android:id="@+id/entry_comment"
             android:scrollbarAlwaysDrawVerticalTrack="false"
             android:scrollbars="vertical"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:layout_columnSpan="2" />
 
         <Button
             android:text="Delete"

@@ -9,26 +9,109 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.quaap.goaltender.EditGoalActivity"
     tools:showIn="@layout/activity_edit_goal">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:weightSum="1">
+        android:columnCount="2"
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <TextView
+        android:text="Goal name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView6"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
+        android:ems="10"
+        android:id="@+id/editgoal_goalname"/>
+
+    <TextView
+        android:text="Goal Type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"/>
+
+        <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editgoal_type"/>
+
+    <TextView
+        android:text="Target value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView5"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/editgoal_goalnum"
+            android:maxLines="1"
+            android:imeOptions="actionNext" />
+
+    <TextView
+        android:text="Target units"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView9"/>
+
+    <AutoCompleteTextView
+        android:layout_width="185dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editgoal_units"
+        android:hint="lbs, kg, mins,... "
+        android:maxLines="1"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
+
+    <CheckBox
+        android:text="Value is a maximum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editgoal_ismax"
+        android:layout_columnSpan="2"/>
+
+    <Space
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_columnSpan="2" />
+
+    <Button
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editgoal_archive"/>
+
+    <Button
+        android:text="Save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editgoal_save"
+        android:layout_gravity="end"/>
+
+    <Space
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_columnSpan="2" />
+
+    <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.03"
             android:id="@+id/editgoal_switchlayout"
             android:backgroundTint="@color/colorAccent"
-            android:backgroundTintMode="src_in">
+            android:backgroundTintMode="src_in"
+            android:layout_columnSpan="2">
 
             <TextView
                 android:text="Switch Goal"
@@ -54,111 +137,6 @@
                 android:layout_weight=".01"
                 android:layout_gravity="right" />
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_weight="0.03" />
-
-        <TextView
-            android:text="Goal name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:layout_weight="0.03" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:ems="10"
-            android:id="@+id/editgoal_goalname"
-            android:layout_weight="0.03" />
-
-        <TextView
-            android:text="Goal Type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:layout_weight="0.03" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editgoal_type"
-            android:layout_weight="0.03" />
-
-        <TextView
-            android:text="Target"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView5"
-            android:layout_weight="0.03" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/editgoal_goalnum" />
-
-        <TextView
-            android:text="units"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView9"
-            android:layout_weight="0.03" />
-
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editgoal_units"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <CheckBox
-            android:text="Value is a mximum"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editgoal_ismax"
-            android:layout_weight="0.03" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:elevation="1dp" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".03"
-            android:gravity="center|fill">
-
-            <Button
-                android:text="Delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editgoal_archive"
-                android:layout_weight="1"
-                android:layout_gravity="left" />
-
-            <Space
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="4" />
-
-            <Button
-                android:text="Save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editgoal_save"
-                android:layout_weight="1"
-                android:layout_gravity="right" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </GridLayout>
 
 </RelativeLayout>

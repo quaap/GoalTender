@@ -1,12 +1,15 @@
 package com.quaap.goaltender;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,10 +63,23 @@ public class EditEntryActivity extends AppCompatActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
         goalid.setAdapter(adapter);
 
+        goalid.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                goalChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+
+        });
+
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
-
+        TextView entry_units = (TextView) findViewById(R.id.editentry_units);
 
         entry_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,10 +96,26 @@ public class EditEntryActivity extends AppCompatActivity {
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
             entry_date.setText(GoalDB.formatDateTime(entry.getDate()));
             entry_value.setText(entry.getValue()+"");
+            entry_units.setText(entry.getGoal().getUnits());
             entry_comment.setText(entry.getComment());
         } else  {
+            int goal_id= intent.getIntExtra("goal_id", -1);
+            if (goal_id>=0) {
+                goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
+            }
             entry_date.setText(GoalDB.formatDateTime(new Date()));
+            goalChanged();
         }
+        goalid.requestFocus();
+        entry_value.requestFocus();
+    }
+
+    private void goalChanged() {
+        Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
+        GoalDB db = MainActivity.getDatabase();
+        Goal g = db.getGoal(goalid.getSelectedItem().toString());
+        TextView entry_units = (TextView) findViewById(R.id.editentry_units);
+        entry_units.setText(g.getUnits());
     }
 
     private void pickdatetime(){
