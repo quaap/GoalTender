@@ -75,6 +75,19 @@ public class GoalDB extends SQLiteOpenHelper {
         return dateFormat.format(date);
     }
 
+    public static String formatDateTime(Date date, Goal.Type type) {
+        if (date==null) return null;
+
+        String format="yyyy-MM-dd HH:mm";
+        switch (type) {
+            case DailyTotal: format="yyyy-MM-dd"; break;
+            case WeeklyTotal: format="yyyy-MM 'W'W"; break;
+            case MonthlyTotal: format="yyyy-MM"; break;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
     public static String formatDateTime(Long date) {
         if (date==null) return null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -287,7 +300,7 @@ public class GoalDB extends SQLiteOpenHelper {
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.HOUR, 0);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
             if(gtype==Goal.Type.MonthlyTotal) { //month
                 cal.set(Calendar.DAY_OF_MONTH, 1);
             } else if(gtype==Goal.Type.WeeklyTotal) { //week
@@ -323,6 +336,7 @@ public class GoalDB extends SQLiteOpenHelper {
             Entry e = collapsedmap.get(key);
             if (e!=null) {
                 e.setValue(e.getValue() + entry.getValue());
+                e.incrementCollapsednum();
             } else {
                 if(goal.getType()==Goal.Type.Single) {
                     e = entry;

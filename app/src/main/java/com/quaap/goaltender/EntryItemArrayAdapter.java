@@ -16,6 +16,7 @@ package com.quaap.goaltender;
 
     import com.quaap.goaltender.storage.Entry;
     import com.quaap.goaltender.storage.Goal;
+    import com.quaap.goaltender.storage.GoalDB;
 
     import java.text.SimpleDateFormat;
     import java.util.Date;
@@ -49,11 +50,11 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         Goal goal = entry.getGoal();
 
         String period = "";
-        if (entry.isCollapsed()) {
+        if (entry.isCollapsed() && entry.getCollapsednum()>0) {
             rowView.setBackgroundColor(Color.rgb(245,245,245));
 
             if (goal.getType()!=Goal.Type.Single) {
-                period = " (" + goal.getType().name() + ")";
+                period = " (" + goal.getType().name() + " of " + entry.getCollapsednum() + ")";
             }
         }
 
@@ -92,7 +93,7 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(formatDateTime(entry.getDate()) + period);
+        datetext.setText(GoalDB.formatDateTime(entry.getDate(), goal.getType()) + period);
 
         return rowView;
     }

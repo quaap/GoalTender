@@ -13,6 +13,7 @@ public class Entry {
     private float value;
     private String comment;
     private boolean collapsed = false;
+    private int collapsednum = 0;
 
     public  Entry() {}
 
@@ -69,5 +70,14 @@ public class Entry {
 
     public void setCollapsed(boolean collapsed) {
         this.collapsed = collapsed;
+        incrementCollapsednum();
+    }
+
+    public int getCollapsednum() {
+        return collapsednum;
+    }
+
+    public void incrementCollapsednum() {
+        this.collapsednum++;
     }
 }
