@@ -48,7 +48,7 @@ public class GoalDB extends SQLiteOpenHelper {
                             "calories", "cal", "kcal", "kilocalories", "kj", "bpm",
                             "feet", "ft", "inches", "in", "cm", "meters", "m", "miles", "mi", "km", "kilometers", "yd",
                             "reps", "sets",
-                            "seconds", "minutes", "hours", "days",
+                            "seconds", "sec", "minutes", "mins", "hours", "hrs", "days",
                             "s",  "h", "rpm"};
 
     private Map<Integer,Goal> goals = new HashMap<>();
