@@ -46,38 +46,53 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         View rowView = inflater.inflate(R.layout.itemrowlayout, parent, false);
 
         Entry entry = values.get(position);
+        Goal goal = entry.getGoal();
+
+        String period = "";
+        if (entry.isCollapsed()) {
+            rowView.setBackgroundColor(Color.rgb(245,245,245));
+
+            if (goal.getType()!=Goal.Type.Single) {
+                period = " (" + goal.getType().name() + ")";
+            }
+        }
+
 
         TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
-        goaltext.setText(entry.getGoal().getName());
+        goaltext.setText(goal.getName());
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
         valuetext.setText(entry.getValue() + "");
 
         TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
-        unittext.setText(entry.getGoal().getUnits());
+        unittext.setText(goal.getUnits());
 
         TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 
-        float diff = entry.getValue() - entry.getGoal().getGoalnum();
+        float diff = entry.getValue() - goal.getGoalnum();
 
-        boolean max = entry.getGoal().getMinmax() == Goal.MinMax.Maximum;
-        int c;
-        if (diff>0) {
-            goaldiff.setText(diff + " over");
-            c = max?Color.RED:Color.GREEN;
+        if (goal.getType()!=Goal.Type.Single && !entry.isCollapsed()) {
 
-        } else if (diff<0) {
-            goaldiff.setText(Math.abs(diff) + " under");
-            c = max?Color.GREEN:Color.RED;
-        } else { //==0
-            goaldiff.setText(" ");
-            c = Color.GREEN;
+        } else {
+            boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
+            int c;
+            if (diff > 0) {
+                goaldiff.setText(diff + " over");
+                c = max ? Color.RED : Color.GREEN;
+
+            } else if (diff < 0) {
+                goaldiff.setText(Math.abs(diff) + " under");
+                c = max ? Color.GREEN : Color.RED;
+            } else { //==0
+                goaldiff.setText(" ");
+                c = Color.GREEN;
+            }
+
+            goaldiff.setTextColor(c);
         }
 
-        goaldiff.setTextColor(c);
-
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(formatDateTime(entry.getDate()));
+        datetext.setText(formatDateTime(entry.getDate()) + period);
 
         return rowView;
     }

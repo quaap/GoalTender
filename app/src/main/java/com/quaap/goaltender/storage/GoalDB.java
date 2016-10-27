@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.text.format.DateUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +14,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -53,6 +51,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
     private Map<Integer,Goal> goals = new HashMap<>();
 
+    private boolean firstRun = false;
+
     public GoalDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -61,6 +61,7 @@ public class GoalDB extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(GOAL_TABLE_CREATE);
         db.execSQL(ENTRY_TABLE_CREATE);
+        setFirstRun(true);
     }
 
     @Override
@@ -70,19 +71,19 @@ public class GoalDB extends SQLiteOpenHelper {
 
     public static String formatDateTime(Date date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return dateFormat.format(date);
     }
 
     public static String formatDateTime(Long date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         return dateFormat.format(new Date(date));
     }
 
     public static Date getDateTime(String date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         try {
             return dateFormat.parse(date);
         } catch (ParseException e) {
@@ -374,4 +375,11 @@ public class GoalDB extends SQLiteOpenHelper {
     }
 
 
+    public boolean isFirstRun() {
+        return firstRun;
+    }
+
+    public void setFirstRun(boolean firstRun) {
+        this.firstRun = firstRun;
+    }
 }

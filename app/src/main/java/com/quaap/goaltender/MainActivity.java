@@ -24,6 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static GoalDB db;
     private EntryItemArrayAdapter listitemadapter;
+
+    private Goal currentGoal = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,24 +44,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         db = new GoalDB(this);
-
-//        Goal g = db.getGoal("Weight");
-//        if (g==null) {
-//            g=new Goal();
-//            g.setType(Goal.Type.Single);
-//            g.setStartDate(new Date());
-//            g.setName("Weight");
-//            g.setGoalnum(180);
-//            db.addGoal(g);
-//        }
-//
-//
-//        Entry e = new Entry();
-//        e.setGoal(g);
-//        e.setDate(new Date());
-//        e.setValue(225);
-//        e.setComment("OMG");
-//        db.addEntry(e);
+        if (db.isFirstRun()) {
+            makeDefault();
+        }
 
         populateList();
 
@@ -67,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showEntryEditor(id, position);
-                //Toast.makeText(getApplicationContext(), "Click ListItem Number " + position + ", with id " + id, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -77,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         populateList(null);
     }
     private void populateList(Goal g) {
+        currentGoal = g;
         List<String> listitems = new ArrayList<>();
         //List<Entry> listentry = db.getAllEntries();
         List<Entry> listentry;
@@ -89,13 +77,20 @@ public class MainActivity extends AppCompatActivity {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
         }
         ListView mainList = (ListView) findViewById(R.id.mainList);
-        //mainList.removeAllViews();
 
         listitemadapter = new EntryItemArrayAdapter(this,  listitems.toArray(new String[0]), listentry);
         mainList.setAdapter(listitemadapter);
 
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentGoal!=null) {
+            populateList();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     public static GoalDB getDatabase() {
         if (db==null) {
@@ -162,5 +157,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void makeDefault() {
+        GoalDB db = getDatabase();
+
+        Goal g = db.getGoal("Weight");
+        if (g==null) {
+            g=new Goal();
+            g.setType(Goal.Type.Single);
+            g.setStartDate(new Date());
+            g.setName("Weight");
+            g.setGoalnum(180);
+            g.setUnits("lbs");
+            g.setMinmax(Goal.MinMax.Maximum);
+            db.addGoal(g);
+        }
+
+        g = db.getGoal("Cardio");
+        if (g==null) {
+            g=new Goal();
+            g.setType(Goal.Type.DailyTotal);
+            g.setStartDate(new Date());
+            g.setName("Cardio");
+            g.setGoalnum(30);
+            g.setUnits("mins");
+            g.setMinmax(Goal.MinMax.Minimum);
+            db.addGoal(g);
+        }
+        //        Entry e = new Entry();
+        //        e.setGoal(g);
+        //        e.setDate(new Date());
+        //        e.setValue(225);
+        //        e.setComment("OMG");
+        //        db.addEntry(e);
     }
 }
