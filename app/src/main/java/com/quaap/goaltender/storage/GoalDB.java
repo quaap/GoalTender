@@ -239,24 +239,24 @@ public class GoalDB extends SQLiteOpenHelper {
         entry.setComment(cursor.getString(4));
         return entry;
     }
-
-    public Entry getEntry(Goal goal, Date date) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(
-                ENTRY_TABLE,
-                entrycolumns,
-                "goalid=? and date=?",
-                new String[]{goal.getId()+"", dateToLong(date).toString()},
-                null,
-                null,
-                null);
-
-
-        if (cursor.moveToFirst()) {
-            return getEntryFromCursor(cursor);
-        }
-        return null;
-    }
+//
+//    public Entry getEntry(Goal goal, Date date) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.query(
+//                ENTRY_TABLE,
+//                entrycolumns,
+//                "goalid=? and date=?",
+//                new String[]{goal.getId()+"", dateToLong(date).toString()},
+//                null,
+//                null,
+//                null);
+//
+//
+//        if (cursor.moveToFirst()) {
+//            return getEntryFromCursor(cursor);
+//        }
+//        return null;
+//    }
 
     public Entry getEntry(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -288,10 +288,10 @@ public class GoalDB extends SQLiteOpenHelper {
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.HOUR, 0);
-            if(gtype!=Goal.Type.MonthlyTotal) { //month
-                cal.set(Calendar.DAY_OF_MONTH, 0);
-            } else if(gtype!=Goal.Type.WeeklyTotal) { //week
-                cal.set(Calendar.DAY_OF_WEEK, 0);
+            if(gtype==Goal.Type.MonthlyTotal) { //month
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+            } else if(gtype==Goal.Type.WeeklyTotal) { //week
+                cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
             }
             //day
             date = new Date(cal.getTimeInMillis());
@@ -299,6 +299,14 @@ public class GoalDB extends SQLiteOpenHelper {
         return formatDateTime(date);
 
     }
+
+//    public static void  main(String [] args) {
+//        Date date = new Date();
+//        System.out.println(getRoundedDate(date, Goal.Type.Single));
+//        System.out.println(getRoundedDate(date, Goal.Type.DailyTotal));
+//        System.out.println(getRoundedDate(date, Goal.Type.WeeklyTotal));
+//        System.out.println(getRoundedDate(date, Goal.Type.MonthlyTotal));
+//    }
 
     public List<Entry> getAllEntriesCollapsed() {
 
@@ -308,6 +316,10 @@ public class GoalDB extends SQLiteOpenHelper {
             Goal goal = entry.getGoal();
             String key = getRoundedDate(entry.getDate(), goal.getType()) + goal.getName() + goal.getType().name();
 
+            if(goal.getType()==Goal.Type.Single) {
+                key += entry.getId() + "";
+            }
+            System.out.println(key + " " +entry.getDate() );
             Entry e = collapsedmap.get(key);
             if (e!=null) {
                 e.setValue(e.getValue() + entry.getValue());

@@ -46,13 +46,6 @@ public class EditEntryActivity extends AppCompatActivity {
             }
         });
 
-        Button pick_datetime = (Button)findViewById(R.id.pick_datetime);
-        pick_datetime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickdatetime();
-            }
-        });
 
         GoalDB db = MainActivity.getDatabase();
 
@@ -70,6 +63,15 @@ public class EditEntryActivity extends AppCompatActivity {
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
+
+
+        entry_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickdatetime();
+            }
+        });
+
 
         Intent intent = getIntent();
         entry_id = intent.getIntExtra("entry_id", -1);
