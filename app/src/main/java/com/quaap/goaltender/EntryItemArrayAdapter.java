@@ -5,22 +5,22 @@ package com.quaap.goaltender;
  */
 
 
-    import android.content.Context;
-    import android.graphics.Color;
-    import android.view.LayoutInflater;
-    import android.view.View;
-    import android.view.ViewGroup;
-    import android.widget.ArrayAdapter;
-    import android.widget.TextView;
+import android.content.Context;
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-    import com.quaap.goaltender.storage.Entry;
-    import com.quaap.goaltender.storage.Goal;
-    import com.quaap.goaltender.storage.GoalDB;
+import com.quaap.goaltender.storage.Entry;
+import com.quaap.goaltender.storage.Goal;
+import com.quaap.goaltender.storage.GoalDB;
 
-    import java.text.SimpleDateFormat;
-    import java.util.Date;
-    import java.util.List;
-    import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class EntryItemArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
@@ -49,10 +49,10 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         Goal goal = entry.getGoal();
 
         String period = "";
-        if (entry.isCollapsed() && entry.getCollapsednum()>0) {
-            rowView.setBackgroundColor(Color.rgb(245,245,245));
+        if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
+            rowView.setBackgroundColor(Color.rgb(245, 245, 245));
 
-            if (goal.getType()!=Goal.Type.Single) {
+            if (goal.getType() != Goal.Type.Single) {
                 period = " (" + goal.getType().name() + " of " + entry.getCollapsednum() + ")";
             }
         }
@@ -66,8 +66,8 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
             valuetext.setText("Unmet");
         } else {
             float value = entry.getValue();
-            if (value == (int)value) {
-                valuetext.setText((int)value + "");
+            if (value == (int) value) {
+                valuetext.setText((int) value + "");
             } else {
                 valuetext.setText(value + "");
             }
@@ -79,12 +79,12 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 
         float diff = entry.getValue() - goal.getGoalnum();
-        String difftext = diff+"";
-        if (diff==(int)diff) {
-            difftext = (int)Math.abs(diff) + "";
+        String difftext = diff + "";
+        if (diff == (int) diff) {
+            difftext = (int) Math.abs(diff) + "";
         }
 
-        if (goal.getType()!=Goal.Type.Single && !entry.isCollapsed()) {
+        if (goal.getType() != Goal.Type.Single && !entry.isCollapsed()) {
 
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;

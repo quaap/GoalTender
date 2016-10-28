@@ -29,6 +29,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
     int entry_id = -1;
     Entry entry = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +57,7 @@ public class EditEntryActivity extends AppCompatActivity {
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
 
         List<String> goalnames = new ArrayList<>();
-        for (Goal g: goals) {
+        for (Goal g : goals) {
             goalnames.add(g.getName());
         }
 
@@ -92,17 +93,17 @@ public class EditEntryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         entry_id = intent.getIntExtra("entry_id", -1);
-        if (entry_id>=0) {
+        if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
             entry_date.setText(GoalDB.dateToString(entry.getDate()));
-            entry_value.setText(entry.getValue()+"");
+            entry_value.setText(entry.getValue() + "");
             entry_units.setText(entry.getGoal().getUnits());
             entry_comment.setText(entry.getComment());
-        } else  {
+        } else {
             delete.setVisibility(View.INVISIBLE);
-            int goal_id= intent.getIntExtra("goal_id", -1);
-            if (goal_id>=0) {
+            int goal_id = intent.getIntExtra("goal_id", -1);
+            if (goal_id >= 0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
             }
             entry_date.setText(GoalDB.dateToString(new Date()));
@@ -118,7 +119,7 @@ public class EditEntryActivity extends AppCompatActivity {
                         getSystemService(Context.INPUT_METHOD_SERVICE);
                 keyboard.showSoftInput(entry_value, 0);
             }
-        },200);
+        }, 200);
     }
 
     private void goalChanged() {
@@ -129,12 +130,12 @@ public class EditEntryActivity extends AppCompatActivity {
         entry_units.setText(g.getUnits());
     }
 
-    private void pickdatetime(){
+    private void pickdatetime() {
         Intent pickdatetime = new Intent(this, PickDateTimeActivity.class);
 
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
-        if (entry!=null) {
+        if (entry != null) {
             pickdatetime.putExtra("date", entry.getDate().getTime());
         }
 
@@ -152,15 +153,14 @@ public class EditEntryActivity extends AppCompatActivity {
         }
     }
 
-    private void delete(){
+    private void delete() {
 
 
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Deleting Entry")
                 .setMessage("Are you sure you want to delete this entry?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GoalDB db = MainActivity.getDatabase();

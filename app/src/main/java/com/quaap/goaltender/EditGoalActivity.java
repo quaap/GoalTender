@@ -2,11 +2,8 @@ package com.quaap.goaltender;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -51,15 +48,13 @@ public class EditGoalActivity extends AppCompatActivity {
         });
 
 
-
-
         final GoalDB db = MainActivity.getDatabase();
 
         List<Goal> goals = db.getAllGoals(true);
         final Spinner goallist = (Spinner) findViewById(R.id.editgoal_goallist);
 
         List<String> goalnames = new ArrayList<>();
-        for (Goal g: goals) {
+        for (Goal g : goals) {
             goalnames.add(g.getName());
         }
 
@@ -68,7 +63,7 @@ public class EditGoalActivity extends AppCompatActivity {
         goallist.setAdapter(adapter);
 
         LinearLayout switchlayout = (LinearLayout) findViewById(R.id.editgoal_switchlayout);
-        if (goalnames.size()==0) {
+        if (goalnames.size() == 0) {
             switchlayout.setVisibility(View.INVISIBLE);
         }
 
@@ -84,10 +79,9 @@ public class EditGoalActivity extends AppCompatActivity {
 
         final ArrayAdapter unitsadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, db.getAllUnits());
         unitsadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView) findViewById(R.id.editgoal_units);
         editgoal_units.setAdapter(unitsadapter);
         editgoal_units.setThreshold(1);
-
 
 
         Intent intent = getIntent();
@@ -105,7 +99,6 @@ public class EditGoalActivity extends AppCompatActivity {
         goaltype.setAdapter(goaltypeadapter);
 
 
-
     }
 
     private void loadGoal() {
@@ -119,7 +112,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
         CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
 
-        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView) findViewById(R.id.editgoal_units);
 
         Goal goal = db.getGoal(goalid);
 
@@ -136,7 +129,7 @@ public class EditGoalActivity extends AppCompatActivity {
     private void archive() {
 
         Goal goal;
-        if (goalid>-1) {
+        if (goalid > -1) {
             GoalDB db = MainActivity.getDatabase();
             goal = db.getGoal(goalid);
             goal.setArchiveDate(new Date());
@@ -151,13 +144,13 @@ public class EditGoalActivity extends AppCompatActivity {
         EditText goalname = (EditText) findViewById(R.id.editgoal_goalname);
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
-        AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
+        AutoCompleteTextView editgoal_units = (AutoCompleteTextView) findViewById(R.id.editgoal_units);
         CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
 
         GoalDB db = MainActivity.getDatabase();
 
         Goal goal;
-        if (goalid>-1) {
+        if (goalid > -1) {
             goal = db.getGoal(goalid);
         } else {
             goal = db.getGoal(goalname.getText().toString());
@@ -168,14 +161,14 @@ public class EditGoalActivity extends AppCompatActivity {
 
         goal.setName(goalname.getText().toString());
         goal.setType(Goal.Type.valueOf(goaltype.getSelectedItem().toString()));
-        if (goal.getStartDate()==null) {
+        if (goal.getStartDate() == null) {
             goal.setStartDate(new Date());
         }
 
         goal.setGoalnum(Float.parseFloat(goalnum.getText().toString()));
 
         goal.setUnits(editgoal_units.getText().toString());
-        goal.setMinmax(ismax.isChecked()? Goal.MinMax.Maximum: Goal.MinMax.Minimum);
+        goal.setMinmax(ismax.isChecked() ? Goal.MinMax.Maximum : Goal.MinMax.Minimum);
 
         db.addGoal(goal);
 

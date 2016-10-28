@@ -1,8 +1,8 @@
 package com.quaap.goaltender;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -20,8 +20,8 @@ public class PickDateTimeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_date_time);
 
-        DatePicker datep = (DatePicker)findViewById(R.id.datePicker);
-        TimePicker timep = (TimePicker)findViewById(R.id.timePicker);
+        DatePicker datep = (DatePicker) findViewById(R.id.datePicker);
+        TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
 
         Intent intent = getIntent();
         long datelong = intent.getLongExtra("date", new Date().getTime());
@@ -43,7 +43,7 @@ public class PickDateTimeActivity extends AppCompatActivity {
         timep.setCurrentHour(hour);
         timep.setCurrentMinute(minute);
 
-        Button pick_datetime = (Button)findViewById(R.id.datetime_save);
+        Button pick_datetime = (Button) findViewById(R.id.datetime_save);
         pick_datetime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,8 +62,8 @@ public class PickDateTimeActivity extends AppCompatActivity {
 
     private void save() {
         Intent output = new Intent();
-        DatePicker datep = (DatePicker)findViewById(R.id.datePicker);
-        TimePicker timep = (TimePicker)findViewById(R.id.timePicker);
+        DatePicker datep = (DatePicker) findViewById(R.id.datePicker);
+        TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
 
         int year = datep.getYear();
         int month = datep.getMonth();

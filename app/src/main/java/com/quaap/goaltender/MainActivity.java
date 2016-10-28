@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // openOptionsMenu();
+                // openOptionsMenu();
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.showOverflowMenu();
 
@@ -65,30 +65,31 @@ public class MainActivity extends AppCompatActivity {
     private void populateList() {
         populateList(null);
     }
+
     private void populateList(Goal g) {
         currentGoal = g;
         List<String> listitems = new ArrayList<>();
         //List<Entry> listentry = db.getAllEntries();
         List<Entry> listentry;
-        if (g==null) {
+        if (g == null) {
             listentry = db.getUnmetEntries();
             listentry.addAll(db.getAllEntriesCollapsed());
         } else {
             listentry = db.getAllEntries(g);
         }
-        for (Entry entry: listentry) {
+        for (Entry entry : listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
         }
         ListView mainList = (ListView) findViewById(R.id.mainList);
 
-        listitemadapter = new EntryItemArrayAdapter(this,  listitems.toArray(new String[0]), listentry);
+        listitemadapter = new EntryItemArrayAdapter(this, listitems.toArray(new String[0]), listentry);
         mainList.setAdapter(listitemadapter);
 
     }
 
     @Override
     public void onBackPressed() {
-        if (currentGoal!=null) {
+        if (currentGoal != null) {
             populateList();
         } else {
 
@@ -103,19 +104,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static GoalDB getDatabase() {
-        if (db==null) {
+        if (db == null) {
             throw new NullPointerException("Database not initialized yet!");
         }
         return db;
     }
 
     int entry_edit_code = 1;
+
     private void showEntryEditor(long id, int pos) {
 
         Entry entry = null;
-        if (!listitemadapter.isEmpty() && pos>=0) entry = listitemadapter.getEntry(pos);
+        if (!listitemadapter.isEmpty() && pos >= 0) entry = listitemadapter.getEntry(pos);
 
-        if (entry!=null && entry.isCollapsed()) {
+        if (entry != null && entry.isCollapsed()) {
             populateList(entry.getGoal());
         } else {
             Intent entry_edit = new Intent(this, EditEntryActivity.class);
@@ -129,16 +131,17 @@ public class MainActivity extends AppCompatActivity {
     private void showEntryEditor(int goalid) {
 
 
-            Intent entry_edit = new Intent(this, EditEntryActivity.class);
+        Intent entry_edit = new Intent(this, EditEntryActivity.class);
 
-            entry_edit.putExtra("goal_id", (int) goalid);
+        entry_edit.putExtra("goal_id", (int) goalid);
 
-            this.startActivityForResult(entry_edit, entry_edit_code);
+        this.startActivityForResult(entry_edit, entry_edit_code);
 
     }
 
 
     int goal_edit_code = 2;
+
     private void showGoalEditor(long id) {
         Intent goal_edit = new Intent(this, EditGoalActivity.class);
 
@@ -150,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == entry_edit_code && resultCode == RESULT_OK) {
-            Toast.makeText(this,"Entry Saved", Toast.LENGTH_SHORT).show();
-        } else  if (requestCode == goal_edit_code && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Entry Saved", Toast.LENGTH_SHORT).show();
+        } else if (requestCode == goal_edit_code && resultCode == RESULT_OK) {
             Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT).show();
         }
         populateList();
@@ -172,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         GoalDB db = getDatabase();
 
-        for (Goal g: db.getAllGoals(true)) {
-            if (menu.findItem(1001 + g.getId())==null) {
+        for (Goal g : db.getAllGoals(true)) {
+            if (menu.findItem(1001 + g.getId()) == null) {
                 menu.add(Menu.NONE, 1001 + g.getId(), Menu.NONE, "New " + g.getName() + " Entry");
             }
 
@@ -203,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         GoalDB db = getDatabase();
 
         Goal g = db.getGoal("Weight");
-        if (g==null) {
-            g=new Goal();
+        if (g == null) {
+            g = new Goal();
             g.setType(Goal.Type.Single);
             g.setStartDate(new Date());
             g.setName("Weight");
@@ -216,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         g = db.getGoal("Walking");
-        if (g==null) {
-            g=new Goal();
+        if (g == null) {
+            g = new Goal();
             g.setType(Goal.Type.DailyTotal);
             g.setStartDate(new Date());
             g.setName("Walking");

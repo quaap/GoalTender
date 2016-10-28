@@ -6,21 +6,17 @@ package com.quaap.goaltender;
 
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class GoalItemArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
@@ -51,11 +47,11 @@ public class GoalItemArrayAdapter extends ArrayAdapter<String> {
     }
 
     public int getPosition(long id) {
-       for(int i=0; i<values.size(); i++) {
-           if (values.get(i).getId()==id) {
-               return i;
-           }
-       }
+        for (int i = 0; i < values.size(); i++) {
+            if (values.get(i).getId() == id) {
+                return i;
+            }
+        }
         return 0;
     }
 
