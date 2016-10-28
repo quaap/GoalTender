@@ -186,10 +186,11 @@ public class EditEntryActivity extends AppCompatActivity {
 
         GoalDB db = MainActivity.getDatabase();
 
-        System.out.println(goalid.getSelectedItem().toString());
-        System.out.println(goalid.getSelectedItemId());
+        //System.out.println(goalid.getSelectedItem().toString());
+       // System.out.println(goalid.getSelectedItemId());
 
-        Entry entry = new Entry();
+
+        if (entry==null) entry = new Entry();
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         entry.setGoal(g);
         entry.setDate(Utils.stringToDate(entry_date.getText().toString()));
