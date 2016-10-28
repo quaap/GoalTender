@@ -62,15 +62,19 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         goaltext.setText(goal.getName());
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
-        float value = entry.getValue();
-        if (value == (int)value) {
-            valuetext.setText((int)value + "");
+        if (entry.isUnmet()) {
+            valuetext.setText("Unmet");
         } else {
-            valuetext.setText(value + "");
+            float value = entry.getValue();
+            if (value == (int)value) {
+                valuetext.setText((int)value + "");
+            } else {
+                valuetext.setText(value + "");
+            }
+            TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
+            unittext.setText(goal.getUnits());
         }
 
-        TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
-        unittext.setText(goal.getUnits());
 
         TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 

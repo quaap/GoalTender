@@ -229,40 +229,67 @@ public class GoalDB extends SQLiteOpenHelper {
         return goals;
     }
 
-//    public List<Entry> getUnmetEntries() {
-//        List<Entry> entries = new ArrayList<>();
-//        for (Goal g: getUnmetGoals()) {
-//            Entry entry = new Entry();
-//            entry.setGoal(g);
-//            entry.setValue(0);
-//            entry.setDate(new Date());
-//            entries.add(entry);
-//
-//        }
-//
-//        return entries;
-//    }
-//
-//    public List<Goal> getUnmetGoals() {
-//        List<Goal> goals = new ArrayList<>();
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(
-//                                "select g.id " +
-//                                "from goals g " +
-//                                "where g.type=1 and g.id not in " +
-//                                        "(select distinct goalid id " +
-//                                        " from entries e " +
-//                                        " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
-//                                        ")",null);
-//        Goal goal;
-//        if (cursor.moveToFirst()) {
-//            do {
-//                goals.add(getGoal(cursor.getInt(0)));
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//        return goals;
-//    }
+    public List<Entry> getUnmetEntries() {
+        List<Entry> entries = new ArrayList<>();
+        for (Goal g: getUnmetGoals()) {
+            Entry entry = new Entry();
+            entry.setGoal(g);
+            entry.setValue(0);
+            entry.setDate(new Date());
+            entry.setUnmet(true);
+            entries.add(entry);
+
+        }
+
+        return entries;
+    }
+
+    private List<Goal> getGoalsFromSQL(String sql, String[] selargs) {
+        List<Goal> goals = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sql,selargs);
+        Goal goal;
+        if (cursor.moveToFirst()) {
+            do {
+                goals.add(getGoal(cursor.getInt(0)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return goals;
+    }
+
+    public List<Goal> getUnmetGoals() {
+        List<Goal> goals = new ArrayList<>();
+        //get Daily Goals
+        goals.addAll(getGoalsFromSQL("select g.id " +
+                "from goals g " +
+                "where g.type=" + Goal.Type.DailyTotal.getID() + " and g.id not in " +
+                "(select distinct goalid id " +
+                " from entries e " +
+                " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
+                ")",null));
+
+        // get Weekly Goals
+        goals.addAll(getGoalsFromSQL("select g.id " +
+                "from goals g " +
+                "where g.type=" + Goal.Type.WeeklyTotal.getID() + " and g.id not in " +
+                "(select distinct goalid id " +
+                " from entries e " +
+                " where strftime('%Y-%W', e.entrydate) = strftime('%Y-%W', date('now'))" +
+                ")",null));
+
+        // get Weekly Goals
+        goals.addAll(getGoalsFromSQL("select g.id " +
+                "from goals g " +
+                "where g.type=" + Goal.Type.MonthlyTotal.getID() + " and g.id not in " +
+                "(select distinct goalid id " +
+                " from entries e " +
+                " where strftime('%Y-%m', e.entrydate) = strftime('%Y-%m', date('now'))" +
+                ")",null));
+
+
+        return goals;
+    }
 
     public List<String> getAllUnits() {
         List<String> units = new ArrayList<>();

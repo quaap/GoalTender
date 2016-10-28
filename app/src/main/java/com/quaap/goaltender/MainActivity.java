@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         //List<Entry> listentry = db.getAllEntries();
         List<Entry> listentry;
         if (g==null) {
-            //listentry = db.getUnmetEntries();
-            listentry = db.getAllEntriesCollapsed();
+            listentry = db.getUnmetEntries();
+            listentry.addAll(db.getAllEntriesCollapsed());
         } else {
             listentry = db.getAllEntries(g);
         }

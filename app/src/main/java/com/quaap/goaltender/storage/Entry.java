@@ -15,6 +15,8 @@ public class Entry {
     private boolean collapsed = false;
     private int collapsednum = 0;
 
+    private boolean unmet=false;
+
     public  Entry() {}
 
     public Entry(Entry other) {
@@ -79,5 +81,13 @@ public class Entry {
 
     public void incrementCollapsednum() {
         this.collapsednum++;
+    }
+
+    public boolean isUnmet() {
+        return unmet;
+    }
+
+    public void setUnmet(boolean unmet) {
+        this.unmet = unmet;
     }
 }
