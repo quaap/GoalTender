@@ -74,7 +74,7 @@ public class PickDateTimeActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day, hour, minute);
 
-        output.putExtra("date", GoalDB.dateToString(new Date(cal.getTimeInMillis())));
+        output.putExtra("date", Utils.dateToString(new Date(cal.getTimeInMillis())));
 
         setResult(RESULT_OK, output);
         finish();

@@ -105,7 +105,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(GoalDB.formatDateForDisplay(entry.getDate(), goal.getType()) + period);
+        datetext.setText(Utils.formatDateForDisplay(entry.getDate(), goal.getType()) + period);
 
         return rowView;
     }
