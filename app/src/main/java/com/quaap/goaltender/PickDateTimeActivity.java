@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.quaap.goaltender.storage.GoalDB;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -72,7 +74,7 @@ public class PickDateTimeActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         cal.set(year, month, day, hour, minute);
 
-        output.putExtra("date", cal.getTimeInMillis());
+        output.putExtra("date", GoalDB.dateToString(new Date(cal.getTimeInMillis())));
 
         setResult(RESULT_OK, output);
         finish();

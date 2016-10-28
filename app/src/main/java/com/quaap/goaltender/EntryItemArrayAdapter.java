@@ -11,7 +11,6 @@ package com.quaap.goaltender;
     import android.view.View;
     import android.view.ViewGroup;
     import android.widget.ArrayAdapter;
-    import android.widget.ImageView;
     import android.widget.TextView;
 
     import com.quaap.goaltender.storage.Entry;
@@ -102,7 +101,7 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(GoalDB.formatDateTime(entry.getDate(), goal.getType()) + period);
+        datetext.setText(GoalDB.formatDateForDisplay(entry.getDate(), goal.getType()) + period);
 
         return rowView;
     }

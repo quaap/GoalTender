@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         //List<Entry> listentry = db.getAllEntries();
         List<Entry> listentry;
         if (g==null) {
+            //listentry = db.getUnmetEntries();
             listentry = db.getAllEntriesCollapsed();
         } else {
             listentry = db.getAllEntries(g);
@@ -213,12 +214,13 @@ public class MainActivity extends AppCompatActivity {
             db.addGoal(g);
         }
 
-        g = db.getGoal("Cardio");
+
+        g = db.getGoal("Walking");
         if (g==null) {
             g=new Goal();
             g.setType(Goal.Type.DailyTotal);
             g.setStartDate(new Date());
-            g.setName("Cardio");
+            g.setName("Walking");
             g.setGoalnum(30);
             g.setUnits("mins");
             g.setMinmax(Goal.MinMax.Minimum);

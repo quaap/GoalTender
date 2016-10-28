@@ -95,7 +95,7 @@ public class EditEntryActivity extends AppCompatActivity {
         if (entry_id>=0) {
             entry = db.getEntry(entry_id);
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
-            entry_date.setText(GoalDB.formatDateTime(entry.getDate()));
+            entry_date.setText(GoalDB.dateToString(entry.getDate()));
             entry_value.setText(entry.getValue()+"");
             entry_units.setText(entry.getGoal().getUnits());
             entry_comment.setText(entry.getComment());
@@ -105,7 +105,7 @@ public class EditEntryActivity extends AppCompatActivity {
             if (goal_id>=0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
             }
-            entry_date.setText(GoalDB.formatDateTime(new Date()));
+            entry_date.setText(GoalDB.dateToString(new Date()));
             goalChanged();
         }
         //goalid.requestFocus();
@@ -147,7 +147,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
             TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
-            entry_date.setText(GoalDB.formatDateTime(data.getLongExtra("date", new Date().getTime())));
+            entry_date.setText(data.getStringExtra("date"));
 
         }
     }
@@ -192,7 +192,7 @@ public class EditEntryActivity extends AppCompatActivity {
         Entry entry = new Entry();
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         entry.setGoal(g);
-        entry.setDate(GoalDB.getDateTime(entry_date.getText().toString()));
+        entry.setDate(GoalDB.stringToDate(entry_date.getText().toString()));
         entry.setValue(Float.parseFloat(entry_value.getText().toString()));
         entry.setComment(entry_comment.getText().toString());
 

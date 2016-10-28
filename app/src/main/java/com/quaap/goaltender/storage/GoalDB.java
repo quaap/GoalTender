@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,6 +56,9 @@ public class GoalDB extends SQLiteOpenHelper {
 
     public GoalDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        if (getAllGoals(true).size()==0) {
+            setFirstRun(true);
+        }
     }
 
     @Override
@@ -69,13 +73,62 @@ public class GoalDB extends SQLiteOpenHelper {
 
     }
 
-    public static String formatDateTime(Date date) {
+    private static final String dbdateformat = "yyyy-MM-dd HH:mm:ss";
+
+    private static String dbFormatDateTime(Date date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.ENGLISH);
         return dateFormat.format(date);
     }
 
-    public static String formatDateTime(Date date, Goal.Type type) {
+    private static Date dbParseDateTime(String date) {
+        if (date==null) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.ENGLISH);
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
+    private static final String datepassingformat = "yyyy-MM-dd HH:mm:ss";
+
+    public static String dateToString(Date date) {
+        if (date==null) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(datepassingformat, Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
+    public static Date stringToDate(String date) {
+        if (date==null) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat(datepassingformat, Locale.getDefault());
+        try {
+            return dateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
+//    public static String dateToString(Long date) {
+//        if (date==null) return null;
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//        return dateFormat.format(new Date(date));
+//    }
+
+
+//    public static Long dateToLong(Date date) {
+//        if (date==null || date.equals(new Date(0))) return null;
+//        return date.getTime();
+//    }
+//
+//    public static Date longToDate(Long date) {
+//        if (date==null || date==0) return null;
+//        return new Date(date);
+//    }
+
+    public static String formatDateForDisplay(Date date, Goal.Type type) {
         if (date==null) return null;
 
         String format="yyyy-MM-dd HH:mm";
@@ -87,34 +140,6 @@ public class GoalDB extends SQLiteOpenHelper {
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         return dateFormat.format(date);
     }
-
-    public static String formatDateTime(Long date) {
-        if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return dateFormat.format(new Date(date));
-    }
-
-    public static Date getDateTime(String date) {
-        if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        try {
-            return dateFormat.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
-    }
-
-    public static Long dateToLong(Date date) {
-        if (date==null || date.equals(new Date(0))) return null;
-        return date.getTime();
-    }
-
-    public static Date longToDate(Long date) {
-        if (date==null || date==0) return null;
-        return new Date(date);
-    }
-
     public boolean addGoal(Goal goal) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -125,8 +150,8 @@ public class GoalDB extends SQLiteOpenHelper {
         values.put("goalnum", goal.getGoalnum());
         values.put("units", goal.getUnits());
         values.put("minmax", goal.getMinmax().getID());
-        values.put("start", dateToLong(goal.getStartDate()));
-        values.put("archived", dateToLong(goal.getArchiveDate()));
+        values.put("start", dbFormatDateTime(goal.getStartDate()));
+        values.put("archived", dbFormatDateTime(goal.getArchiveDate()));
 
         if (goal.getId()!=-1) {
             db.update(GOAL_TABLE, values, "id=?", new String[]{goal.getId()+""});
@@ -156,8 +181,8 @@ public class GoalDB extends SQLiteOpenHelper {
         goal.setGoalnum(cursor.getFloat(3));
         goal.setUnits(cursor.getString(4));
         goal.setMinmax(cursor.getInt(5));
-        goal.setStartDate(longToDate(cursor.getLong(6)));
-        goal.setArchiveDate(longToDate(cursor.getLong(7)));
+        goal.setStartDate(dbParseDateTime(cursor.getString(6)));
+        goal.setArchiveDate(dbParseDateTime(cursor.getString(7)));
 
         return goal;
     }
@@ -169,6 +194,7 @@ public class GoalDB extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             goal = getGoalFromCursor(cursor);
         }
+        cursor.close();
         return goal;
     }
 
@@ -180,6 +206,7 @@ public class GoalDB extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             goal = getGoalFromCursor(cursor);
         }
+        cursor.close();
         return goal;
     }
 
@@ -198,8 +225,44 @@ public class GoalDB extends SQLiteOpenHelper {
                 goals.add(getGoalFromCursor(cursor));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return goals;
     }
+
+//    public List<Entry> getUnmetEntries() {
+//        List<Entry> entries = new ArrayList<>();
+//        for (Goal g: getUnmetGoals()) {
+//            Entry entry = new Entry();
+//            entry.setGoal(g);
+//            entry.setValue(0);
+//            entry.setDate(new Date());
+//            entries.add(entry);
+//
+//        }
+//
+//        return entries;
+//    }
+//
+//    public List<Goal> getUnmetGoals() {
+//        List<Goal> goals = new ArrayList<>();
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(
+//                                "select g.id " +
+//                                "from goals g " +
+//                                "where g.type=1 and g.id not in " +
+//                                        "(select distinct goalid id " +
+//                                        " from entries e " +
+//                                        " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
+//                                        ")",null);
+//        Goal goal;
+//        if (cursor.moveToFirst()) {
+//            do {
+//                goals.add(getGoal(cursor.getInt(0)));
+//            } while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return goals;
+//    }
 
     public List<String> getAllUnits() {
         List<String> units = new ArrayList<>();
@@ -213,6 +276,7 @@ public class GoalDB extends SQLiteOpenHelper {
                 units.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         Collections.sort(units);
         return units;
     }
@@ -230,7 +294,7 @@ public class GoalDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("goalid", entry.getGoal().getId());
         values.put("value", entry.getValue());
-        values.put("entrydate", dateToLong(entry.getDate()));
+        values.put("entrydate", dbFormatDateTime(entry.getDate()));
         values.put("comment", entry.getComment());
 
         if (entry.getId()!=-1) {
@@ -248,7 +312,7 @@ public class GoalDB extends SQLiteOpenHelper {
         entry.setId(cursor.getInt(0));
         entry.setGoal(getGoal(cursor.getInt(1)));
         entry.setValue(cursor.getFloat(2));
-        entry.setDate(longToDate(cursor.getLong(3)));
+        entry.setDate(dbParseDateTime(cursor.getString(3)));
         entry.setComment(cursor.getString(4));
         return entry;
     }
@@ -309,7 +373,7 @@ public class GoalDB extends SQLiteOpenHelper {
             //day
             date = new Date(cal.getTimeInMillis());
         }
-        return formatDateTime(date);
+        return dateToString(date);
 
     }
 
@@ -350,7 +414,7 @@ public class GoalDB extends SQLiteOpenHelper {
             }
 
         }
-        List<Entry> collapsed = new ArrayList<>(collapsedmap.values());
+        List<Entry> collapsed = new ArrayList<>(new LinkedHashSet<>(collapsedmap.values()));
 
         Collections.reverse(collapsed);
         return collapsed;
@@ -370,6 +434,7 @@ public class GoalDB extends SQLiteOpenHelper {
                 entries.add(getEntryFromCursor(cursor));
             } while (cursor.moveToNext());
         }
+        cursor.close();
         return entries;
     }
 

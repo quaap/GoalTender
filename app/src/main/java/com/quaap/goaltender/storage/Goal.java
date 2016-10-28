@@ -122,7 +122,11 @@ public class Goal {
         Single(0),
         DailyTotal(1),
         WeeklyTotal(2),
-        MonthlyTotal(3);
+        MonthlyTotal(3),
+        //DailyTask(4),
+        //WeeklyTask(5),
+        //MonthlyTask(6)
+        ;
 
 
         private int id;
