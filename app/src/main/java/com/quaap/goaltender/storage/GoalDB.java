@@ -327,7 +327,7 @@ public class GoalDB extends SQLiteOpenHelper {
 
         for (Entry entry: getAllEntries()) {
             Goal goal = entry.getGoal();
-            if (goal.getArchiveDate()!=null) continue;
+           // if (goal.getArchiveDate()!=null) continue;
 
             String key = getRoundedDate(entry.getDate(), goal.getType()) + goal.getName() + goal.getType().name();
 

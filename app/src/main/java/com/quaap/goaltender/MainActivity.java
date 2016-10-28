@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT).show();
         }
         populateList();
+        invalidateOptionsMenu();
     }
 
 
@@ -162,13 +163,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         GoalDB db = getDatabase();
 
         for (Goal g: db.getAllGoals(true)) {
-            MenuItem item = menu.add(Menu.NONE, 1001 + g.getId(), Menu.NONE, "New " + g.getName() + " Entry");
+            if (menu.findItem(1001 + g.getId())==null) {
+                menu.add(Menu.NONE, 1001 + g.getId(), Menu.NONE, "New " + g.getName() + " Entry");
+            }
 
         }
-        return true;
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
