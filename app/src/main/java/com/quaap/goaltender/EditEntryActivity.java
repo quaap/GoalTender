@@ -61,6 +61,7 @@ public class EditEntryActivity extends AppCompatActivity {
         }
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goalid.setAdapter(adapter);
 
         goalid.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

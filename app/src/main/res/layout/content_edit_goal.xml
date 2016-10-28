@@ -88,7 +88,8 @@
         android:text="Archive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/editgoal_archive"/>
+        android:id="@+id/editgoal_archive"
+        android:visibility="invisible" />
 
     <Button
         android:text="Save"
@@ -100,16 +101,16 @@
     <Space
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:layout_columnSpan="2" />
+            android:layout_columnSpan="2"
+        android:background="@color/colorPrimary" />
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editgoal_switchlayout"
-            android:backgroundTint="@color/colorAccent"
-            android:backgroundTintMode="src_in"
-            android:layout_columnSpan="2">
+        android:layout_columnSpan="2"
+        android:elevation="5dp">
 
             <TextView
                 android:text="Switch Goal"

@@ -64,6 +64,7 @@ public class EditGoalActivity extends AppCompatActivity {
         }
 
         final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goallist.setAdapter(adapter);
 
         LinearLayout switchlayout = (LinearLayout) findViewById(R.id.editgoal_switchlayout);
@@ -82,6 +83,7 @@ public class EditGoalActivity extends AppCompatActivity {
         });
 
         final ArrayAdapter unitsadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, db.getAllUnits());
+        unitsadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         AutoCompleteTextView editgoal_units = (AutoCompleteTextView)findViewById(R.id.editgoal_units);
         editgoal_units.setAdapter(unitsadapter);
         editgoal_units.setThreshold(1);
@@ -99,6 +101,7 @@ public class EditGoalActivity extends AppCompatActivity {
             goaltypes.add(t.name());
         }
         goaltypeadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goaltypes);
+        goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goaltype.setAdapter(goaltypeadapter);
 
 
@@ -128,6 +131,18 @@ public class EditGoalActivity extends AppCompatActivity {
             ismax.setChecked(goal.getMinmax() == Goal.MinMax.Maximum);
 
         }
+    }
+
+    private void archive() {
+
+        Goal goal;
+        if (goalid>-1) {
+            GoalDB db = MainActivity.getDatabase();
+            goal = db.getGoal(goalid);
+            goal.setArchiveDate(new Date());
+            db.addGoal(goal);
+        }
+
     }
 
     private void save() {

@@ -25,7 +25,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/valuetext"
                     android:layout_weight="2"
-                    android:layout_gravity="right|fill_horizontal|end"
+                    android:layout_gravity="fill_horizontal|end"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:layout_width="wrap_content"

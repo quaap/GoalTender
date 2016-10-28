@@ -63,7 +63,12 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         goaltext.setText(goal.getName());
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
-        valuetext.setText(entry.getValue() + "");
+        float value = entry.getValue();
+        if (value == (int)value) {
+            valuetext.setText((int)value + "");
+        } else {
+            valuetext.setText(value + "");
+        }
 
         TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
         unittext.setText(goal.getUnits());
@@ -71,6 +76,10 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
         TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 
         float diff = entry.getValue() - goal.getGoalnum();
+        String difftext = diff+"";
+        if (diff==(int)diff) {
+            difftext = (int)Math.abs(diff) + "";
+        }
 
         if (goal.getType()!=Goal.Type.Single && !entry.isCollapsed()) {
 
@@ -78,11 +87,11 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
             int c;
             if (diff > 0) {
-                goaldiff.setText(diff + " over");
+                goaldiff.setText(difftext + " over");
                 c = max ? Color.RED : Color.GREEN;
 
             } else if (diff < 0) {
-                goaldiff.setText(Math.abs(diff) + " under");
+                goaldiff.setText(difftext + " under");
                 c = max ? Color.GREEN : Color.RED;
             } else { //==0
                 goaldiff.setText(" ");
