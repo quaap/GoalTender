@@ -52,8 +52,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
             rowView.setBackgroundColor(Color.rgb(245, 245, 245));
 
-            if (goal.getType() != Goal.Type.Single) {
-                period = " (" + goal.getType().name() + " of " + entry.getCollapsednum() + ")";
+            if (goal.getType().isCumulative()) {
+                period = " (" + goal.getType().getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
             }
         }
 
@@ -84,7 +84,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             difftext = (int) Math.abs(diff) + "";
         }
 
-        if (goal.getType() != Goal.Type.Single && !entry.isCollapsed()) {
+        if (goal.getType().isCumulative() && !entry.isCollapsed()) {
 
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;

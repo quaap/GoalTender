@@ -32,8 +32,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     private static final String GOAL_TABLE = "goals";
-    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "minmax", "start",  "active"};
-    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "SHORT"};
+    private static final String[] goalcolumns = {"id", "name", "type", "period", "goalnum", "units", "minmax", "start",  "active"};
+    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "SHORT"};
     private static final String GOAL_TABLE_CREATE = buildCreateTableStmt(GOAL_TABLE, goalcolumns, goalcolumntypes);
 
 
@@ -132,13 +132,23 @@ public class GoalDB extends SQLiteOpenHelper {
         if (date==null) return null;
 
         String format="yyyy-MM-dd HH:mm";
-        switch (type) {
-            case DailyTotal: format="yyyy-MM-dd"; break;
-            case WeeklyTotal: format="yyyy-MM 'W'W"; break;
-            case MonthlyTotal: format="yyyy-MM"; break;
+        switch (type.getPeriod()) {
+
+            case Daily: format="yyyy-MM-dd"; break;
+            case Weekly: format="yyyy 'Week' w"; break;
+            case Monthly: format="yyyy-MM"; break;
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
-        return dateFormat.format(date);
+        String fdate = dateFormat.format(date);
+        String currentperiod = dateFormat.format(new Date());
+        if (fdate.equals(currentperiod)) {
+            switch (type.getPeriod()) {
+                case Daily: fdate="Today"; break;
+                case Weekly: fdate="This week"; break;
+                case Monthly: fdate="This month"; break;
+            }
+        }
+        return fdate;
     }
     public boolean addGoal(Goal goal) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -147,6 +157,7 @@ public class GoalDB extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("name", goal.getName());
         values.put("type", goal.getType().getID());
+        values.put("period", goal.getType().getPeriod().getId());
         values.put("goalnum", goal.getGoalnum());
         values.put("units", goal.getUnits());
         values.put("minmax", goal.getMinmax().getID());
@@ -172,19 +183,19 @@ public class GoalDB extends SQLiteOpenHelper {
 
     private Goal getGoalFromCursor(Cursor cursor) {
         int id = cursor.getInt(0);
-        Goal goal = null;
-        goals.get(id);
+        Goal goal = goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
-        //{"id", "name", "type", "goalnum", "units", "minmax", "start", "active"};
+        //{"id", "name", "type", "period", "goalnum", "units", "minmax", "start",  "active"};
         goal.setId(id);
         goal.setName(cursor.getString(1));
         goal.setType(cursor.getInt(2));
-        goal.setGoalnum(cursor.getFloat(3));
-        goal.setUnits(cursor.getString(4));
-        goal.setMinmax(cursor.getInt(5));
-        goal.setStartDate(dbParseDateTime(cursor.getString(6)));
-        goal.setActive(cursor.getShort(7)==1);
+        //cursor.getInt(3) // this is the goal's period.  skip it
+        goal.setGoalnum(cursor.getFloat(4));
+        goal.setUnits(cursor.getString(5));
+        goal.setMinmax(cursor.getInt(6));
+        goal.setStartDate(dbParseDateTime(cursor.getString(7)));
+        goal.setActive(cursor.getShort(8)==1);
 
 
         return goal;
@@ -265,7 +276,7 @@ public class GoalDB extends SQLiteOpenHelper {
         //get Daily Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.DailyTotal.getID() + " and g.active=1 and g.id not in " +
+                "where g.period=" + Goal.Period.Daily.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
@@ -274,16 +285,16 @@ public class GoalDB extends SQLiteOpenHelper {
         // get Weekly Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.WeeklyTotal.getID() + " and g.active=1 and g.id not in " +
+                "where g.period=" +  Goal.Period.Weekly.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%W', e.entrydate) = strftime('%Y-%W', date('now'))" +
                 ")",null));
 
-        // get Weekly Goals
+        // get Monthly Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.MonthlyTotal.getID() + " and g.active=1 and g.id not in " +
+                "where g.period=" +  Goal.Period.Monthly.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%m', e.entrydate) = strftime('%Y-%m', date('now'))" +
@@ -389,7 +400,7 @@ public class GoalDB extends SQLiteOpenHelper {
         cal.setTimeInMillis(date.getTime());
 
 
-        if(gtype!=Goal.Type.Single) {
+        if(gtype.isCumulative()) {
             cal.set(Calendar.MILLISECOND, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MINUTE, 0);
@@ -424,7 +435,7 @@ public class GoalDB extends SQLiteOpenHelper {
 
             String key = getRoundedDate(entry.getDate(), goal.getType()) + goal.getName() + goal.getType().name();
 
-            if(goal.getType()==Goal.Type.Single) {
+            if(!goal.getType().isCumulative()) {
                 key += entry.getId() + "";
             }
             System.out.println(key + " " +entry.getDate() );
@@ -433,7 +444,7 @@ public class GoalDB extends SQLiteOpenHelper {
                 e.setValue(e.getValue() + entry.getValue());
                 e.incrementCollapsednum();
             } else {
-                if(goal.getType()==Goal.Type.Single) {
+                if(!goal.getType().isCumulative()) {
                     e = entry;
                 } else {
                     e = new Entry(entry);

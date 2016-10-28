@@ -120,21 +120,27 @@ public class Goal {
         }
 
     };
+
     public static enum Type {
-        Single(0),
-        DailyTotal(1),
-        WeeklyTotal(2),
-        MonthlyTotal(3),
-        //DailyTask(4),
-        //WeeklyTask(5),
-        //MonthlyTask(6)
+        Single(0, Period.None, false),
+        DailyTotal(1, Period.Daily, true),
+        WeeklyTotal(2, Period.Weekly, true),
+        MonthlyTotal(3, Period.Monthly, true),
+//        Daily(4, Period.Daily, false),
+//        Weekly(5, Period.Weekly, false),
+//        Monthly(6, Period.Monthly, false)
         ;
 
 
         private int id;
+        private Period period;
+        private boolean cumulative;
 
-        Type(int id) {
+
+        Type(int id, Period period, boolean cumulative) {
             this.id=id;
+            this.period=period;
+            this.cumulative=cumulative;
         }
 
 
@@ -152,6 +158,21 @@ public class Goal {
             for (Type s : EnumSet.allOf(Type.class))
                 lookup.put(s.getID(), s);
         }
-    };
+
+        public Period getPeriod() {
+            return period;
+        }
+
+        public boolean isCumulative() {
+            return cumulative;
+        }
+    }
+
+    public static enum Period {
+        None(0), Hourly(10), Daily(20), Semiweekly(30), Weekly(40), Biweekly(50), Monthly(60), Anually(100);
+        private final int id;
+        private Period(int id) { this.id = id; }
+        public int getId() { return id; }
+    }
 
 }
