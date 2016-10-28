@@ -85,7 +85,7 @@
             android:layout_columnSpan="2" />
 
     <Button
-        android:text="Delete"
+        android:text="Archive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editgoal_archive"/>

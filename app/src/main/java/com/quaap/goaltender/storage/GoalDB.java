@@ -183,12 +183,12 @@ public class GoalDB extends SQLiteOpenHelper {
         return goal;
     }
 
-    public List<Goal> getAllGoals(boolean archived) {
+    public List<Goal> getAllGoals(boolean onlyopen) {
         List<Goal> goals = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         String getarchive = null;
-        if (!archived) {
-            getarchive = "archived is not null and archived>0";
+        if (onlyopen) {
+            getarchive = "archived IS NULL";
         }
         Cursor cursor = db.query(GOAL_TABLE, goalcolumns, getarchive, null, null, null,"name, start desc");
 
