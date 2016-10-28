@@ -24,4 +24,5 @@
     <string name="over_label">" over"</string>
     <string name="under_label">" under"</string>
     <string name="ok">OK</string>
+    <string name="active">Active</string>
 </resources>
