@@ -18,20 +18,15 @@
         <DatePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:id="@+id/datePicker"
             android:calendarViewShown="false"
-            android:datePickerMode="spinner"
-            android:layout_alignParentStart="true" />
+            android:datePickerMode="spinner"/>
 
         <TimePicker
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/timePicker"
-            android:timePickerMode="spinner"
-            android:layout_below="@+id/datePicker"
-            android:layout_alignEnd="@+id/datePicker"
-            android:layout_alignParentStart="true" />
+            android:timePickerMode="spinner" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -44,7 +39,7 @@
                 android:layout_weight="1" />
 
             <Button
-                android:text="OK"
+                android:text="@string/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/datetime_save"

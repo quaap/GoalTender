@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         return db;
     }
 
-    int entry_edit_code = 1;
+    private int entry_edit_code = 1;
 
     private void showEntryEditor(long id, int pos) {
 
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    int goal_edit_code = 2;
+    private int goal_edit_code = 2;
 
     private void showGoalEditor(long id) {
         Intent goal_edit = new Intent(this, EditGoalActivity.class);
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void makeDefault() {
+    private static void makeDefault() {
         GoalDB db = getDatabase();
 
         Goal g = db.getGoal("Weight");

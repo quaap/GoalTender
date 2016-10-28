@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class EntryItemArrayAdapter extends ArrayAdapter<String> {
+class EntryItemArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final List<Entry> values;
 
@@ -63,7 +63,7 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
         if (entry.isUnmet()) {
-            valuetext.setText("Unmet");
+            valuetext.setText(R.string.unmet_goal_label);
         } else {
             float value = entry.getValue();
             if (value == (int) value) {
@@ -90,14 +90,14 @@ public class EntryItemArrayAdapter extends ArrayAdapter<String> {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
             int c;
             if (diff > 0) {
-                goaldiff.setText(difftext + " over");
+                goaldiff.setText(difftext + context.getString(R.string.over_label));
                 c = max ? Color.RED : Color.GREEN;
 
             } else if (diff < 0) {
-                goaldiff.setText(difftext + " under");
+                goaldiff.setText(difftext + context.getString(R.string.under_label));
                 c = max ? Color.GREEN : Color.RED;
             } else { //==0
-                goaldiff.setText(" ");
+                goaldiff.setText("");
                 c = Color.GREEN;
             }
 

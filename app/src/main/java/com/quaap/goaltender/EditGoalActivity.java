@@ -22,8 +22,8 @@ import java.util.List;
 
 public class EditGoalActivity extends AppCompatActivity {
 
-    int goalid = -1;
-    ArrayAdapter goaltypeadapter;
+    private int goalid = -1;
+    private ArrayAdapter goaltypeadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

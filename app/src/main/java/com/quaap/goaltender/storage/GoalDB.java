@@ -171,7 +171,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
     private Goal getGoalFromCursor(Cursor cursor) {
         int id = cursor.getInt(0);
-        Goal goal = null;//goals.get(id);
+        Goal goal = null;
+        goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
         //{"id", "name", "type", "goalnum", "units", "minmax", "start", "archived"};
@@ -219,7 +220,6 @@ public class GoalDB extends SQLiteOpenHelper {
         }
         Cursor cursor = db.query(GOAL_TABLE, goalcolumns, getarchive, null, null, null,"name, start desc");
 
-        Goal goal;
         if (cursor.moveToFirst()) {
             do {
                 goals.add(getGoalFromCursor(cursor));
@@ -248,7 +248,7 @@ public class GoalDB extends SQLiteOpenHelper {
         List<Goal> goals = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sql,selargs);
-        Goal goal;
+
         if (cursor.moveToFirst()) {
             do {
                 goals.add(getGoal(cursor.getInt(0)));
@@ -297,7 +297,7 @@ public class GoalDB extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(true, GOAL_TABLE, new String[]{"units"}, null , null, null, null, "units", null);
-        Goal goal;
+
         if (cursor.moveToFirst()) {
             do {
                 units.add(cursor.getString(0));
@@ -451,7 +451,7 @@ public class GoalDB extends SQLiteOpenHelper {
     public List<Entry> getAllEntries(Goal goal) {
         List<Entry> entries = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        String getarchive = null;
+
 
         Cursor cursor = db.query(ENTRY_TABLE, entrycolumns, "goalid=?", new String[]{goal.getId()+""}, null, null,"entrydate desc");
 
@@ -468,7 +468,6 @@ public class GoalDB extends SQLiteOpenHelper {
     public List<Entry> getAllEntries() {
         List<Entry> entries = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        String getarchive = null;
 
         Cursor cursor = db.query(ENTRY_TABLE, entrycolumns, null, null, null, null,"entrydate desc");
 
@@ -482,7 +481,7 @@ public class GoalDB extends SQLiteOpenHelper {
     }
 
 
-    public static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
+    private static String buildCreateTableStmt(String tablename, String[] cols, String[] coltypes) {
 
         String create =  "CREATE TABLE " + tablename + " (";
         for (int i=0; i<cols.length; i++) {
@@ -499,7 +498,7 @@ public class GoalDB extends SQLiteOpenHelper {
         return firstRun;
     }
 
-    public void setFirstRun(boolean firstRun) {
+    private void setFirstRun(boolean firstRun) {
         this.firstRun = firstRun;
     }
 }

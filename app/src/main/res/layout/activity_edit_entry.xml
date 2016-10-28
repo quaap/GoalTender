@@ -14,7 +14,7 @@
 
 
     <TextView
-        android:text="Goal"
+        android:text="@string/entry_edit_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/entry_goalid_lab"
@@ -27,7 +27,7 @@
         android:layout_columnSpan="2" />
 
     <TextView
-        android:text="Date"
+        android:text="@string/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
@@ -41,7 +41,7 @@
         android:layout_columnSpan="2" />
 
     <TextView
-        android:text="Value"
+        android:text="@string/value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView3"
@@ -61,7 +61,7 @@
         android:id="@+id/editentry_units" />
 
     <TextView
-        android:text="Comment"
+        android:text="@string/entry_edit_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView4"
@@ -80,13 +80,13 @@
         android:layout_columnSpan="2" />
 
     <Button
-        android:text="Delete"
+        android:text="@string/activity_lab_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/entry_delete" />
 
     <Button
-        android:text="Save"
+        android:text="@string/activity_lab_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/entry_save" />

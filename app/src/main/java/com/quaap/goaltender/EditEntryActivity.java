@@ -27,8 +27,8 @@ import java.util.List;
 
 public class EditEntryActivity extends AppCompatActivity {
 
-    int entry_id = -1;
-    Entry entry = null;
+    private int entry_id = -1;
+    private Entry entry = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class EditEntryActivity extends AppCompatActivity {
     private void pickdatetime() {
         Intent pickdatetime = new Intent(this, PickDateTimeActivity.class);
 
-        TextView entry_date = (TextView) findViewById(R.id.entry_date);
+        //TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
         if (entry != null) {
             pickdatetime.putExtra("date", entry.getDate().getTime());
