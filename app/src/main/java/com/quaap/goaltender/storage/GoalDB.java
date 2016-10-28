@@ -32,8 +32,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     private static final String GOAL_TABLE = "goals";
-    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "minmax", "start", "archived"};
-    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "DATETIME"};
+    private static final String[] goalcolumns = {"id", "name", "type", "goalnum", "units", "minmax", "start",  "active"};
+    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "SHORT"};
     private static final String GOAL_TABLE_CREATE = buildCreateTableStmt(GOAL_TABLE, goalcolumns, goalcolumntypes);
 
 
@@ -151,7 +151,8 @@ public class GoalDB extends SQLiteOpenHelper {
         values.put("units", goal.getUnits());
         values.put("minmax", goal.getMinmax().getID());
         values.put("start", dbFormatDateTime(goal.getStartDate()));
-        values.put("archived", dbFormatDateTime(goal.getArchiveDate()));
+        values.put("active", goal.isActive());
+
 
         if (goal.getId()!=-1) {
             db.update(GOAL_TABLE, values, "id=?", new String[]{goal.getId()+""});
@@ -175,7 +176,7 @@ public class GoalDB extends SQLiteOpenHelper {
         goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
-        //{"id", "name", "type", "goalnum", "units", "minmax", "start", "archived"};
+        //{"id", "name", "type", "goalnum", "units", "minmax", "start", "active"};
         goal.setId(id);
         goal.setName(cursor.getString(1));
         goal.setType(cursor.getInt(2));
@@ -183,7 +184,8 @@ public class GoalDB extends SQLiteOpenHelper {
         goal.setUnits(cursor.getString(4));
         goal.setMinmax(cursor.getInt(5));
         goal.setStartDate(dbParseDateTime(cursor.getString(6)));
-        goal.setArchiveDate(dbParseDateTime(cursor.getString(7)));
+        goal.setActive(cursor.getShort(7)==1);
+
 
         return goal;
     }
@@ -214,11 +216,11 @@ public class GoalDB extends SQLiteOpenHelper {
     public List<Goal> getAllGoals(boolean onlyopen) {
         List<Goal> goals = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
-        String getarchive = null;
+        String getactive = null;
         if (onlyopen) {
-            getarchive = "archived IS NULL";
+            getactive = "active = 1";
         }
-        Cursor cursor = db.query(GOAL_TABLE, goalcolumns, getarchive, null, null, null,"name, start desc");
+        Cursor cursor = db.query(GOAL_TABLE, goalcolumns, getactive, null, null, null,"name, start desc");
 
         if (cursor.moveToFirst()) {
             do {
@@ -263,7 +265,7 @@ public class GoalDB extends SQLiteOpenHelper {
         //get Daily Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.DailyTotal.getID() + " and g.id not in " +
+                "where g.type=" + Goal.Type.DailyTotal.getID() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
@@ -272,7 +274,7 @@ public class GoalDB extends SQLiteOpenHelper {
         // get Weekly Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.WeeklyTotal.getID() + " and g.id not in " +
+                "where g.type=" + Goal.Type.WeeklyTotal.getID() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%W', e.entrydate) = strftime('%Y-%W', date('now'))" +
@@ -281,7 +283,7 @@ public class GoalDB extends SQLiteOpenHelper {
         // get Weekly Goals
         goals.addAll(getGoalsFromSQL("select g.id " +
                 "from goals g " +
-                "where g.type=" + Goal.Type.MonthlyTotal.getID() + " and g.id not in " +
+                "where g.type=" + Goal.Type.MonthlyTotal.getID() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
                 " where strftime('%Y-%m', e.entrydate) = strftime('%Y-%m', date('now'))" +
@@ -418,7 +420,7 @@ public class GoalDB extends SQLiteOpenHelper {
 
         for (Entry entry: getAllEntries()) {
             Goal goal = entry.getGoal();
-           // if (goal.getArchiveDate()!=null) continue;
+            if (!goal.isActive()) continue;
 
             String key = getRoundedDate(entry.getDate(), goal.getType()) + goal.getName() + goal.getType().name();
 

@@ -22,7 +22,9 @@ public class Goal {
     private MinMax minmax;
 
     private Date startDate = null;
-    private Date archiveDate = null;
+
+
+    private boolean active = true;
 
     public String getName() {
         return goalname;
@@ -50,14 +52,6 @@ public class Goal {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-    }
-
-    public Date getArchiveDate() {
-        return archiveDate;
-    }
-
-    public void setArchiveDate(Date archiveDate) {
-        this.archiveDate = archiveDate;
     }
 
     public float getGoalnum() {
@@ -93,6 +87,14 @@ public class Goal {
     }
     public void setMinmax(int id) {
         this.minmax = MinMax.get(id);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 
