@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -71,7 +72,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
         LinearLayout switchlayout = (LinearLayout) findViewById(R.id.editgoal_switchlayout);
         if (goalnames.size() == 0) {
-            switchlayout.setVisibility(View.INVISIBLE);
+            switchlayout.setVisibility(View.GONE);
         }
 
         Button switchgoal = (Button) findViewById(R.id.editgoal_switch_goal);
@@ -125,7 +126,7 @@ public class EditGoalActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    goal_days.setVisibility(View.INVISIBLE);
+                    goal_days.setVisibility(View.GONE);
                 }
 
             }
@@ -170,7 +171,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
             for(int id: hideids) {
                 View v = findViewById(id);
-                v.setVisibility(isboolgoal?View.INVISIBLE:View.VISIBLE);
+                v.setVisibility(isboolgoal?View.GONE:View.VISIBLE);
             }
 
     }
@@ -215,6 +216,19 @@ public class EditGoalActivity extends AppCompatActivity {
         EditText goalname = (EditText) findViewById(R.id.editgoal_goalname);
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
+
+        if (goalname.getText().toString().trim().length()==0) {
+            Toast.makeText(this, "Please enter a goalname", Toast.LENGTH_SHORT).show();
+            goalname.requestFocus();
+            return;
+        }
+
+        if (goalnum.getVisibility()==View.VISIBLE && (goalnum.getText().toString().trim().length()==0 || !goalnum.getText().toString().matches("^-?[0-9]+(\\.[0-9]+)?$"))) {
+            Toast.makeText(this, "Please enter a valid target value (number)", Toast.LENGTH_SHORT).show();
+            goalnum.requestFocus();
+            return;
+        }
+
         AutoCompleteTextView editgoal_units = (AutoCompleteTextView) findViewById(R.id.editgoal_units);
         CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
         Switch active = (Switch) findViewById(R.id.goal_active_switch);

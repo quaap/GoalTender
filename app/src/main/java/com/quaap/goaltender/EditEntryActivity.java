@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
@@ -111,7 +112,7 @@ public class EditEntryActivity extends AppCompatActivity {
             }
             entry_comment.setText(entry.getComment());
         } else {
-            delete.setVisibility(View.INVISIBLE);
+            delete.setVisibility(View.GONE);
             int goal_id = intent.getIntExtra("goal_id", -1);
             if (goal_id >= 0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
@@ -150,11 +151,11 @@ public class EditEntryActivity extends AppCompatActivity {
 
         if (g.getType().isBool()) {
             bool_goal_complete.setVisibility(View.VISIBLE);
-            entry_value.setVisibility(View.INVISIBLE);
-            entry_units.setVisibility(View.INVISIBLE);
-            value_label.setVisibility(View.INVISIBLE);
+            entry_value.setVisibility(View.GONE);
+            entry_units.setVisibility(View.GONE);
+            value_label.setVisibility(View.GONE);
         } else {
-            bool_goal_complete.setVisibility(View.INVISIBLE);
+            bool_goal_complete.setVisibility(View.GONE);
             entry_value.setVisibility(View.VISIBLE);
             entry_units.setVisibility(View.VISIBLE);
             value_label.setVisibility(View.VISIBLE);
@@ -214,6 +215,13 @@ public class EditEntryActivity extends AppCompatActivity {
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
         CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
+
+        if (entry_value.getVisibility()==View.VISIBLE && (entry_value.getText().toString().trim().length()==0 || !entry_value.getText().toString().matches("^-?[0-9]+(\\.[0-9]+)?$"))) {
+            Toast.makeText(this, "Please enter a valid value (number)", Toast.LENGTH_SHORT).show();
+            entry_value.requestFocus();
+            return;
+        }
+
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
 
         GoalDB db = MainActivity.getDatabase();
