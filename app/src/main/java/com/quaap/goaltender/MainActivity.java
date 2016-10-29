@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
             Intent entry_edit = new Intent(this, EditEntryActivity.class);
 
             entry_edit.putExtra("entry_id", (int) id);
+            if (entry!=null) {
+                entry_edit.putExtra("goal_id", entry.getGoal().getId());
+            }
 
             this.startActivityForResult(entry_edit, entry_edit_code);
         }

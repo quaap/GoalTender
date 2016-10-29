@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -25,6 +26,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
     private int goalid = -1;
     private ArrayAdapter goaltypeadapter;
+    private boolean isboolgoal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,36 @@ public class EditGoalActivity extends AppCompatActivity {
         goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goaltype.setAdapter(goaltypeadapter);
 
+        goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Goal.Type gtype = Goal.Type.valueOf(adapterView.getSelectedItem().toString());
+                isboolgoal = gtype.isBool();
+                setBoolGoal();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+    }
+
+
+    private void setBoolGoal() {
+
+        int[] hideids = {R.id.textView5,
+                R.id.editgoal_goalnum,
+                R.id.textView9,
+                R.id.editgoal_units,
+                R.id.editgoal_ismax};
+
+            for(int id: hideids) {
+                View v = findViewById(id);
+                v.setVisibility(isboolgoal?View.INVISIBLE:View.VISIBLE);
+            }
 
     }
 
@@ -158,10 +190,14 @@ public class EditGoalActivity extends AppCompatActivity {
             goal.setStartDate(new Date());
         }
 
-        goal.setGoalnum(Float.parseFloat(goalnum.getText().toString()));
-
-        goal.setUnits(editgoal_units.getText().toString());
+        if (isboolgoal) {
+            goal.setGoalnum(1);
+        } else {
+            goal.setGoalnum(Float.parseFloat(goalnum.getText().toString()));
+            goal.setUnits(editgoal_units.getText().toString());
+        }
         goal.setMinmax(ismax.isChecked() ? Goal.MinMax.Maximum : Goal.MinMax.Minimum);
+
         goal.setActive(active.isChecked());
 
         db.addGoal(goal);

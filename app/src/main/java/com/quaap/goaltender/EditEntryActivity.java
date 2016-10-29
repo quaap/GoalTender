@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -80,8 +81,10 @@ public class EditEntryActivity extends AppCompatActivity {
 
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
         final EditText entry_value = (EditText) findViewById(R.id.entry_value);
+        CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
+
 
         entry_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,12 +96,19 @@ public class EditEntryActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         entry_id = intent.getIntExtra("entry_id", -1);
+
+
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
             entry_date.setText(Utils.dateToString(entry.getDate()));
-            entry_value.setText(entry.getValue() + "");
-            entry_units.setText(entry.getGoal().getUnits());
+
+            if (entry.getGoal().getType().isBool()) {
+                bool_goal_complete.setChecked(entry.getValue()>0);
+            } else {
+                entry_value.setText(entry.getValue() + "");
+                entry_units.setText(entry.getGoal().getUnits());
+            }
             entry_comment.setText(entry.getComment());
         } else {
             delete.setVisibility(View.INVISIBLE);
@@ -107,8 +117,11 @@ public class EditEntryActivity extends AppCompatActivity {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
             }
             entry_date.setText(Utils.dateToString(new Date()));
-            goalChanged();
         }
+        goalChanged();
+
+
+
         //goalid.requestFocus();
         //entry_value.requestFocus();
 
@@ -128,6 +141,24 @@ public class EditEntryActivity extends AppCompatActivity {
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
         entry_units.setText(g.getUnits());
+
+
+        final EditText entry_value = (EditText) findViewById(R.id.entry_value);
+        CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
+        View value_label = findViewById(R.id.value_label);
+
+
+        if (g.getType().isBool()) {
+            bool_goal_complete.setVisibility(View.VISIBLE);
+            entry_value.setVisibility(View.INVISIBLE);
+            entry_units.setVisibility(View.INVISIBLE);
+            value_label.setVisibility(View.INVISIBLE);
+        } else {
+            bool_goal_complete.setVisibility(View.INVISIBLE);
+            entry_value.setVisibility(View.VISIBLE);
+            entry_units.setVisibility(View.VISIBLE);
+            value_label.setVisibility(View.VISIBLE);
+        }
     }
 
     private void pickdatetime() {
@@ -181,6 +212,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
+        CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
 
@@ -194,7 +226,15 @@ public class EditEntryActivity extends AppCompatActivity {
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         entry.setGoal(g);
         entry.setDate(Utils.stringToDate(entry_date.getText().toString()));
-        entry.setValue(Float.parseFloat(entry_value.getText().toString()));
+        if (g.getType().isBool()) {
+            entry.setValue(bool_goal_complete.isChecked()?1:0);
+        } else {
+            try {
+                entry.setValue(Float.parseFloat(entry_value.getText().toString()));
+            } catch(java.lang.NumberFormatException e) {
+                entry.setValue(0);
+            }
+        }
         entry.setComment(entry_comment.getText().toString());
 
         db.addEntry(entry);

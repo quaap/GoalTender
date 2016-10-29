@@ -20,6 +20,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 
@@ -79,13 +80,15 @@ public class GoalDB extends SQLiteOpenHelper {
 
     private static String dbFormatDateTime(Date date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.getDefault());
+        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat.format(date);
     }
 
     private static Date dbParseDateTime(String date) {
         if (date==null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(dbdateformat, Locale.getDefault());
+        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             return dateFormat.parse(date);
         } catch (ParseException e) {
@@ -219,30 +222,33 @@ public class GoalDB extends SQLiteOpenHelper {
     public List<Goal> getUnmetGoals() {
         List<Goal> goals = new ArrayList<>();
         //get Daily Goals
-        goals.addAll(getGoalsFromSQL("select g.id " +
+        goals.addAll(getGoalsFromSQL(
+                "select g.id " +
                 "from goals g " +
                 "where g.period=" + Goal.Period.Daily.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
-                " where strftime('%Y-%m-%d', e.entrydate) = strftime('%Y-%m-%d', date('now'))" +
+                " where strftime('%Y-%m-%d', e.entrydate, 'localtime') = strftime('%Y-%m-%d', 'now', 'localtime')" +
                 ")",null));
 
         // get Weekly Goals
-        goals.addAll(getGoalsFromSQL("select g.id " +
+        goals.addAll(getGoalsFromSQL(
+                "select g.id " +
                 "from goals g " +
                 "where g.period=" +  Goal.Period.Weekly.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
-                " where strftime('%Y-%W', e.entrydate) = strftime('%Y-%W', date('now'))" +
+                " where strftime('%Y-%W', e.entrydate, 'localtime') = strftime('%Y-%W', 'now', 'localtime')" +
                 ")",null));
 
         // get Monthly Goals
-        goals.addAll(getGoalsFromSQL("select g.id " +
+        goals.addAll(getGoalsFromSQL(
+                "select g.id " +
                 "from goals g " +
                 "where g.period=" +  Goal.Period.Monthly.getId() + " and g.active=1 and g.id not in " +
                 "(select distinct goalid id " +
                 " from entries e " +
-                " where strftime('%Y-%m', e.entrydate) = strftime('%Y-%m', date('now'))" +
+                " where strftime('%Y-%m', e.entrydate) = strftime('%Y-%m', 'now', 'localtime')" +
                 ")",null));
 
 

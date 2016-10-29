@@ -66,7 +66,13 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             valuetext.setText(R.string.unmet_goal_label);
         } else {
             float value = entry.getValue();
-            if (value == (int) value) {
+            if (goal.getType().isBool()) {
+                if (value>0) {
+                    valuetext.setText("\u2713");
+                } else {
+                    valuetext.setText("\u2718");
+                }
+            } else if (value == (int) value) {
                 valuetext.setText((int) value + "");
             } else {
                 valuetext.setText(value + "");
@@ -84,7 +90,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             difftext = (int) Math.abs(diff) + "";
         }
 
-        if (goal.getType().isCumulative() && !entry.isCollapsed()) {
+        if (goal.getType().isCumulative() && !entry.isCollapsed() || goal.getType().isBool()) {
 
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;

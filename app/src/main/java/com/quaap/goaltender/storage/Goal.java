@@ -126,21 +126,30 @@ public class Goal {
         DailyTotal(1, Period.Daily, true),
         WeeklyTotal(2, Period.Weekly, true),
         MonthlyTotal(3, Period.Monthly, true),
-//        Daily(4, Period.Daily, false),
-//        Weekly(5, Period.Weekly, false),
-//        Monthly(6, Period.Monthly, false)
+        Daily(4, Period.Daily, false),
+        Weekly(5, Period.Weekly, false),
+        Monthly(6, Period.Monthly, false),
+        DailyCheckoff(7, Period.Daily, false, true),
+        WeeklyCheckoff(8, Period.Weekly, false, true),
+        MonthlyCheckoff(9, Period.Monthly, false, true)
         ;
 
 
-        private int id;
-        private Period period;
-        private boolean cumulative;
+        final private int id;
+        final private Period period;
+        final private boolean cumulative;
+        final private boolean bool;
 
 
         Type(int id, Period period, boolean cumulative) {
+            this(id, period, cumulative, false);
+        }
+
+        Type(int id, Period period, boolean cumulative, boolean bool) {
             this.id=id;
             this.period=period;
             this.cumulative=cumulative;
+            this.bool=bool;
         }
 
 
@@ -165,6 +174,10 @@ public class Goal {
 
         public boolean isCumulative() {
             return cumulative;
+        }
+
+        public boolean isBool() {
+            return bool;
         }
     }
 
