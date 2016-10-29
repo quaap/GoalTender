@@ -53,7 +53,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/editgoal_type" />
 
-        <TextView
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/goal_days"
+                    android:layout_columnSpan="2" />
+
+                <TextView
             android:text="@string/target_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +87,8 @@
             android:hint="@string/lbs_kg_mins"
             android:maxLines="1"
             android:inputType="text"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone"
+            android:maxLength="10" />
 
         <CheckBox
             android:text="@string/value_is_a_maximum"

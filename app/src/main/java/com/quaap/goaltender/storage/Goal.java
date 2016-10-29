@@ -1,8 +1,10 @@
 package com.quaap.goaltender.storage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,13 +15,15 @@ public class Goal {
 
     private int id = -1;
     private String goalname;
-    private Type type;
+    private Type type = Type.Single;
 
-    private float goalnum;
+    private float goalnum = 0;
 
-    private String units;
+    private String units = "";
 
-    private MinMax minmax;
+    private MinMax minmax = MinMax.Minimum;
+
+    private List<Days> days = new ArrayList<>();
 
     private Date startDate = null;
 
@@ -97,6 +101,18 @@ public class Goal {
         this.active = active;
     }
 
+    public List<Days> getDays() {
+        return days;
+    }
+
+    public void setDays(List<Days> days) {
+        this.days = days;
+    }
+
+    public void setDays(int dayflags) {
+        this.days = Days.split(dayflags);
+    }
+
 
     public static enum MinMax {
         Minimum(0), Maximum(1);
@@ -123,15 +139,18 @@ public class Goal {
 
     public static enum Type {
         Single(0, Period.None, false),
-        DailyTotal(1, Period.Daily, true),
-        WeeklyTotal(2, Period.Weekly, true),
-        MonthlyTotal(3, Period.Monthly, true),
-        Daily(4, Period.Daily, false),
-        Weekly(5, Period.Weekly, false),
-        Monthly(6, Period.Monthly, false),
-        DailyCheckoff(7, Period.Daily, false, true),
-        WeeklyCheckoff(8, Period.Weekly, false, true),
-        MonthlyCheckoff(9, Period.Monthly, false, true)
+        DailyTotal(10, Period.Daily, true),
+        NamedDaysTotal(15, Period.NamedDays, true),
+        WeeklyTotal(20, Period.Weekly, true),
+        MonthlyTotal(30, Period.Monthly, true),
+        DailyCheckoff(40, Period.Daily, false, true),
+        NamedDaysCheckoff(50, Period.NamedDays, false, true),
+        WeeklyCheckoff(60, Period.Weekly, false, true),
+        MonthlyCheckoff(70, Period.Monthly, false, true),
+        Daily(80, Period.Daily, false),
+        NamedDays(90, Period.NamedDays, false),
+        Weekly(100, Period.Weekly, false),
+        Monthly(110, Period.Monthly, false),
         ;
 
 
@@ -182,10 +201,57 @@ public class Goal {
     }
 
     public static enum Period {
-        None(0), Hourly(10), Daily(20), Semiweekly(30), Weekly(40), Biweekly(50), Monthly(60), Anually(100);
+        None(0), Hourly(10), Daily(20), NamedDays(30), Weekly(40), Biweekly(50), Monthly(60), Anually(100);
         private final int id;
         private Period(int id) { this.id = id; }
         public int getId() { return id; }
+    }
+
+    public static enum Days {
+        Sunday(1), Monday(2), Tuesday(4), Wednesday(8), Thursday(16), Friday(32), Saturday(64);
+        private final int id;
+        private Days(int id) { this.id = id; }
+        public int getId() { return id; }
+
+        public static int combine(EnumSet<Days> days) {
+            return combine(days.toArray(new Days[days.size()]));
+        }
+
+        public static int combine(List<Days> days) {
+            return combine(days.toArray(new Days[days.size()]));
+        }
+
+        public static int combine(Days ... days) {
+            int flags = 0;
+            for (Days day: days) {
+                flags |= day.getId();
+            }
+            return flags;
+        }
+
+        public static int add(int flags, Days day) {
+            return flags | day.getId();
+        }
+
+        public static boolean contains(int flags, Days day) {
+            return (flags & day.getId())==day.getId();
+        }
+
+        public static List<Days> split(Integer flags) {
+            List<Days> days = new ArrayList<>();
+
+            if (flags==null) {
+                return days;
+            }
+
+            for (Days day: EnumSet.allOf(Days.class)) {
+                if (contains(flags, day)) {
+                    days.add(day);
+                }
+            }
+
+            return days;
+        }
     }
 
 }

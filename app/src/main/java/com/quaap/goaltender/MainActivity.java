@@ -208,25 +208,37 @@ public class MainActivity extends AppCompatActivity {
     private static void makeDefault() {
         GoalDB db = getDatabase();
 
-        Goal g = db.getGoal("Weight");
+        String gname = "Weight";
+        Goal g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.Single);
+            g.setType(Goal.Type.Weekly);
             g.setStartDate(new Date());
-            g.setName("Weight");
+            g.setName(gname);
             g.setGoalnum(180);
             g.setUnits("lbs");
             g.setMinmax(Goal.MinMax.Maximum);
             db.addGoal(g);
         }
 
+        gname = "Clean kitchen";
+        g = db.getGoal(gname);
+        if (g == null) {
+            g = new Goal();
+            g.setType(Goal.Type.DailyCheckoff);
+            g.setStartDate(new Date());
+            g.setName(gname);
+            g.setGoalnum(1);
+            db.addGoal(g);
+        }
 
-        g = db.getGoal("Walking");
+        gname = "Walking";
+        g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
             g.setType(Goal.Type.DailyTotal);
             g.setStartDate(new Date());
-            g.setName("Walking");
+            g.setName(gname);
             g.setGoalnum(30);
             g.setUnits("mins");
             g.setMinmax(Goal.MinMax.Minimum);

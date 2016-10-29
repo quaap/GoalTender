@@ -57,6 +57,7 @@ public class Utils {
 
         String format="yyyy-MM-dd HH:mm";
         switch (type.getPeriod()) {
+            case NamedDays:
             case Daily: format="yyyy-MM-dd"; break;
             case Weekly: format="yyyy 'Week' w"; break;
             case Monthly: format="yyyy-MM"; break;
@@ -67,6 +68,7 @@ public class Utils {
         String currentperiod = dateFormat.format(new Date());
         if (fdate.equals(currentperiod)) {
             switch (type.getPeriod()) {
+                case NamedDays:
                 case Daily: fdate="Today"; break;
                 case Weekly: fdate="This week"; break;
                 case Monthly: fdate="This month"; break;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -27,6 +29,8 @@ public class EditGoalActivity extends AppCompatActivity {
     private int goalid = -1;
     private ArrayAdapter goaltypeadapter;
     private boolean isboolgoal;
+
+    private int goal_days_picked = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +111,22 @@ public class EditGoalActivity extends AppCompatActivity {
                 Goal.Type gtype = Goal.Type.valueOf(adapterView.getSelectedItem().toString());
                 isboolgoal = gtype.isBool();
                 setBoolGoal();
+                TextView goal_days = (TextView) findViewById(R.id.goal_days);
+                if (gtype.getPeriod() == Goal.Period.NamedDays) {
+                    goal_days.setVisibility(View.VISIBLE);
+                    if (goal_days_picked==0) {
+                        goal_days.setText("Set days");
+                    }
+                    goal_days.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            pickdays();
+                        }
+                    });
+
+                } else {
+                    goal_days.setVisibility(View.INVISIBLE);
+                }
 
             }
 
@@ -118,6 +138,27 @@ public class EditGoalActivity extends AppCompatActivity {
 
     }
 
+    private void pickdays() {
+        Intent pickdays = new Intent(this, DaysPickerActivity.class);
+
+        //TextView entry_date = (TextView) findViewById(R.id.entry_date);
+
+        pickdays.putExtra("daysflags", goal_days_picked);
+
+        this.startActivityForResult(pickdays, 1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+
+            TextView goal_days = (TextView) findViewById(R.id.goal_days);
+
+            goal_days_picked = data.getIntExtra("daysflags",0);
+            goal_days.setText(TextUtils.join(", ", Goal.Days.split(goal_days_picked)));
+
+        }
+    }
 
     private void setBoolGoal() {
 
@@ -147,7 +188,10 @@ public class EditGoalActivity extends AppCompatActivity {
 
         AutoCompleteTextView editgoal_units = (AutoCompleteTextView) findViewById(R.id.editgoal_units);
 
+        TextView goal_days = (TextView)findViewById(R.id.goal_days);
+
         Switch active = (Switch) findViewById(R.id.goal_active_switch);
+
 
         Goal goal = db.getGoal(goalid);
 
@@ -158,6 +202,9 @@ public class EditGoalActivity extends AppCompatActivity {
             editgoal_units.setText(goal.getUnits());
             ismax.setChecked(goal.getMinmax() == Goal.MinMax.Maximum);
             active.setChecked(goal.isActive());
+
+            goal_days.setText(TextUtils.join(", ", goal.getDays()));
+            goal_days_picked = Goal.Days.combine(goal.getDays());
 
         }
     }
@@ -199,6 +246,8 @@ public class EditGoalActivity extends AppCompatActivity {
         goal.setMinmax(ismax.isChecked() ? Goal.MinMax.Maximum : Goal.MinMax.Minimum);
 
         goal.setActive(active.isChecked());
+
+        goal.setDays(goal_days_picked);
 
         db.addGoal(goal);
 

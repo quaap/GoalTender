@@ -20,7 +20,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 
@@ -35,8 +34,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     private static final String GOAL_TABLE = "goals";
-    private static final String[] goalcolumns = {"id", "name", "type", "period", "goalnum", "units", "minmax", "start",  "active"};
-    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "SHORT"};
+    private static final String[] goalcolumns = {"id", "name", "type", "period", "days", "goalnum", "units", "minmax", "start",  "active"};
+    private static final String[] goalcolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "TEXT", "INTEGER", "INTEGER", "INTEGER", "FLOAT", "TEXT", "SHORT", "DATETIME", "SHORT"};
     private static final String GOAL_TABLE_CREATE = buildCreateTableStmt(GOAL_TABLE, goalcolumns, goalcolumntypes);
 
 
@@ -45,12 +44,12 @@ public class GoalDB extends SQLiteOpenHelper {
     private static final String[] entrycolumntypes = {"INTEGER PRIMARY KEY AUTOINCREMENT", "INTEGER", "float", "DATETIME", "TEXT"};
     private static final String ENTRY_TABLE_CREATE = buildCreateTableStmt(ENTRY_TABLE, entrycolumns, entrycolumntypes);
 
-    private static final String[] BASIC_UNITS = {"",
-                            "lbs", "pounds", "kg", "kilograms", "oz", "ounces", "nt",
-                            "calories", "cal", "kcal", "kilocalories", "kj", "bpm",
-                            "feet", "ft", "inches", "in", "cm", "meters", "m", "miles", "mi", "km", "kilometers", "yd",
+    private static final String[] BASIC_UNITS = {
+                            "lbs", "pounds", "kg", "oz", "ounces", "nt",
+                            "calories", "cal", "kcal", "kj", "bpm",
+                            "feet", "ft", "inches", "in", "cm", "meters", "m", "miles", "mi", "km", "yd",
                             "reps", "sets",
-                            "seconds", "sec", "minutes", "mins", "hours", "hrs", "days",
+                            "sec","secs", "min", "mins", "hours", "hrs", "days",
                             "s",  "h", "rpm"};
 
     private Map<Integer,Goal> goals = new HashMap<>();
@@ -106,6 +105,7 @@ public class GoalDB extends SQLiteOpenHelper {
         values.put("name", goal.getName());
         values.put("type", goal.getType().getID());
         values.put("period", goal.getType().getPeriod().getId());
+        values.put("days", Goal.Days.combine(goal.getDays()));
         values.put("goalnum", goal.getGoalnum());
         values.put("units", goal.getUnits());
         values.put("minmax", goal.getMinmax().getID());
@@ -134,16 +134,17 @@ public class GoalDB extends SQLiteOpenHelper {
         Goal goal = goals.get(id);
         if (goal!=null) return goal;
         goal = new Goal();
-        //{"id", "name", "type", "period", "goalnum", "units", "minmax", "start",  "active"};
+        //{"id", "name", "type", "period", "days" "goalnum", "units", "minmax", "start",  "active"}
         goal.setId(id);
         goal.setName(cursor.getString(1));
         goal.setType(cursor.getInt(2));
         //cursor.getInt(3) // this is the goal's period.  skip it
-        goal.setGoalnum(cursor.getFloat(4));
-        goal.setUnits(cursor.getString(5));
-        goal.setMinmax(cursor.getInt(6));
-        goal.setStartDate(dbParseDateTime(cursor.getString(7)));
-        goal.setActive(cursor.getShort(8)==1);
+        goal.setDays(cursor.getInt(4));
+        goal.setGoalnum(cursor.getFloat(5));
+        goal.setUnits(cursor.getString(6));
+        goal.setMinmax(cursor.getInt(7));
+        goal.setStartDate(dbParseDateTime(cursor.getString(8)));
+        goal.setActive(cursor.getShort(9)==1);
 
 
         return goal;
@@ -231,15 +232,34 @@ public class GoalDB extends SQLiteOpenHelper {
                 " where strftime('%Y-%m-%d', e.entrydate, 'localtime') = strftime('%Y-%m-%d', 'now', 'localtime')" +
                 ")",null));
 
+        // get NamedDays Goals
+        goals.addAll(getGoalsFromSQL( "select g.id " +
+                        "from goals g " +
+                        "where g.period=" +  Goal.Period.NamedDays.getId() + " and g.active=1 and " +
+                        " (" +
+                        "   ((g.days & " + Goal.Days.Sunday.getId() + ") = " + Goal.Days.Sunday.getId() + " and strftime('%w', 'now', 'localtime')='0' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Monday.getId() + ") = " + Goal.Days.Monday.getId() + " and strftime('%w', 'now', 'localtime')='1' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Tuesday.getId() + ") = " + Goal.Days.Tuesday.getId() + " and strftime('%w', 'now', 'localtime')='2' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Wednesday.getId() + ") = " + Goal.Days.Wednesday.getId() + " and strftime('%w', 'now', 'localtime')='3' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Thursday.getId() + ") = " + Goal.Days.Thursday.getId() + " and strftime('%w', 'now', 'localtime')='4' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Friday.getId() + ") = " + Goal.Days.Friday.getId() + " and strftime('%w', 'now', 'localtime')='5' " + ") or "+
+                        "   ((g.days & " + Goal.Days.Saturday.getId() + ") = " + Goal.Days.Saturday.getId() + " and strftime('%w', 'now', 'localtime')='6' " + ")  "+
+                        " ) and " +
+                        " g.id not in " +
+                        "(select distinct goalid id " +
+                        " from entries e " +
+                        " where strftime('%Y-%m-%d', e.entrydate, 'localtime') = strftime('%Y-%m-%d', 'now', 'localtime')" +
+                        ")" ,null));
+
         // get Weekly Goals
         goals.addAll(getGoalsFromSQL(
                 "select g.id " +
-                "from goals g " +
-                "where g.period=" +  Goal.Period.Weekly.getId() + " and g.active=1 and g.id not in " +
-                "(select distinct goalid id " +
-                " from entries e " +
-                " where strftime('%Y-%W', e.entrydate, 'localtime') = strftime('%Y-%W', 'now', 'localtime')" +
-                ")",null));
+                        "from goals g " +
+                        "where g.period=" +  Goal.Period.Weekly.getId() + " and g.active=1 and g.id not in " +
+                        "(select distinct goalid id " +
+                        " from entries e " +
+                        " where strftime('%Y-%W', e.entrydate, 'localtime') = strftime('%Y-%W', 'now', 'localtime')" +
+                        ")",null));
 
         // get Monthly Goals
         goals.addAll(getGoalsFromSQL(
@@ -264,7 +284,8 @@ public class GoalDB extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                units.add(cursor.getString(0));
+                String unit = cursor.getString(0);
+                if (unit != null && unit.length() > 0) units.add(unit);
             } while (cursor.moveToNext());
         }
         cursor.close();
