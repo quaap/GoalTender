@@ -1,5 +1,7 @@
 package com.quaap.goaltender;
 
+import android.text.format.DateUtils;
+
 import com.quaap.goaltender.storage.Goal;
 
 import java.text.ParseException;
@@ -49,16 +51,17 @@ public class Utils {
 //        return new Date(date);
 //    }
 
+
     public static String formatDateForDisplay(Date date, Goal.Type type) {
         if (date==null) return null;
 
         String format="yyyy-MM-dd HH:mm";
         switch (type.getPeriod()) {
-
             case Daily: format="yyyy-MM-dd"; break;
             case Weekly: format="yyyy 'Week' w"; break;
             case Monthly: format="yyyy-MM"; break;
         }
+
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         String fdate = dateFormat.format(date);
         String currentperiod = dateFormat.format(new Date());
@@ -68,6 +71,10 @@ public class Utils {
                 case Weekly: fdate="This week"; break;
                 case Monthly: fdate="This month"; break;
             }
+        } else {
+            //if  (type.getPeriod() == Goal.Period.Daily) {
+                fdate = DateUtils.getRelativeTimeSpanString(date.getTime(), new Date().getTime(), DateUtils.DAY_IN_MILLIS).toString();
+            //}
         }
         return fdate;
     }
