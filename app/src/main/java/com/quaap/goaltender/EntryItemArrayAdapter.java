@@ -90,7 +90,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             difftext = (int) Math.abs(diff) + "";
         }
 
-        if (goal.getType().isCumulative() && !entry.isCollapsed() || goal.getType().isBool()) {
+        if (goal.getType().isCumulative() && !entry.isCollapsed() || goal.getType().isBool() || entry.isUnmet()) {
 
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;

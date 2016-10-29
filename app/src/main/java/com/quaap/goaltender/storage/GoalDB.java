@@ -196,7 +196,7 @@ public class GoalDB extends SQLiteOpenHelper {
         for (Goal g: getUnmetGoals()) {
             Entry entry = new Entry();
             entry.setGoal(g);
-            entry.setValue(0);
+            //entry.setValue(0);
             entry.setDate(new Date());
             entry.setUnmet(true);
             entries.add(entry);
