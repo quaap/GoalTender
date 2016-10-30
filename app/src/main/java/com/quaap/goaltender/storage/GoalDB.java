@@ -132,6 +132,14 @@ public class GoalDB extends SQLiteOpenHelper {
         return true;
     }
 
+    public void deleteGoal(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(ENTRY_TABLE,"goalid=?", new String[]{id+""});
+        db.delete(GOAL_TABLE,"id=?", new String[]{id+""});
+
+
+    }
 
     private Goal getGoalFromCursor(Cursor cursor) {
         int id = cursor.getInt(0);

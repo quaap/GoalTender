@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.quaap.goaltender.storage.Entry;
@@ -39,10 +40,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // openOptionsMenu();
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.showOverflowMenu();
-
+                handleFab();
             }
         });
 
@@ -63,6 +61,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void handleFab() {
+        if (currentGoal==null) {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.showOverflowMenu();
+        } else {
+            showEntryEditor(currentGoal.getId());
+        }
+    }
+
+
     private void populateList() {
         populateList(null);
     }
@@ -74,16 +82,19 @@ public class MainActivity extends AppCompatActivity {
         currentGoal = g;
         List<String> listitems = new ArrayList<>();
         //List<Entry> listentry = db.getAllEntries();
+        TextView entries_list_title = (TextView)findViewById(R.id.entries_list_title);
         List<Entry> listentry;
         if (g == null) {
             listentry = db.getUnmetEntries();
             listentry.addAll(db.getAllEntriesCollapsed());
+            entries_list_title.setText("All entries");
         } else {
             listentry = db.getAllEntries(g);
             if (listentry.size()==0) {
                 Toast.makeText(this, "No entries for " + g.getName(), Toast.LENGTH_SHORT).show();
                 return;
             }
+            entries_list_title.setText("Entries for " + g.getName());
         }
         for (Entry entry : listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
@@ -170,10 +181,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        String action = null;
+        if (data!=null) {
+            action = data.getStringExtra("action");
+        }
+
+        if (action == null) action = "somethinged";
+
         if (requestCode == entry_edit_code && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Entry Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Entry " + action, Toast.LENGTH_SHORT).show();
         } else if (requestCode == goal_edit_code && resultCode == RESULT_OK) {
-            Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Goal " + action, Toast.LENGTH_SHORT).show();
         }
         populateList();
         invalidateOptionsMenu();
@@ -226,18 +245,8 @@ public class MainActivity extends AppCompatActivity {
     private static void makeDefault() {
         GoalDB db = getDatabase();
 
-        String gname = "Weight";
-        Goal g = db.getGoal(gname);
-        if (g == null) {
-            g = new Goal();
-            g.setType(Goal.Type.Weekly);
-            g.setStartDate(new Date());
-            g.setName(gname);
-            g.setGoalnum(180);
-            g.setUnits("lbs");
-            g.setMinmax(Goal.MinMax.Maximum);
-            db.addGoal(g);
-        }
+        String gname;
+        Goal g;
 
         gname = "Clean kitchen";
         g = db.getGoal(gname);
@@ -262,6 +271,34 @@ public class MainActivity extends AppCompatActivity {
             g.setMinmax(Goal.MinMax.Minimum);
             db.addGoal(g);
         }
+
+        gname = "Calories";
+        g = db.getGoal(gname);
+        if (g == null) {
+            g = new Goal();
+            g.setType(Goal.Type.DailyTotal);
+            g.setStartDate(new Date());
+            g.setName(gname);
+            g.setGoalnum(2400);
+            g.setUnits("kcal");
+            g.setMinmax(Goal.MinMax.Minimum);
+            db.addGoal(g);
+        }
+
+        gname = "Weight";
+        g = db.getGoal(gname);
+        if (g == null) {
+            g = new Goal();
+            g.setType(Goal.Type.Weekly);
+            g.setStartDate(new Date());
+            g.setName(gname);
+            g.setGoalnum(180);
+            g.setUnits("lbs");
+            g.setMinmax(Goal.MinMax.Maximum);
+            db.addGoal(g);
+        }
+
+
         //        Entry e = new Entry();
         //        e.setGoal(g);
         //        e.setDate(new Date());

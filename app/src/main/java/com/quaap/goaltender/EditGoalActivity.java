@@ -1,7 +1,9 @@
 package com.quaap.goaltender;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -47,14 +49,15 @@ public class EditGoalActivity extends AppCompatActivity {
                 save();
             }
         });
-        Button delete = (Button) findViewById(R.id.editgoal_archive);
+
+        Button delete = (Button) findViewById(R.id.editgoal_delete);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //delete();
+                delete();
             }
         });
-
+        delete.setVisibility(View.INVISIBLE);
 
         final GoalDB db = MainActivity.getDatabase();
 
@@ -192,7 +195,7 @@ public class EditGoalActivity extends AppCompatActivity {
         TextView goal_days = (TextView)findViewById(R.id.goal_days);
 
         Switch active = (Switch) findViewById(R.id.goal_active_switch);
-
+        Button delete = (Button) findViewById(R.id.editgoal_delete);
 
         Goal goal = db.getGoal(goalid);
 
@@ -203,11 +206,33 @@ public class EditGoalActivity extends AppCompatActivity {
             editgoal_units.setText(goal.getUnits());
             ismax.setChecked(goal.getMinmax() == Goal.MinMax.Maximum);
             active.setChecked(goal.isActive());
+            delete.setVisibility(View.VISIBLE);
 
             goal_days.setText(TextUtils.join(", ", goal.getDays()));
             goal_days_picked = Goal.Days.combine(goal.getDays());
 
         }
+    }
+
+    private void delete() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Deleting Goal")
+                .setMessage("This will delete all entries for this goal. Are you sure you want to delete this goal?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        GoalDB db = MainActivity.getDatabase();
+                        db.deleteGoal(goalid);
+                        Intent output = new Intent();
+                        output.putExtra("action", "deleted");
+                        setResult(RESULT_OK, output);
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     private void save() {
@@ -264,6 +289,7 @@ public class EditGoalActivity extends AppCompatActivity {
         goal.setDays(goal_days_picked);
 
         db.addGoal(goal);
+        output.putExtra("action", "saved");
 
         setResult(RESULT_OK, output);
         finish();

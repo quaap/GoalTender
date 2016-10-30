@@ -224,6 +224,7 @@ public class EditEntryActivity extends AppCompatActivity {
                         GoalDB db = MainActivity.getDatabase();
                         db.deleteEntry(entry_id);
                         Intent output = new Intent();
+                        output.putExtra("action", "deleted");
                         setResult(RESULT_OK, output);
                         finish();
                     }
@@ -273,6 +274,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
         db.addEntry(entry);
 
+        output.putExtra("action", "saved");
         setResult(RESULT_OK, output);
         finish();
     }
