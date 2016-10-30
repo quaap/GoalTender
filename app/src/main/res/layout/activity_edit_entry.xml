@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_edit_entry"
     android:layout_width="match_parent"
@@ -50,7 +51,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/value_label"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -65,21 +67,34 @@
         android:layout_height="wrap_content"
         android:id="@+id/editentry_units" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        android:id="@+id/entry_showcomment"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="10dp" />
+
     <CheckBox
         android:text="Complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/bool_goal_complete"
-        android:layout_columnSpan="3"
+        android:layout_columnSpan="1"
         android:textSize="24sp"
         android:gravity="center_vertical"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <TextView
         android:text="@string/entry_edit_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView4"
+        android:id="@+id/entry_comment_lab"
         android:textSize="18sp"
         android:visibility="invisible" />
 

@@ -3,6 +3,7 @@ package com.quaap.goaltender;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -65,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
     private void populateList() {
         populateList(null);
     }
+    private void populateList(int goalid) {
+        populateList(db.getGoal(goalid));
+    }
 
     private void populateList(Goal g) {
         currentGoal = g;
@@ -76,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
             listentry.addAll(db.getAllEntriesCollapsed());
         } else {
             listentry = db.getAllEntries(g);
+            if (listentry.size()==0) {
+                Toast.makeText(this, "No entries for " + g.getName(), Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         for (Entry entry : listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
@@ -83,6 +91,13 @@ public class MainActivity extends AppCompatActivity {
         ListView mainList = (ListView) findViewById(R.id.mainList);
 
         listitemadapter = new EntryItemArrayAdapter(this, listitems.toArray(new String[0]), listentry);
+        listitemadapter.setMoreGoalClick(new EntryItemArrayAdapter.OnMoreGoalClick() {
+            @Override
+            public void itemClicked(int goalid) {
+                populateList(goalid);
+            }
+        });
+        listitemadapter.setGoallist(g!=null);
         mainList.setAdapter(listitemadapter);
 
     }

@@ -35,6 +35,7 @@ public class Entry {
     }
 
     public Date getDate() {
+        if (date==null) return new Date(0);
         return date;
     }
 

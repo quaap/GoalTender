@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.quaap.goaltender.storage.Entry;
@@ -25,6 +26,10 @@ import java.util.Locale;
 class EntryItemArrayAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final List<Entry> values;
+
+    private OnMoreGoalClick moreGoalClick;
+
+    private boolean goallist;
 
     public EntryItemArrayAdapter(Context context, String[] ids, List<Entry> values) {
         super(context, -1, ids);
@@ -55,8 +60,24 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             if (goal.getType().isCumulative()) {
                 period = " (" + goal.getType().getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
             }
+            ImageView add_entry_goal = (ImageView) rowView.findViewById(R.id.add_entry_goal);
+            add_entry_goal.setVisibility(View.INVISIBLE);
         }
 
+        if (moreGoalClick!=null && !goallist) {
+            final int goalid = goal.getId();
+            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
+            more_goal_click.setVisibility(View.VISIBLE);
+            more_goal_click.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    moreGoalClick.itemClicked(goalid);
+                }
+            });
+        } else {
+            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
+            more_goal_click.setVisibility(View.GONE);
+        }
 
         TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
         goaltext.setText(goal.getName());
@@ -97,11 +118,11 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             int c;
             if (diff > 0) {
                 goaldiff.setText(difftext + context.getString(R.string.over_label));
-                c = max ? Color.RED : Color.GREEN;
+                c = max ? Color.rgb(180,64,64) : Color.GREEN;
 
             } else if (diff < 0) {
                 goaldiff.setText(difftext + context.getString(R.string.under_label));
-                c = max ? Color.GREEN : Color.RED;
+                c = max ? Color.GREEN : Color.rgb(180,64,64);
             } else { //==0
                 goaldiff.setText("");
                 c = Color.GREEN;
@@ -128,6 +149,28 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    public OnMoreGoalClick getMoreGoalClick() {
+        return moreGoalClick;
+    }
+
+    public void setMoreGoalClick(OnMoreGoalClick moreGoalClick) {
+        this.moreGoalClick = moreGoalClick;
+    }
+
+    public boolean isGoallist() {
+        return goallist;
+    }
+
+    public void setGoallist(boolean goallist) {
+        this.goallist = goallist;
+    }
+
+
+    public static interface OnMoreGoalClick {
+
+        public void itemClicked(int goalid);
     }
 
 }

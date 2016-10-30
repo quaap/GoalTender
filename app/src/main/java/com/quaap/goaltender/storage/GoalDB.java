@@ -393,6 +393,7 @@ public class GoalDB extends SQLiteOpenHelper {
 
 
     public static String getRoundedDate(Date date, Goal.Type gtype) {
+        if (date==null) return "isnull";
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(date.getTime());
 

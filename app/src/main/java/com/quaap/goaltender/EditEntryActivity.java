@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
     private int entry_id = -1;
     private Entry entry = null;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +85,25 @@ public class EditEntryActivity extends AppCompatActivity {
         TextView entry_date = (TextView) findViewById(R.id.entry_date);
         final EditText entry_value = (EditText) findViewById(R.id.entry_value);
         CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
-        EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
+        final EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
+        final TextView entry_comment_lab = (TextView) findViewById(R.id.entry_comment_lab);
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
+        ImageButton showcomm = (ImageButton) findViewById(R.id.entry_showcomment);
 
+        showcomm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (entry_comment.getVisibility()==View.VISIBLE) {
+                    entry_comment.setVisibility(View.GONE);
+                    entry_comment_lab.setVisibility(View.GONE);
+                } else {
+                    entry_comment.setVisibility(View.VISIBLE);
+                    entry_comment_lab.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
 
         entry_date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +120,8 @@ public class EditEntryActivity extends AppCompatActivity {
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
             goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
-            entry_date.setText(Utils.dateToString(entry.getDate()));
+
+            date = entry.getDate();
 
             if (entry.getGoal().getType().isBool()) {
                 bool_goal_complete.setChecked(entry.getValue()>0);
@@ -110,21 +129,23 @@ public class EditEntryActivity extends AppCompatActivity {
                 entry_value.setText(entry.getValue() + "");
                 entry_units.setText(entry.getGoal().getUnits());
             }
-            entry_comment.setText(entry.getComment());
+            String comm = entry.getComment();
+            if (comm!=null && comm.length()>0) {
+                entry_comment.setText(comm);
+                entry_comment.setVisibility(View.VISIBLE);
+                entry_comment_lab.setVisibility(View.VISIBLE);
+            }
         } else {
             delete.setVisibility(View.GONE);
             int goal_id = intent.getIntExtra("goal_id", -1);
             if (goal_id >= 0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
             }
-            entry_date.setText(Utils.dateToString(new Date()));
+
+            date = new Date();
         }
+        entry_date.setText(Utils.showDate(date));
         goalChanged();
-
-
-
-        //goalid.requestFocus();
-        //entry_value.requestFocus();
 
         entry_value.postDelayed(new Runnable() {
             @Override
@@ -165,9 +186,12 @@ public class EditEntryActivity extends AppCompatActivity {
     private void pickdatetime() {
         Intent pickdatetime = new Intent(this, PickDateTimeActivity.class);
 
-        //TextView entry_date = (TextView) findViewById(R.id.entry_date);
+        TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
-        if (entry != null) {
+
+        if (date!=null) {
+            pickdatetime.putExtra("date", date.getTime());
+        } else if (entry != null) {
             pickdatetime.putExtra("date", entry.getDate().getTime());
         }
 
@@ -180,7 +204,9 @@ public class EditEntryActivity extends AppCompatActivity {
 
             TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
-            entry_date.setText(data.getStringExtra("date"));
+            date = Utils.stringToDate(data.getStringExtra("date"));
+            entry_date.setText(Utils.showDate(date));
+
 
         }
     }
@@ -233,7 +259,7 @@ public class EditEntryActivity extends AppCompatActivity {
         if (entry==null) entry = new Entry();
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         entry.setGoal(g);
-        entry.setDate(Utils.stringToDate(entry_date.getText().toString()));
+        entry.setDate(date);
         if (g.getType().isBool()) {
             entry.setValue(bool_goal_complete.isChecked()?1:0);
         } else {

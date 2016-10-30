@@ -39,6 +39,13 @@ public class Utils {
         return new Date();
     }
 
+
+    public static String showDate(Date date) {
+        if (date==null) return null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMMM d, yyyy", Locale.getDefault());
+        return dateFormat.format(date);
+    }
+
 //    public static String dateToString(Long date) {
 //        if (date==null) return null;
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());

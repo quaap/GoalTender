@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.quaap.goaltender.storage.GoalDB;
@@ -21,7 +22,7 @@ public class PickDateTimeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_date_time);
 
         DatePicker datep = (DatePicker) findViewById(R.id.datePicker);
-        TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
+        //TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
 
         Intent intent = getIntent();
         long datelong = intent.getLongExtra("date", new Date().getTime());
@@ -36,12 +37,12 @@ public class PickDateTimeActivity extends AppCompatActivity {
 
         datep.init(year, month, day, null);
 
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-        //int second = intent.getIntExtra("second", cal.get(Calendar.SECOND));
-
-        timep.setCurrentHour(hour);
-        timep.setCurrentMinute(minute);
+//        int hour = cal.get(Calendar.HOUR_OF_DAY);
+//        int minute = cal.get(Calendar.MINUTE);
+//        //int second = intent.getIntExtra("second", cal.get(Calendar.SECOND));
+//
+//        timep.setCurrentHour(hour);
+//        timep.setCurrentMinute(minute);
 
         Button pick_datetime = (Button) findViewById(R.id.datetime_save);
         pick_datetime.setOnClickListener(new View.OnClickListener() {
@@ -63,16 +64,32 @@ public class PickDateTimeActivity extends AppCompatActivity {
     private void save() {
         Intent output = new Intent();
         DatePicker datep = (DatePicker) findViewById(R.id.datePicker);
-        TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
+      //  TimePicker timep = (TimePicker) findViewById(R.id.timePicker);
+
+
+
+//        datep.setO
+//
+//                ;setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+//                DatePicker datep = (DatePicker)view;
+//                int year = datep.getYear();
+//                int month = datep.getMonth();
+//                int day = datep.getDayOfMonth();
+//                TextView date = (TextView)findViewById(R.id.datepicker_date);
+//                date.setText(datep.);
+//            }
+//        });
 
         int year = datep.getYear();
         int month = datep.getMonth();
         int day = datep.getDayOfMonth();
 
-        int hour = timep.getCurrentHour();
-        int minute = timep.getCurrentMinute();
+       // int hour = timep.getCurrentHour();
+      //  int minute = timep.getCurrentMinute();
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month, day, hour, minute);
+        cal.set(year, month, day);
 
         output.putExtra("date", Utils.dateToString(new Date(cal.getTimeInMillis())));
 

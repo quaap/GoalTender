@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,6 +12,25 @@
         android:layout_height="match_parent"
         android:layout_weight="0">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_more"
+            android:id="@+id/more_goal_click"
+            android:layout_weight="0.01"
+            android:scaleX=".75"
+            android:scaleY=".75" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_edit"
+            android:id="@+id/add_entry_goal"
+            android:layout_weight="0.01"
+            android:scaleX=".75"
+            android:scaleY=".75"
+            android:visibility="gone" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,7 +38,11 @@
             android:layout_weight="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:gravity="start"
+            android:layout_gravity="start"
+            android:ellipsize="end"
+            android:maxEms="6" />
 
         <TextView
             android:layout_height="wrap_content"
@@ -29,7 +53,8 @@
             android:paddingRight="10dp"
             android:layout_width="wrap_content"
             android:textSize="24sp"
-            android:textAlignment="viewEnd" />
+            android:textAlignment="viewEnd"
+            android:maxLines="1" />
 
         <TextView
             android:layout_width="wrap_content"
