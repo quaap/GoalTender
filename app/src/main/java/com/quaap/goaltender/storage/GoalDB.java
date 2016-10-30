@@ -5,9 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 import com.quaap.goaltender.Utils;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -190,6 +194,27 @@ public class GoalDB extends SQLiteOpenHelper {
         cursor.close();
         return goals;
     }
+
+
+    public void export() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(GOAL_TABLE, null, null, null, null, null, null);
+        Utils.CurorToCSV(cursor, "goals.csv");
+        cursor = db.query(ENTRY_TABLE, null, null, null, null, null, null);
+        Utils.CurorToCSV(cursor, "entries.csv");
+
+
+//        cursor = db.rawQuery(
+//                "select g.id, g.name, g. " +
+//                        "from goals g " +
+//                        "  join entries e on g.id=e.goalid", null);
+        //{"id", "name", "type", "period", "days", "goalnum", "units", "minmax", "start",  "active"};
+        //{"id", "goalid", "value", "entrydate", "comment"};
+
+    }
+
+
+
 
     public List<Entry> getUnmetEntries() {
         List<Entry> entries = new ArrayList<>();

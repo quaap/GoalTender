@@ -198,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             showGoalEditor(-1);
             return true;
+        } else if (id == R.id.export_csv) {
+            GoalDB db = getDatabase();
+            db.export();
         } else {
             showEntryEditor(id - 1001);
         }

@@ -1,9 +1,14 @@
 package com.quaap.goaltender;
 
+import android.database.Cursor;
+import android.os.Environment;
 import android.text.format.DateUtils;
 
 import com.quaap.goaltender.storage.Goal;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -80,4 +85,48 @@ public class Utils {
         }
         return fdate;
     }
+
+
+    public static void CurorToCSV(Cursor cursor, String filename) {
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), filename);
+        try (FileWriter goalswriter = new FileWriter(file)) {
+            if (cursor.moveToFirst()) {
+                int count  = cursor.getColumnCount();
+                for (int i=0; i<count; i++) {
+                    String text = cursor.getColumnName(i);
+                    goalswriter.write(valueToCsvValue(text));
+                    if (i<count-1) goalswriter.write(",");
+                }
+                goalswriter.write("\n");
+                do {
+                    for (int i=0; i<count; i++) {
+                        String text = cursor.getString(i);
+                        if (cursor.isNull(i)) {
+                            text=null;
+                        }
+                        goalswriter.write(valueToCsvValue(text));
+                        if (i<count-1) goalswriter.write(",");
+                    }
+                    goalswriter.write("\n");
+
+                } while (cursor.moveToNext());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String valueToCsvValue(String value) {
+        if (value==null) {
+            return "";
+        }
+        if (value.length() ==0) {
+            return "\"\"";
+        }
+        if (value.matches("^-?(\\d+(\\.\\d+)?|\\.\\d+)$")) {
+            return value;
+        }
+        return "\"" + value.replaceAll("\"", "\"\"") + "\"";
+    }
+
 }
