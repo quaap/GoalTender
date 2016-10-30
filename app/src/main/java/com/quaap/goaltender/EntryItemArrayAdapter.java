@@ -60,8 +60,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             if (goal.getType().isCumulative()) {
                 period = " (" + goal.getType().getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
             }
-            ImageView add_entry_goal = (ImageView) rowView.findViewById(R.id.add_entry_goal);
-            add_entry_goal.setVisibility(View.INVISIBLE);
+
         }
 
         if (moreGoalClick!=null && !goallist) {
@@ -112,7 +111,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         if (goal.getType().isCumulative() && !entry.isCollapsed() || goal.getType().isBool() || entry.isUnmet()) {
-
+            goaldiff.setText(" ");
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
             int c;
@@ -124,7 +123,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
                 goaldiff.setText(difftext + context.getString(R.string.under_label));
                 c = max ? Color.GREEN : Color.rgb(180,64,64);
             } else { //==0
-                goaldiff.setText("");
+                goaldiff.setText(" ");
                 c = Color.GREEN;
             }
 

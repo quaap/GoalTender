@@ -21,16 +21,6 @@
             android:scaleX=".75"
             android:scaleY=".75" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_edit"
-            android:id="@+id/add_entry_goal"
-            android:layout_weight="0.01"
-            android:scaleX=".75"
-            android:scaleY=".75"
-            android:visibility="gone" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
