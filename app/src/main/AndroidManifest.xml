@@ -38,7 +38,7 @@
             android:name=".EditGoalActivity"
             android:label="@string/title_activity_edit_goal"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".DaysPickerActivity"></activity>
+        <activity android:name=".DaysPickerActivity" />
     </application>
 
 </manifest>

@@ -114,7 +114,7 @@ public class Goal {
     }
 
 
-    public static enum MinMax {
+    public enum MinMax {
         Minimum(0), Maximum(1);
         private int id;
         MinMax(int id) {
@@ -135,9 +135,9 @@ public class Goal {
                 lookup.put(s.getID(), s);
         }
 
-    };
+    }
 
-    public static enum Type {
+    public enum Type {
         Single(0, Period.None, false),
         DailyTotal(10, Period.Daily, true),
         NamedDaysTotal(15, Period.NamedDays, true),
@@ -200,17 +200,17 @@ public class Goal {
         }
     }
 
-    public static enum Period {
+    public  enum Period {
         None(0), Hourly(10), Daily(20), NamedDays(30), Weekly(40), Biweekly(50), Monthly(60), Anually(100);
         private final int id;
-        private Period(int id) { this.id = id; }
+        Period(int id) { this.id = id; }
         public int getId() { return id; }
     }
 
-    public static enum Days {
+    public  enum Days {
         Sunday(1), Monday(2), Tuesday(4), Wednesday(8), Thursday(16), Friday(32), Saturday(64);
         private final int id;
-        private Days(int id) { this.id = id; }
+        Days(int id) { this.id = id; }
         public int getId() { return id; }
 
         public static int combine(EnumSet<Days> days) {

@@ -14,7 +14,7 @@
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:columnCount="3"
         android:orientation="horizontal">
 
@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/value_label"
             android:textSize="18sp"
+            android:labelFor="@+id/entry_value"
             android:layout_marginTop="10dp" />
 
         <EditText
@@ -77,10 +78,11 @@
             app:srcCompat="@android:drawable/ic_menu_edit"
             android:id="@+id/entry_showcomment"
             android:background="@android:color/transparent"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:contentDescription="Show comment field" />
 
         <CheckBox
-            android:text="Complete"
+            android:text="@string/complete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bool_goal_complete"
@@ -100,6 +102,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/entry_comment_lab"
             android:textSize="18sp"
+            android:labelFor="@+id/entry_comment"
             android:visibility="gone" />
 
         <EditText

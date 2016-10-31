@@ -167,9 +167,9 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
     }
 
 
-    public static interface OnMoreGoalClick {
+    public interface OnMoreGoalClick {
 
-        public void itemClicked(int goalid);
+        void itemClicked(int goalid);
     }
 
 }

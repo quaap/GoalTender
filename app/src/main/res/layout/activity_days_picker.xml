@@ -12,43 +12,43 @@
     android:columnCount="2">
 
     <CheckBox
-        android:text="Sunday"
+        android:text="@string/sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_sun" />
 
     <CheckBox
-        android:text="Monday"
+        android:text="@string/monday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_mon" />
 
     <CheckBox
-        android:text="Tuesday"
+        android:text="@string/tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_tue" />
 
     <CheckBox
-        android:text="Wedensday"
+        android:text="@string/wedensday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_wed" />
 
     <CheckBox
-        android:text="Thursday"
+        android:text="@string/thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_thu" />
 
     <CheckBox
-        android:text="Friday"
+        android:text="@string/friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_fri" />
 
     <CheckBox
-        android:text="Saturday"
+        android:text="@string/saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_sat" />
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:text="Done"
+        android:text="@string/done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pick_days_done" />

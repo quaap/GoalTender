@@ -19,7 +19,8 @@
             android:id="@+id/more_goal_click"
             android:layout_weight="0.01"
             android:scaleX=".75"
-            android:scaleY=".75" />
+            android:scaleY=".75"
+            android:contentDescription="See all entries of this @string/entry_edit_goal" />
 
         <TextView
             android:layout_width="wrap_content"

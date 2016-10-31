@@ -8,7 +8,7 @@
         android:title="@string/add_edit_goals"
         app:showAsAction="never" />
 
-    <item android:title="Export to CSV"
+    <item android:title="@string/export_to_csv"
         android:id="@+id/export_csv"
         android:orderInCategory="101"
         android:visible="false" />

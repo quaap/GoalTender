@@ -119,7 +119,7 @@ public class EditGoalActivity extends AppCompatActivity {
                 if (gtype.getPeriod() == Goal.Period.NamedDays) {
                     goal_days.setVisibility(View.VISIBLE);
                     if (goal_days_picked==0) {
-                        goal_days.setText("Set days");
+                        goal_days.setText(R.string.setgoaldays);
                     }
                     goal_days.setOnClickListener(new View.OnClickListener() {
                         @Override

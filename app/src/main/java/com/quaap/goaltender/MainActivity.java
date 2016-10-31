@@ -87,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
         if (g == null) {
             listentry = db.getUnmetEntries();
             listentry.addAll(db.getAllEntriesCollapsed());
-            entries_list_title.setText("All entries");
+            entries_list_title.setText(R.string.list_all_entries);
         } else {
             listentry = db.getAllEntries(g);
             if (listentry.size()==0) {
-                Toast.makeText(this, "No entries for " + g.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.list_no_entries) + g.getName(), Toast.LENGTH_SHORT).show();
                 return;
             }
-            entries_list_title.setText("Entries for " + g.getName());
+            entries_list_title.setText(getString(R.string.list_entries_goal) + g.getName());
         }
         for (Entry entry : listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private int goal_edit_code = 2;
+    private final int goal_edit_code = 2;
 
     private void showGoalEditor(long id) {
         Intent goal_edit = new Intent(this, EditGoalActivity.class);
