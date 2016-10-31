@@ -60,6 +60,18 @@ public class EditGoalActivity extends AppCompatActivity {
         });
         delete.setVisibility(View.INVISIBLE);
 
+        Button show_switch_goal = (Button) findViewById(R.id.goal_show_switch_goal);
+        show_switch_goal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View editgoal_switchlayout = findViewById(R.id.editgoal_switchlayout);
+                editgoal_switchlayout.setVisibility(View.VISIBLE);
+                view.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
+
         final GoalDB db = MainActivity.getDatabase();
 
         List<Goal> goals = db.getAllGoals(false);

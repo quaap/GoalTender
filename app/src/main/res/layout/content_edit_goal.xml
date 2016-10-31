@@ -21,15 +21,48 @@
         android:orientation="horizontal">
 
 
-        <Switch
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/editgoal_switchlayout"
+                    android:layout_columnSpan="2"
+                    android:visibility="gone">
+
+                        <Spinner
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editgoal_goallist"
+                        android:layout_weight="3"
+                        android:layout_gravity="fill_horizontal" />
+
+                    <Button
+                        android:text="@string/goal_load"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/editgoal_switch_goal"
+                        android:layout_weight=".01"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+
+                <Switch
             android:text="@string/active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/goal_active_switch"
-            android:layout_columnSpan="2"
-            android:checked="true"/>
+                    android:checked="true"/>
 
-        <TextView
+                <Button
+                    android:text="@string/switch_goal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/goal_show_switch_goal"
+                    android:layout_gravity="end"
+                    android:elevation="6dp"
+                    android:textSize="10sp"
+                    android:alpha=".5" />
+
+                <TextView
             android:text="@string/goal_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,37 +176,7 @@
             android:layout_columnSpan="2"
             android:background="@color/colorPrimary" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editgoal_switchlayout"
-            android:layout_columnSpan="2">
-
-            <TextView
-                android:text="@string/switch_goal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView8"
-                android:layout_weight=".2" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editgoal_goallist"
-                android:layout_weight="3"
-                android:layout_gravity="fill_horizontal" />
-
-            <Button
-                android:text="@string/goal_load"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editgoal_switch_goal"
-                android:layout_weight=".01"
-                android:layout_gravity="end" />
-        </LinearLayout>
-
-    </GridLayout>
+        </GridLayout>
 
 
 </ScrollView>

@@ -15,7 +15,7 @@ public class Goal {
 
     private int id = -1;
     private String goalname;
-    private Type type = Type.Normal;
+    private Type type = Type.Value;
     private Period period = Period.None;
 
     private float goalnum = 0;
@@ -213,7 +213,7 @@ public class Goal {
 //    }
 
     public enum Type {
-        Normal(10), Cumulative(20), Checkbox(30);
+        Value(10), Cumulative(20), Checkbox(30);
         private final int id;
         Type(int id) { this.id = id; }
         public int getId() { return id; }

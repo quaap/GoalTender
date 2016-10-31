@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.Normal);
+            g.setType(Goal.Type.Value);
             g.setPeriod(Goal.Period.Weekly);
 
             g.setStartDate(new Date());
