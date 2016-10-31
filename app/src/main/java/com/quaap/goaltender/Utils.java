@@ -64,11 +64,11 @@ public class Utils {
 //    }
 
 
-    public static String formatDateForDisplay(Date date, Goal.Type type) {
+    public static String formatDateForDisplay(Date date, Goal.Period period) {
         if (date==null) return null;
 
         String format="yyyy-MM-dd HH:mm";
-        switch (type.getPeriod()) {
+        switch (period) {
             case NamedDays:
             case Daily: format="yyyy-MM-dd"; break;
             case Weekly: format="yyyy 'Week' w"; break;
@@ -79,7 +79,7 @@ public class Utils {
         String fdate = dateFormat.format(date);
         String currentperiod = dateFormat.format(new Date());
         if (fdate.equals(currentperiod)) {
-            switch (type.getPeriod()) {
+            switch (period) {
                 case NamedDays:
                 case Daily: fdate="Today"; break;
                 case Weekly: fdate="This week"; break;

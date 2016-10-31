@@ -15,7 +15,8 @@ public class Goal {
 
     private int id = -1;
     private String goalname;
-    private Type type = Type.Single;
+    private Type type = Type.Normal;
+    private Period period = Period.None;
 
     private float goalnum = 0;
 
@@ -113,6 +114,17 @@ public class Goal {
         this.days = Days.split(dayflags);
     }
 
+    public Period getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(int period) {
+        this.period = Period.get(period);
+    }
+    public void setPeriod(Period period) {
+        this.period = period;
+    }
+
 
     public enum MinMax {
         Minimum(0), Maximum(1);
@@ -137,74 +149,99 @@ public class Goal {
 
     }
 
+//    public enum Type {
+//        Single(0, Period.None, false),
+//        DailyTotal(10, Period.Daily, true),
+//        NamedDaysTotal(15, Period.NamedDays, true),
+//        WeeklyTotal(20, Period.Weekly, true),
+//        MonthlyTotal(30, Period.Monthly, true),
+//        DailyCheckoff(40, Period.Daily, false, true),
+//        NamedDaysCheckoff(50, Period.NamedDays, false, true),
+//        WeeklyCheckoff(60, Period.Weekly, false, true),
+//        MonthlyCheckoff(70, Period.Monthly, false, true),
+//        Daily(80, Period.Daily, false),
+//        NamedDays(90, Period.NamedDays, false),
+//        Weekly(100, Period.Weekly, false),
+//        Monthly(110, Period.Monthly, false),
+//        ;
+//
+//
+//        final private int id;
+//        final private Period period;
+//        final private boolean cumulative;
+//        final private boolean bool;
+//
+//
+//        Type(int id, Period period, boolean cumulative) {
+//            this(id, period, cumulative, false);
+//        }
+//
+//        Type(int id, Period period, boolean cumulative, boolean bool) {
+//            this.id=id;
+//            this.period=period;
+//            this.cumulative=cumulative;
+//            this.bool=bool;
+//        }
+//
+//
+//        public static Type get(int id) {
+//            return lookup.get(id);
+//        }
+//
+//        public int getID() {
+//            return id;
+//        }
+//
+//        private static final Map<Integer,Type> lookup = new HashMap<>();
+//        // Populate the lookup table on loading time
+//        static {
+//            for (Type s : EnumSet.allOf(Type.class))
+//                lookup.put(s.getID(), s);
+//        }
+//
+//        public Period getPeriod() {
+//            return period;
+//        }
+//
+//        public boolean isCumulative() {
+//            return cumulative;
+//        }
+//
+//        public boolean isBool() {
+//            return bool;
+//        }
+//    }
+
     public enum Type {
-        Single(0, Period.None, false),
-        DailyTotal(10, Period.Daily, true),
-        NamedDaysTotal(15, Period.NamedDays, true),
-        WeeklyTotal(20, Period.Weekly, true),
-        MonthlyTotal(30, Period.Monthly, true),
-        DailyCheckoff(40, Period.Daily, false, true),
-        NamedDaysCheckoff(50, Period.NamedDays, false, true),
-        WeeklyCheckoff(60, Period.Weekly, false, true),
-        MonthlyCheckoff(70, Period.Monthly, false, true),
-        Daily(80, Period.Daily, false),
-        NamedDays(90, Period.NamedDays, false),
-        Weekly(100, Period.Weekly, false),
-        Monthly(110, Period.Monthly, false),
-        ;
-
-
-        final private int id;
-        final private Period period;
-        final private boolean cumulative;
-        final private boolean bool;
-
-
-        Type(int id, Period period, boolean cumulative) {
-            this(id, period, cumulative, false);
-        }
-
-        Type(int id, Period period, boolean cumulative, boolean bool) {
-            this.id=id;
-            this.period=period;
-            this.cumulative=cumulative;
-            this.bool=bool;
-        }
-
+        Normal(10), Cumulative(20), Checkbox(30);
+        private final int id;
+        Type(int id) { this.id = id; }
+        public int getId() { return id; }
 
         public static Type get(int id) {
-            return lookup.get(id);
+           return lookup.get(id);
         }
-
-        public int getID() {
-            return id;
-        }
-
         private static final Map<Integer,Type> lookup = new HashMap<>();
-        // Populate the lookup table on loading time
         static {
             for (Type s : EnumSet.allOf(Type.class))
-                lookup.put(s.getID(), s);
-        }
-
-        public Period getPeriod() {
-            return period;
-        }
-
-        public boolean isCumulative() {
-            return cumulative;
-        }
-
-        public boolean isBool() {
-            return bool;
+                lookup.put(s.getId(), s);
         }
     }
 
     public  enum Period {
-        None(0), Hourly(10), Daily(20), NamedDays(30), Weekly(40), Biweekly(50), Monthly(60), Anually(100);
+        None(0), Daily(20), NamedDays(30), Weekly(40), Monthly(60);
         private final int id;
         Period(int id) { this.id = id; }
         public int getId() { return id; }
+
+        public static Period get(int id) {
+            return lookup.get(id);
+        }
+        private static final Map<Integer,Period> lookup = new HashMap<>();
+        static {
+            for (Period s : EnumSet.allOf(Period.class))
+                lookup.put(s.getId(), s);
+        }
     }
 
     public  enum Days {

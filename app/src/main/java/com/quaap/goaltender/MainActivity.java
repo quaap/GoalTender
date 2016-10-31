@@ -252,7 +252,8 @@ public class MainActivity extends AppCompatActivity {
         g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.DailyCheckoff);
+            g.setType(Goal.Type.Checkbox);
+            g.setPeriod(Goal.Period.Daily);
             g.setStartDate(new Date());
             g.setName(gname);
             g.setGoalnum(1);
@@ -263,7 +264,9 @@ public class MainActivity extends AppCompatActivity {
         g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.DailyTotal);
+
+            g.setType(Goal.Type.Cumulative);
+            g.setPeriod(Goal.Period.Daily);
             g.setStartDate(new Date());
             g.setName(gname);
             g.setGoalnum(30);
@@ -276,7 +279,8 @@ public class MainActivity extends AppCompatActivity {
         g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.DailyTotal);
+            g.setType(Goal.Type.Cumulative);
+            g.setPeriod(Goal.Period.Daily);
             g.setStartDate(new Date());
             g.setName(gname);
             g.setGoalnum(2400);
@@ -289,7 +293,9 @@ public class MainActivity extends AppCompatActivity {
         g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
-            g.setType(Goal.Type.Weekly);
+            g.setType(Goal.Type.Normal);
+            g.setPeriod(Goal.Period.Weekly);
+
             g.setStartDate(new Date());
             g.setName(gname);
             g.setGoalnum(180);

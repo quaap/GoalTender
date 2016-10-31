@@ -31,6 +31,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
     private int goalid = -1;
     private ArrayAdapter goaltypeadapter;
+    private ArrayAdapter goalperiodadapter;
     private boolean isboolgoal;
 
     private int goal_days_picked = 0;
@@ -98,27 +99,52 @@ public class EditGoalActivity extends AppCompatActivity {
         Intent intent = getIntent();
         goalid = intent.getIntExtra("goalid", goalid);
 
+        {
+            Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
 
-        Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
+            List<String> goaltypes = new ArrayList<>();
+            for (Goal.Type t : Goal.Type.values()) {
+                goaltypes.add(t.name());
+            }
+            goaltypeadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goaltypes);
+            goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            goaltype.setAdapter(goaltypeadapter);
 
-        List<String> goaltypes = new ArrayList<>();
-        for (Goal.Type t : Goal.Type.values()) {
-            goaltypes.add(t.name());
+            goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    Goal.Type gtype = Goal.Type.valueOf(adapterView.getSelectedItem().toString());
+                    isboolgoal = gtype == Goal.Type.Checkbox;
+                    setBoolGoal();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
         }
-        goaltypeadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goaltypes);
-        goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        goaltype.setAdapter(goaltypeadapter);
 
-        goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
+
+        List<String> goalperiods = new ArrayList<>();
+        for (Goal.Period t : Goal.Period.values()) {
+            goalperiods.add(t.name());
+        }
+        goalperiodadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalperiods);
+        goalperiodadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        goalperiod.setAdapter(goalperiodadapter);
+
+        goalperiod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Goal.Type gtype = Goal.Type.valueOf(adapterView.getSelectedItem().toString());
-                isboolgoal = gtype.isBool();
-                setBoolGoal();
+                Goal.Period gperiod = Goal.Period.valueOf(adapterView.getSelectedItem().toString());
+
                 TextView goal_days = (TextView) findViewById(R.id.goal_days);
-                if (gtype.getPeriod() == Goal.Period.NamedDays) {
+                if (gperiod == Goal.Period.NamedDays) {
                     goal_days.setVisibility(View.VISIBLE);
-                    if (goal_days_picked==0) {
+                    if (goal_days_picked == 0) {
                         goal_days.setText(R.string.setgoaldays);
                     }
                     goal_days.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +212,8 @@ public class EditGoalActivity extends AppCompatActivity {
 
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
 
+        Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
+
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
 
         CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
@@ -202,6 +230,8 @@ public class EditGoalActivity extends AppCompatActivity {
         if (goal != null) {
             goalname.setText(goal.getName());
             goaltype.setSelection(goaltypeadapter.getPosition(goal.getType().name()));
+            goalperiod.setSelection(goalperiodadapter.getPosition(goal.getPeriod().name()));
+
             goalnum.setText(goal.getGoalnum() + "");
             editgoal_units.setText(goal.getUnits());
             ismax.setChecked(goal.getMinmax() == Goal.MinMax.Maximum);
@@ -240,6 +270,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
         EditText goalname = (EditText) findViewById(R.id.editgoal_goalname);
         Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
+        Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
 
         if (goalname.getText().toString().trim().length()==0) {
@@ -272,6 +303,9 @@ public class EditGoalActivity extends AppCompatActivity {
 
         goal.setName(goalname.getText().toString());
         goal.setType(Goal.Type.valueOf(goaltype.getSelectedItem().toString()));
+        goal.setPeriod(Goal.Period.valueOf(goalperiod.getSelectedItem().toString()));
+
+
         if (goal.getStartDate() == null) {
             goal.setStartDate(new Date());
         }

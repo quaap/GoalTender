@@ -57,8 +57,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
             rowView.setBackgroundColor(Color.rgb(245, 245, 245));
 
-            if (goal.getType().isCumulative()) {
-                period = " (" + goal.getType().getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
+            if (goal.getType() == Goal.Type.Cumulative) {
+                period = " (" + goal.getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
             }
 
         }
@@ -86,7 +86,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             valuetext.setText(R.string.unmet_goal_label);
         } else {
             float value = entry.getValue();
-            if (goal.getType().isBool()) {
+            if (goal.getType() == Goal.Type.Checkbox) {
                 if (value>0) {
                     valuetext.setText("\u2713");
                 } else {
@@ -110,7 +110,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             difftext = (int) Math.abs(diff) + "";
         }
 
-        if (goal.getType().isCumulative() && !entry.isCollapsed() || goal.getType().isBool() || entry.isUnmet()) {
+        if (goal.getType() == Goal.Type.Cumulative && !entry.isCollapsed() || goal.getType() == Goal.Type.Checkbox || entry.isUnmet()) {
             goaldiff.setText(" ");
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
@@ -131,7 +131,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         }
 
         TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(Utils.formatDateForDisplay(entry.getDate(), goal.getType()) + period);
+        datetext.setText(Utils.formatDateForDisplay(entry.getDate(), goal.getPeriod()) + period);
 
         return rowView;
     }

@@ -123,7 +123,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
             date = entry.getDate();
 
-            if (entry.getGoal().getType().isBool()) {
+            if (entry.getGoal().getType() == Goal.Type.Checkbox) {
                 bool_goal_complete.setChecked(entry.getValue()>0);
             } else {
                 entry_value.setText(entry.getValue() + "");
@@ -170,7 +170,7 @@ public class EditEntryActivity extends AppCompatActivity {
         View value_label = findViewById(R.id.value_label);
 
 
-        if (g.getType().isBool()) {
+        if (g.getType() == Goal.Type.Checkbox) {
             bool_goal_complete.setVisibility(View.VISIBLE);
             entry_value.setVisibility(View.GONE);
             entry_units.setVisibility(View.GONE);
@@ -261,7 +261,7 @@ public class EditEntryActivity extends AppCompatActivity {
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         entry.setGoal(g);
         entry.setDate(date);
-        if (g.getType().isBool()) {
+        if (g.getType() == Goal.Type.Checkbox) {
             entry.setValue(bool_goal_complete.isChecked()?1:0);
         } else {
             try {
