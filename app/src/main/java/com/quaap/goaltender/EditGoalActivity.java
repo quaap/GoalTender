@@ -72,7 +72,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
 
 
-        final GoalDB db = MainActivity.getDatabase();
+        final GoalDB db = GoalTender.getDatabase();
 
         List<Goal> goals = db.getAllGoals(false);
         final Spinner goallist = (Spinner) findViewById(R.id.editgoal_goallist);
@@ -211,7 +211,7 @@ public class EditGoalActivity extends AppCompatActivity {
     }
 
     private void loadGoal() {
-        GoalDB db = MainActivity.getDatabase();
+        GoalDB db = GoalTender.getDatabase();
 
         EditText goalname = (EditText) findViewById(R.id.editgoal_goalname);
 
@@ -257,7 +257,7 @@ public class EditGoalActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        GoalDB db = MainActivity.getDatabase();
+                        GoalDB db = GoalTender.getDatabase();
                         db.deleteGoal(goalid);
                         Intent output = new Intent();
                         output.putExtra("action", "deleted");
@@ -294,7 +294,7 @@ public class EditGoalActivity extends AppCompatActivity {
         CheckBox ismax = (CheckBox) findViewById(R.id.editgoal_ismax);
         Switch active = (Switch) findViewById(R.id.goal_active_switch);
 
-        GoalDB db = MainActivity.getDatabase();
+        GoalDB db = GoalTender.getDatabase();
 
         Goal goal;
         if (goalid > -1) {

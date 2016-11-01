@@ -55,7 +55,7 @@ public class EditEntryActivity extends AppCompatActivity {
         });
 
 
-        GoalDB db = MainActivity.getDatabase();
+        GoalDB db = GoalTender.getDatabase();
 
         List<Goal> goals = db.getAllGoals(true);
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
@@ -159,7 +159,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
     private void goalChanged() {
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
-        GoalDB db = MainActivity.getDatabase();
+        GoalDB db = GoalTender.getDatabase();
         Goal g = db.getGoal(goalid.getSelectedItem().toString());
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
         entry_units.setText(g.getUnits());
@@ -221,7 +221,7 @@ public class EditEntryActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        GoalDB db = MainActivity.getDatabase();
+                        GoalDB db = GoalTender.getDatabase();
                         db.deleteEntry(entry_id);
                         Intent output = new Intent();
                         output.putExtra("action", "deleted");
@@ -251,7 +251,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
         EditText entry_comment = (EditText) findViewById(R.id.entry_comment);
 
-        GoalDB db = MainActivity.getDatabase();
+        GoalDB db = GoalTender.getDatabase();
 
         //System.out.println(goalid.getSelectedItem().toString());
        // System.out.println(goalid.getSelectedItemId());

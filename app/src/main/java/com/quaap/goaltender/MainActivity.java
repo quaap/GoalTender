@@ -25,26 +25,30 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static GoalDB db;
     private EntryItemArrayAdapter listitemadapter;
 
     private Goal currentGoal = null;
 
-    private static Context context;
+    private GoalDB db;
 
-    public static Context getContext() {
-        return context;
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        context=getApplicationContext();
-    }
+//    private static Context context;
+//
+//    public static Context getContext() {
+//        return context;
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        context=getApplicationContext();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        db = GoalTender.getDatabase();
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,11 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 handleFab();
             }
         });
-
-        db = new GoalDB(this);
-        if (db.isFirstRun()) {
-            makeDefault();
-        }
 
         populateList();
 
@@ -134,19 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        db.close();
-        super.onStop();
-    }
-
-    public static GoalDB getDatabase() {
-        if (db == null) {
-            throw new NullPointerException("Database not initialized yet!");
-        }
-        return db;
     }
 
     private int entry_edit_code = 1;
@@ -223,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        GoalDB db = getDatabase();
+
 
         for (Goal g : db.getAllGoals(true)) {
             if (menu.findItem(1001 + g.getId()) == null) {
@@ -246,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
             showGoalEditor(-1);
             return true;
         } else if (id == R.id.export_csv) {
-            GoalDB db = getDatabase();
+
             db.export();
         } else {
             showEntryEditor(id - 1001);
@@ -255,74 +241,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static void makeDefault() {
-        GoalDB db = getDatabase();
 
-        String gname;
-        Goal g;
-
-        gname = "Clean kitchen";
-        g = db.getGoal(gname);
-        if (g == null) {
-            g = new Goal();
-            g.setType(Goal.Type.Checkbox);
-            g.setPeriod(Goal.Period.Daily);
-            g.setStartDate(new Date());
-            g.setName(gname);
-            g.setGoalnum(1);
-            db.addGoal(g);
-        }
-
-        gname = "Walking";
-        g = db.getGoal(gname);
-        if (g == null) {
-            g = new Goal();
-
-            g.setType(Goal.Type.Cumulative);
-            g.setPeriod(Goal.Period.Daily);
-            g.setStartDate(new Date());
-            g.setName(gname);
-            g.setGoalnum(30);
-            g.setUnits("mins");
-            g.setMinmax(Goal.MinMax.Minimum);
-            db.addGoal(g);
-        }
-
-        gname = "Calories";
-        g = db.getGoal(gname);
-        if (g == null) {
-            g = new Goal();
-            g.setType(Goal.Type.Cumulative);
-            g.setPeriod(Goal.Period.Daily);
-            g.setStartDate(new Date());
-            g.setName(gname);
-            g.setGoalnum(2400);
-            g.setUnits("kcal");
-            g.setMinmax(Goal.MinMax.Minimum);
-            db.addGoal(g);
-        }
-
-        gname = "Weight";
-        g = db.getGoal(gname);
-        if (g == null) {
-            g = new Goal();
-            g.setType(Goal.Type.Value);
-            g.setPeriod(Goal.Period.Weekly);
-
-            g.setStartDate(new Date());
-            g.setName(gname);
-            g.setGoalnum(180);
-            g.setUnits("lbs");
-            g.setMinmax(Goal.MinMax.Maximum);
-            db.addGoal(g);
-        }
-
-
-        //        Entry e = new Entry();
-        //        e.setGoal(g);
-        //        e.setDate(new Date());
-        //        e.setValue(225);
-        //        e.setComment("OMG");
-        //        db.addEntry(e);
-    }
 }

@@ -3,6 +3,7 @@ package com.quaap.goaltender.storage;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.quaap.goaltender.GoalTender;
 import com.quaap.goaltender.MainActivity;
 import com.quaap.goaltender.R;
 
@@ -238,7 +239,7 @@ public class Goal {
 
         @Override
         public String toString() {
-            return MainActivity.getContext().getString(displayid);
+            return GoalTender.getContext().getString(displayid);
 
         }
 
@@ -265,7 +266,7 @@ public class Goal {
         public int getId() { return id; }
 
         public String toString() {
-            return MainActivity.getContext().getString(displayid);
+            return GoalTender.getContext().getString(displayid);
         }
 
         public static Period get(int id) {
@@ -335,7 +336,7 @@ public class Goal {
             return days;
         }
         public String toString() {
-            return MainActivity.getContext().getString(displayid);
+            return GoalTender.getContext().getString(displayid);
         }
     }
 
