@@ -1,5 +1,6 @@
 package com.quaap.goaltender;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +29,18 @@ public class MainActivity extends AppCompatActivity {
     private EntryItemArrayAdapter listitemadapter;
 
     private Goal currentGoal = null;
+
+    private static Context context;
+
+    public static Context getContext() {
+        return context;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        context=getApplicationContext();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

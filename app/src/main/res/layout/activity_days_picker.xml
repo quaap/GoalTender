@@ -12,43 +12,43 @@
     android:columnCount="2">
 
     <CheckBox
-        android:text="@string/sunday"
+        android:text="@string/days_sunday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_sun" />
 
     <CheckBox
-        android:text="@string/monday"
+        android:text="@string/days_monday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_mon" />
 
     <CheckBox
-        android:text="@string/tuesday"
+        android:text="@string/days_tuesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_tue" />
 
     <CheckBox
-        android:text="@string/wedensday"
+        android:text="@string/days_wednesday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_wed" />
 
     <CheckBox
-        android:text="@string/thursday"
+        android:text="@string/days_thursday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_thu" />
 
     <CheckBox
-        android:text="@string/friday"
+        android:text="@string/days_friday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_fri" />
 
     <CheckBox
-        android:text="@string/saturday"
+        android:text="@string/days_saturday"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/check_sat" />

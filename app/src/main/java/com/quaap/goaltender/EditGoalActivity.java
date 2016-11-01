@@ -30,8 +30,8 @@ import java.util.List;
 public class EditGoalActivity extends AppCompatActivity {
 
     private int goalid = -1;
-    private ArrayAdapter goaltypeadapter;
-    private ArrayAdapter goalperiodadapter;
+    private ArrayAdapter<Goal.Type> goaltypeadapter;
+    private ArrayAdapter<Goal.Period> goalperiodadapter;
     private boolean isboolgoal;
 
     private int goal_days_picked = 0;
@@ -114,18 +114,14 @@ public class EditGoalActivity extends AppCompatActivity {
         {
             Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
 
-            List<String> goaltypes = new ArrayList<>();
-            for (Goal.Type t : Goal.Type.values()) {
-                goaltypes.add(t.name());
-            }
-            goaltypeadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goaltypes);
+            goaltypeadapter = new ArrayAdapter<Goal.Type>(this, android.R.layout.simple_spinner_item, Goal.Type.values());
             goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             goaltype.setAdapter(goaltypeadapter);
 
             goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Goal.Type gtype = Goal.Type.valueOf(adapterView.getSelectedItem().toString());
+                    Goal.Type gtype = (Goal.Type)adapterView.getSelectedItem();
                     isboolgoal = gtype == Goal.Type.Checkbox;
                     setBoolGoal();
 
@@ -140,18 +136,15 @@ public class EditGoalActivity extends AppCompatActivity {
 
         Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
 
-        List<String> goalperiods = new ArrayList<>();
-        for (Goal.Period t : Goal.Period.values()) {
-            goalperiods.add(t.name());
-        }
-        goalperiodadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalperiods);
+
+        goalperiodadapter = new ArrayAdapter<Goal.Period>(this, android.R.layout.simple_spinner_item, Goal.Period.values());
         goalperiodadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goalperiod.setAdapter(goalperiodadapter);
 
         goalperiod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Goal.Period gperiod = Goal.Period.valueOf(adapterView.getSelectedItem().toString());
+                Goal.Period gperiod = (Goal.Period)adapterView.getSelectedItem();
 
                 TextView goal_days = (TextView) findViewById(R.id.goal_days);
                 if (gperiod == Goal.Period.NamedDays) {
@@ -241,8 +234,8 @@ public class EditGoalActivity extends AppCompatActivity {
 
         if (goal != null) {
             goalname.setText(goal.getName());
-            goaltype.setSelection(goaltypeadapter.getPosition(goal.getType().name()));
-            goalperiod.setSelection(goalperiodadapter.getPosition(goal.getPeriod().name()));
+            goaltype.setSelection(goaltypeadapter.getPosition(goal.getType()));
+            goalperiod.setSelection(goalperiodadapter.getPosition(goal.getPeriod()));
 
             goalnum.setText(goal.getGoalnum() + "");
             editgoal_units.setText(goal.getUnits());

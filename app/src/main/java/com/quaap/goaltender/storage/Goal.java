@@ -1,5 +1,11 @@
 package com.quaap.goaltender.storage;
 
+import android.content.Context;
+import android.content.res.Resources;
+
+import com.quaap.goaltender.MainActivity;
+import com.quaap.goaltender.R;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -213,14 +219,29 @@ public class Goal {
 //    }
 
     public enum Type {
-        Value(10), Cumulative(20), Checkbox(30);
+        Value(10, R.string.type_value),
+        Cumulative(20,R.string.type_cumulative),
+        Checkbox(30,R.string.type_checkbox);
+
         private final int id;
-        Type(int id) { this.id = id; }
+        private final int displayid;
+
+        Type(int id, int displayid) {
+            this.id = id;
+            this.displayid = displayid;
+        }
         public int getId() { return id; }
 
         public static Type get(int id) {
            return lookup.get(id);
         }
+
+        @Override
+        public String toString() {
+            return MainActivity.getContext().getString(displayid);
+
+        }
+
         private static final Map<Integer,Type> lookup = new HashMap<>();
         static {
             for (Type s : EnumSet.allOf(Type.class))
@@ -228,11 +249,24 @@ public class Goal {
         }
     }
 
-    public  enum Period {
-        None(0), Daily(20), NamedDays(30), Weekly(40), Monthly(60);
+    public enum Period {
+        None(0, R.string.period_none),
+        Daily(20, R.string.period_daily),
+        NamedDays(30, R.string.period_namedDays),
+        Weekly(40, R.string.period_weekly),
+        Monthly(60, R.string.period_monthly);
+
         private final int id;
-        Period(int id) { this.id = id; }
+        private final int displayid;
+        Period(int id, int displayid) {
+            this.id = id;
+            this.displayid = displayid;
+        }
         public int getId() { return id; }
+
+        public String toString() {
+            return MainActivity.getContext().getString(displayid);
+        }
 
         public static Period get(int id) {
             return lookup.get(id);
@@ -244,10 +278,21 @@ public class Goal {
         }
     }
 
-    public  enum Days {
-        Sunday(1), Monday(2), Tuesday(4), Wednesday(8), Thursday(16), Friday(32), Saturday(64);
+    public enum Days {
+        Sunday(1, R.string.days_sunday),
+        Monday(2, R.string.days_monday),
+        Tuesday(4, R.string.days_tuesday),
+        Wednesday(8, R.string.days_wednesday),
+        Thursday(16, R.string.days_thursday),
+        Friday(32, R.string.days_friday),
+        Saturday(64, R.string.days_saturday);
+
         private final int id;
-        Days(int id) { this.id = id; }
+        private final int displayid;
+        Days(int id, int displayid) {
+            this.id = id;
+            this.displayid = displayid;
+        }
         public int getId() { return id; }
 
         public static int combine(EnumSet<Days> days) {
@@ -288,6 +333,9 @@ public class Goal {
             }
 
             return days;
+        }
+        public String toString() {
+            return MainActivity.getContext().getString(displayid);
         }
     }
 

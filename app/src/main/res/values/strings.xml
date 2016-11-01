@@ -22,13 +22,6 @@
     <string name="under_label">" under"</string>
     <string name="ok">OK</string>
     <string name="active">Active</string>
-    <string name="sunday">Sunday</string>
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wedensday">Wedensday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
     <string name="done">Done</string>
     <string name="complete">Complete</string>
     <string name="delete">Delete</string>
@@ -37,4 +30,20 @@
     <string name="list_all_entries">Viewing all entries</string>
     <string name="list_no_entries">"No entries for "</string>
     <string name="list_entries_goal">"Viewing entries for "</string>
+    <string name="type_value">Value</string>
+    <string name="type_cumulative">Cumulative</string>
+    <string name="type_checkbox">Checkbox</string>
+    <string name="period_none">None</string>
+    <string name="period_daily">Daily</string>
+    <string name="period_namedDays">NamedDays</string>
+    <string name="period_weekly">Weekly</string>
+    <string name="period_monthly">Monthly</string>
+    <string name="days_sunday">Sunday</string>
+    <string name="days_monday">Monday</string>
+    <string name="days_tuesday">Tuesday</string>
+    <string name="days_wednesday">Wednesday</string>
+    <string name="days_thursday">Thursday</string>
+    <string name="days_friday">Friday</string>
+    <string name="days_saturday">Saturdayg</string>
+
 </resources>
