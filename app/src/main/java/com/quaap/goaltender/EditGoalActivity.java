@@ -114,8 +114,9 @@ public class EditGoalActivity extends AppCompatActivity {
         {
             Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
 
-            goaltypeadapter = new ArrayAdapter<Goal.Type>(this, android.R.layout.simple_spinner_item, Goal.Type.values());
-            goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            goaltypeadapter = Goal.Type.getArrayAdapter(this, android.R.layout.simple_spinner_item);
+            //goaltypeadapter = new ArrayAdapter<Goal.Type>(this, android.R.layout.simple_spinner_item, Goal.Type.values());
+            //goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             goaltype.setAdapter(goaltypeadapter);
 
             goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -137,8 +138,9 @@ public class EditGoalActivity extends AppCompatActivity {
         Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
 
 
-        goalperiodadapter = new ArrayAdapter<Goal.Period>(this, android.R.layout.simple_spinner_item, Goal.Period.values());
-        goalperiodadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        goalperiodadapter = Goal.Period.getArrayAdapter(this, android.R.layout.simple_spinner_item);
+//        goalperiodadapter = new ArrayAdapter<Goal.Period>(this, android.R.layout.simple_spinner_item, Goal.Period.values());
+//        goalperiodadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goalperiod.setAdapter(goalperiodadapter);
 
         goalperiod.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

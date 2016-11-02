@@ -31,17 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GoalDB db;
 
-//    private static Context context;
-//
-//    public static Context getContext() {
-//        return context;
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        context=getApplicationContext();
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +80,11 @@ public class MainActivity extends AppCompatActivity {
         populateList(db.getGoal(goalid));
     }
 
+
     private void populateList(Goal g) {
         currentGoal = g;
         List<String> listitems = new ArrayList<>();
-        //List<Entry> listentry = db.getAllEntries();
+
         TextView entries_list_title = (TextView)findViewById(R.id.entries_list_title);
         List<Entry> listentry;
         if (g == null) {

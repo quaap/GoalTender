@@ -14,13 +14,12 @@ import java.util.Date;
 
 public class GoalTender  extends Application {
 
-    private static Context mContext;
+
     private static GoalDB db;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = this;
 
         db = new GoalDB(this);
         if (db.isFirstRun()) {
@@ -35,9 +34,6 @@ public class GoalTender  extends Application {
         super.onTerminate();
     }
 
-    public static Context getContext(){
-        return mContext;
-    }
 
     public static GoalDB getDatabase() {
         if (db == null) {

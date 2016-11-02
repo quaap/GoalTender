@@ -2,6 +2,11 @@ package com.quaap.goaltender.storage;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.quaap.goaltender.GoalTender;
 import com.quaap.goaltender.MainActivity;
@@ -237,16 +242,31 @@ public class Goal {
            return lookup.get(id);
         }
 
-        @Override
-        public String toString() {
-            return GoalTender.getContext().getString(displayid);
-
-        }
+//        @Override
+//        public String toString() {
+//            return GoalTender.getContext().getString(displayid);
+//
+//        }
 
         private static final Map<Integer,Type> lookup = new HashMap<>();
         static {
             for (Type s : EnumSet.allOf(Type.class))
                 lookup.put(s.getId(), s);
+        }
+
+        public static ArrayAdapter<Type> getArrayAdapter(final Context context, int resource) {
+            ArrayAdapter<Type> aa = new ArrayAdapter<Type>(context, resource, Type.values()) {
+                @NonNull
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    TextView tv= new TextView(this.getContext());
+                    tv.setText(this.getContext().getText(this.getItem(position).displayid));
+                    return tv;
+                    //return super.getView(position, convertView, parent);
+                }
+            };
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            return aa;
         }
     }
 
@@ -265,9 +285,6 @@ public class Goal {
         }
         public int getId() { return id; }
 
-        public String toString() {
-            return GoalTender.getContext().getString(displayid);
-        }
 
         public static Period get(int id) {
             return lookup.get(id);
@@ -276,6 +293,21 @@ public class Goal {
         static {
             for (Period s : EnumSet.allOf(Period.class))
                 lookup.put(s.getId(), s);
+        }
+
+        public static ArrayAdapter<Period> getArrayAdapter(final Context context, int resource) {
+            ArrayAdapter<Period> aa = new ArrayAdapter<Period>(context, resource, Period.values()) {
+                @NonNull
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    TextView tv= new TextView(this.getContext());
+                    tv.setText(this.getContext().getText(this.getItem(position).displayid));
+                    return tv;
+                    //return super.getView(position, convertView, parent);
+                }
+            };
+            aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            return aa;
         }
     }
 
@@ -335,9 +367,7 @@ public class Goal {
 
             return days;
         }
-        public String toString() {
-            return GoalTender.getContext().getString(displayid);
-        }
+
     }
 
 }
