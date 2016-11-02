@@ -1,0 +1,22 @@
+Category:Writing,Sports & Health
+License:GPLv3+
+Web Site:http://quaap.com/D/goaltender
+
+Source Code:https://github.com/quaap/GoalTender
+Issue Tracker:https://github.com/quaap/GoalTender/issues
+
+Repo:https://github.com/quaap/GoalTender.git
+Repo Type:git
+
+Summary:A simple and configurable goal tracker.
+Description:
+A simple tool to keep track of and record measurments in pursuit of your goals. Goals can be
+created and edited.
+Several goal types are available:
+* Single values like weight measurements.
+* Cumulative values such as time spent practicing or distance walked.
+* Periods of Daily, Weekly, or Monthly, or named days during the week.
+.
+
+Auto Update Mode:Version
+Update Check Mode:
