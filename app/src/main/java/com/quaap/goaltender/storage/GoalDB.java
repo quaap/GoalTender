@@ -432,6 +432,10 @@ public class GoalDB extends SQLiteOpenHelper {
 //    }
 
     public List<Entry> getAllEntriesCollapsed() {
+        return getAllEntriesCollapsed(0,Integer.MAX_VALUE);
+    }
+
+    public List<Entry> getAllEntriesCollapsed(int start, int length) {
 
         Map<String, Entry> collapsedmap = new TreeMap<>();
 
@@ -463,7 +467,17 @@ public class GoalDB extends SQLiteOpenHelper {
         List<Entry> collapsed = new ArrayList<>(new LinkedHashSet<>(collapsedmap.values()));
 
         Collections.reverse(collapsed);
-        return collapsed;
+
+        int end = start+length;
+        int clen = collapsed.size();
+        if (start >= clen) {
+            return new ArrayList<>();
+        }
+        if (end >= clen) {
+            end = clen-1;
+        }
+
+        return collapsed.subList(start, end);
     }
 
 

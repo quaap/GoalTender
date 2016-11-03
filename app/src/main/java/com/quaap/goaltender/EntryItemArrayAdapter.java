@@ -54,11 +54,11 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
     }
 
 
-    private static String formatDateTime(Date date) {
-        if (date == null) return null;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-        return dateFormat.format(date);
-    }
+//    private static String formatDateTime(Date date) {
+//        if (date == null) return null;
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+//        return dateFormat.format(date);
+//    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -71,7 +71,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
 
         String period = "";
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
-            rowView.setBackgroundColor(Color.rgb(245, 245, 245));
+            //rowView.setBackgroundColor(Color.rgb(245, 245, 245));
 
             if (goal.getType() == Goal.Type.Cumulative) {
                 period = " (" + goal.getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";

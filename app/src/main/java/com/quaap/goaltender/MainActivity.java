@@ -97,14 +97,18 @@ public class MainActivity extends AppCompatActivity {
         populateList(db.getGoal(goalid));
     }
 
+    private int startindex = 0;
+    private int lengthindex = 100;
 
     private void populateList(Goal g) {
         currentGoal = g;
         List<String> listitems = new ArrayList<>();
 
         TextView entries_list_title = (TextView)findViewById(R.id.entries_list_title);
-        List<Entry> listentry;
+        List<Entry> listentry = null;
+
         if (g == null) {
+
             listentry = db.getUnmetEntries();
             listentry.addAll(db.getAllEntriesCollapsed());
             entries_list_title.setText(R.string.list_all_entries);
@@ -119,7 +123,11 @@ public class MainActivity extends AppCompatActivity {
         for (Entry entry : listentry) {
             listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
         }
+
         ListView mainList = (ListView) findViewById(R.id.mainList);
+
+
+
 
         listitemadapter = new EntryItemArrayAdapter(this, listitems.toArray(new String[0]), listentry);
         listitemadapter.setMoreGoalClick(new EntryItemArrayAdapter.OnMoreGoalClick() {
