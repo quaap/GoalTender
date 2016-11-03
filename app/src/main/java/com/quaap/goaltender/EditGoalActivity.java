@@ -1,5 +1,25 @@
 package com.quaap.goaltender;
 
+/**
+ *   Copyright 2016 Tom Kliethermes
+ *
+ *   This file is part of GoalTender.
+ *
+ *   GoalTender is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   GoalTender is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with GoalTender.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +46,7 @@ import com.quaap.goaltender.storage.GoalDB;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 public class EditGoalActivity extends AppCompatActivity {
 
