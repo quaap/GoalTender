@@ -45,5 +45,11 @@
     <string name="days_thursday">Thursday</string>
     <string name="days_friday">Friday</string>
     <string name="days_saturday">Saturday</string>
+    <string name="enter_a_goalname">Please enter a goalname</string>
+    <string name="enter_a_target">Please enter a valid target value (number)</string>
+    <string name="deleting_goal">Deleting Goal</string>
+    <string name="sure_delete">This will delete all entries for this goal. Are you sure you want to delete this goal?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

@@ -30,12 +30,14 @@ import com.quaap.goaltender.storage.Goal;
 
 public class DaysPickerActivity extends AppCompatActivity {
 
+    public static final String PASSINGDAYSFLAGS = "daysflags";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_days_picker);
         Intent intent = getIntent();
-        int daysflags = intent.getIntExtra("daysflags", 0);
+        int daysflags = intent.getIntExtra(PASSINGDAYSFLAGS, 0);
 
         Button done = (Button)findViewById(R.id.pick_days_done);
         done.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +84,7 @@ public class DaysPickerActivity extends AppCompatActivity {
         if (check_sat.isChecked()) daysflags = Goal.Days.add(daysflags, Goal.Days.Saturday);
 
         Intent output = new Intent();
-        output.putExtra("daysflags", daysflags);
+        output.putExtra(PASSINGDAYSFLAGS, daysflags);
 
         setResult(RESULT_OK, output);
         finish();

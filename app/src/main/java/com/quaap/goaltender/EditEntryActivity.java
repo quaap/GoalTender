@@ -47,6 +47,8 @@ import java.util.List;
 
 public class EditEntryActivity extends AppCompatActivity {
 
+    public static final String PASSINGENTRYID = "entry_id";
+    public static final String PASSINGGOALID = "goal_id";
     private int entry_id = -1;
     private Entry entry = null;
     private Date date;
@@ -131,7 +133,7 @@ public class EditEntryActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        entry_id = intent.getIntExtra("entry_id", -1);
+        entry_id = intent.getIntExtra(PASSINGENTRYID, -1);
 
 
         if (entry_id >= 0) {
@@ -154,7 +156,7 @@ public class EditEntryActivity extends AppCompatActivity {
             }
         } else {
             delete.setVisibility(View.GONE);
-            int goal_id = intent.getIntExtra("goal_id", -1);
+            int goal_id = intent.getIntExtra(PASSINGGOALID, -1);
             if (goal_id >= 0) {
                 goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
             }

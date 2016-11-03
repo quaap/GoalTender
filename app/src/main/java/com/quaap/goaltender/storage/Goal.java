@@ -137,6 +137,10 @@ public class Goal {
         this.period = period;
     }
 
+    @Override
+    public String toString() {
+        return goalname;
+    }
 
     public enum MinMax {
         Minimum(0), Maximum(1);

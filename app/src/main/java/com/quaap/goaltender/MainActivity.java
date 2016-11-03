@@ -20,11 +20,9 @@ package com.quaap.goaltender;
  */
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -40,7 +38,6 @@ import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -158,9 +155,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Intent entry_edit = new Intent(this, EditEntryActivity.class);
 
-            entry_edit.putExtra("entry_id", (int) id);
+            entry_edit.putExtra(EditEntryActivity.PASSINGENTRYID, (int) id);
             if (entry!=null) {
-                entry_edit.putExtra("goal_id", entry.getGoal().getId());
+                entry_edit.putExtra(EditEntryActivity.PASSINGGOALID, entry.getGoal().getId());
             }
 
             this.startActivityForResult(entry_edit, entry_edit_code);
@@ -172,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent entry_edit = new Intent(this, EditEntryActivity.class);
 
-        entry_edit.putExtra("goal_id", (int) goalid);
+        entry_edit.putExtra(EditEntryActivity.PASSINGGOALID, goalid);
 
         this.startActivityForResult(entry_edit, entry_edit_code);
 
@@ -184,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     private void showGoalEditor(long id) {
         Intent goal_edit = new Intent(this, EditGoalActivity.class);
 
-        //goal_edit.putExtra("goal_id", (int)id);
+        goal_edit.putExtra(EditGoalActivity.PASSINGGOALID, (int)id);
 
         this.startActivityForResult(goal_edit, 2);
     }

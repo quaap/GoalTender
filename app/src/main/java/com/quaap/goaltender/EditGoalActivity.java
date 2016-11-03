@@ -43,13 +43,13 @@ import android.widget.Toast;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 public class EditGoalActivity extends AppCompatActivity {
 
+    public static final String PASSINGGOALID = "goalid";
     private int goalid = -1;
     private ArrayAdapter<Goal.Type> goaltypeadapter;
     private ArrayAdapter<Goal.Period> goalperiodadapter;
@@ -98,17 +98,13 @@ public class EditGoalActivity extends AppCompatActivity {
         List<Goal> goals = db.getAllGoals(false);
         final Spinner goallist = (Spinner) findViewById(R.id.editgoal_goallist);
 
-        List<String> goalnames = new ArrayList<>();
-        for (Goal g : goals) {
-            goalnames.add(g.getName());
-        }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
+        final ArrayAdapter<Goal> adapter = new ArrayAdapter<Goal>(this, android.R.layout.simple_spinner_item, goals);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goallist.setAdapter(adapter);
 
         LinearLayout switchlayout = (LinearLayout) findViewById(R.id.editgoal_switchlayout);
-        if (goalnames.size() == 0) {
+        if (goals.size() == 0) {
             switchlayout.setVisibility(View.GONE);
         }
 
@@ -116,7 +112,7 @@ public class EditGoalActivity extends AppCompatActivity {
         switchgoal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Goal g = db.getGoal(goallist.getSelectedItem().toString());
+                Goal g = (Goal)goallist.getSelectedItem();
                 goalid = g.getId();
                 loadGoal();
             }
@@ -130,35 +126,20 @@ public class EditGoalActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        goalid = intent.getIntExtra("goalid", goalid);
+        goalid = intent.getIntExtra(PASSINGGOALID, goalid);
 
-        {
-            Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
 
-            goaltypeadapter = Goal.Type.getArrayAdapter(this, android.R.layout.simple_spinner_item);
-            //goaltypeadapter = new ArrayAdapter<Goal.Type>(this, android.R.layout.simple_spinner_item, Goal.Type.values());
-            //goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            goaltype.setAdapter(goaltypeadapter);
+        setupGoaltypeSpinner();
 
-            goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    Goal.Type gtype = (Goal.Type)adapterView.getSelectedItem();
-                    isboolgoal = gtype == Goal.Type.Checkbox;
-                    setBoolGoal();
-
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-        }
 
         Spinner goalperiod = (Spinner) findViewById(R.id.goal_period);
 
 
+        setupGoalperiodSpinner(goalperiod);
+
+    }
+
+    private void setupGoalperiodSpinner(Spinner goalperiod) {
         goalperiodadapter = Goal.Period.getArrayAdapter(this, android.R.layout.simple_spinner_item);
 //        goalperiodadapter = new ArrayAdapter<Goal.Period>(this, android.R.layout.simple_spinner_item, Goal.Period.values());
 //        goalperiodadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -193,7 +174,30 @@ public class EditGoalActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void setupGoaltypeSpinner() {
+        Spinner goaltype = (Spinner) findViewById(R.id.editgoal_type);
+
+        goaltypeadapter = Goal.Type.getArrayAdapter(this, android.R.layout.simple_spinner_item);
+        //goaltypeadapter = new ArrayAdapter<Goal.Type>(this, android.R.layout.simple_spinner_item, Goal.Type.values());
+        //goaltypeadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        goaltype.setAdapter(goaltypeadapter);
+
+        goaltype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Goal.Type gtype = (Goal.Type)adapterView.getSelectedItem();
+                isboolgoal = gtype == Goal.Type.Checkbox;
+                setBoolGoal();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void pickdays() {
@@ -201,7 +205,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
         //TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
-        pickdays.putExtra("daysflags", goal_days_picked);
+        pickdays.putExtra(DaysPickerActivity.PASSINGDAYSFLAGS, goal_days_picked);
 
         this.startActivityForResult(pickdays, 1);
     }
@@ -212,7 +216,7 @@ public class EditGoalActivity extends AppCompatActivity {
 
             TextView goal_days = (TextView) findViewById(R.id.goal_days);
 
-            goal_days_picked = data.getIntExtra("daysflags",0);
+            goal_days_picked = data.getIntExtra(DaysPickerActivity.PASSINGDAYSFLAGS,0);
             goal_days.setText(TextUtils.join(", ", Goal.Days.split(goal_days_picked)));
 
         }
@@ -275,9 +279,9 @@ public class EditGoalActivity extends AppCompatActivity {
     private void delete() {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Deleting Goal")
-                .setMessage("This will delete all entries for this goal. Are you sure you want to delete this goal?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.deleting_goal)
+                .setMessage(R.string.sure_delete)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         GoalDB db = GoalTender.getDatabase();
@@ -289,7 +293,7 @@ public class EditGoalActivity extends AppCompatActivity {
                     }
 
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(R.string.no, null)
                 .show();
     }
 
@@ -302,13 +306,13 @@ public class EditGoalActivity extends AppCompatActivity {
         EditText goalnum = (EditText) findViewById(R.id.editgoal_goalnum);
 
         if (goalname.getText().toString().trim().length()==0) {
-            Toast.makeText(this, "Please enter a goalname", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enter_a_goalname, Toast.LENGTH_SHORT).show();
             goalname.requestFocus();
             return;
         }
 
         if (goalnum.getVisibility()==View.VISIBLE && (goalnum.getText().toString().trim().length()==0 || !goalnum.getText().toString().matches("^-?[0-9]+(\\.[0-9]+)?$"))) {
-            Toast.makeText(this, "Please enter a valid target value (number)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.enter_a_target, Toast.LENGTH_SHORT).show();
             goalnum.requestFocus();
             return;
         }
