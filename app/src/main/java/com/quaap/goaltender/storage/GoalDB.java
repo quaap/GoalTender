@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.util.Pair;
 
 import com.quaap.goaltender.Utils;
 
@@ -431,15 +432,16 @@ public class GoalDB extends SQLiteOpenHelper {
 //        System.out.println(getRoundedDate(date, Goal.Type.MonthlyTotal));
 //    }
 
-    public List<Entry> getAllEntriesCollapsed() {
+    public Pair<List<Entry>, Integer> getAllEntriesCollapsed() {
         return getAllEntriesCollapsed(0,Integer.MAX_VALUE);
     }
 
-    public List<Entry> getAllEntriesCollapsed(int start, int length) {
+    public Pair<List<Entry>, Integer> getAllEntriesCollapsed(int start, int length) {
 
         Map<String, Entry> collapsedmap = new TreeMap<>();
 
-        for (Entry entry: getAllEntries()) {
+        Pair<List<Entry>, Integer> all = getAllEntries(0, Integer.MAX_VALUE);
+        for (Entry entry: all.first) {
             Goal goal = entry.getGoal();
             if (!goal.isActive()) continue;
 
@@ -468,20 +470,25 @@ public class GoalDB extends SQLiteOpenHelper {
 
         Collections.reverse(collapsed);
 
-        int end = start+length;
-        int clen = collapsed.size();
-        if (start >= clen) {
-            return new ArrayList<>();
-        }
-        if (end >= clen) {
-            end = clen-1;
-        }
+        return trimAndPair(collapsed, start, length );
 
-        return collapsed.subList(start, end);
     }
 
+    private Pair<List<Entry>, Integer> trimAndPair(List<Entry> list,int start, int length ) {
+        int end = start+length;
+        int clen = list.size();
+        if (start >= clen) {
+            return new Pair<>((List<Entry>)new ArrayList<Entry>(), 0);
+        }
+        if (end >= clen) {
+            end = clen;
+        }
+        System.err.format("List: start %d, length %d, end %d,  clen %d\n", start, length, end, clen);
 
-    public List<Entry> getAllEntries(Goal goal) {
+        return new Pair<List<Entry>, Integer>(list.subList(start, end), clen - end);
+    }
+
+    public Pair<List<Entry>, Integer> getAllEntries(Goal goal, int start, int length) {
         List<Entry> entries = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -495,10 +502,10 @@ public class GoalDB extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        return entries;
+        return trimAndPair(entries, start, length );
     }
 
-    public List<Entry> getAllEntries() {
+    public Pair<List<Entry>, Integer> getAllEntries(int start, int length) {
         List<Entry> entries = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -510,7 +517,7 @@ public class GoalDB extends SQLiteOpenHelper {
                 entries.add(getEntryFromCursor(cursor));
             } while (cursor.moveToNext());
         }
-        return entries;
+        return trimAndPair(entries, start, length );
     }
 
 

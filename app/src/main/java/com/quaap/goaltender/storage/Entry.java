@@ -17,6 +17,8 @@ public class Entry {
 
     private boolean unmet=false;
 
+    private int nav = 0;
+
     public  Entry() {}
 
     public Entry(Entry other) {
@@ -90,5 +92,17 @@ public class Entry {
 
     public void setUnmet(boolean unmet) {
         this.unmet = unmet;
+    }
+
+    public boolean isNav() {
+        return nav!=0;
+    }
+
+    public int getNav() {
+        return nav;
+    }
+
+    public void setNav(int nav) {
+        this.nav = nav;
     }
 }

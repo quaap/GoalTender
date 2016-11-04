@@ -30,27 +30,22 @@ import android.widget.TextView;
 
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
-import com.quaap.goaltender.storage.GoalDB;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
-
-class EntryItemArrayAdapter extends ArrayAdapter<String> {
+class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
     private final Context context;
-    private final List<Entry> values;
+    //private final List<Entry> values;
 
     private OnMoreGoalClick moreGoalClick;
 
     private boolean goallist;
 
-    public EntryItemArrayAdapter(Context context, String[] ids, List<Entry> values) {
-        super(context, -1, ids);
+    public EntryItemArrayAdapter(Context context, List<Entry> values) {
+        super(context, -1, values);
         this.context = context;
-        this.values = values;
+        //this.values = values;
     }
 
 
@@ -62,11 +57,25 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.itemrowlayout, parent, false);
 
-        Entry entry = values.get(position);
+
+        TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
+        Entry entry = this.getItem(position);
+
+        if (entry.isNav()) {
+
+            goaltext.setText(entry.getComment());
+            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
+            more_goal_click.setVisibility(View.INVISIBLE);
+            return rowView;
+
+        }
+
         Goal goal = entry.getGoal();
 
         String period = "";
@@ -94,7 +103,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
             more_goal_click.setVisibility(View.GONE);
         }
 
-        TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
         goaltext.setText(goal.getName());
 
         TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
@@ -152,19 +160,19 @@ class EntryItemArrayAdapter extends ArrayAdapter<String> {
         return rowView;
     }
 
-    public Entry getEntry(int position) {
-        return values.get(position);
-    }
-
+//    public Entry getEntry(int position) {
+//        return values.get(position);
+//    }
+//
     @Override
     public long getItemId(int position) {
-        return values.get(position).getId();
+        return getItem(position).getId();
     }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
+//
+//    @Override
+//    public boolean hasStableIds() {
+//        return true;
+//    }
 
     public OnMoreGoalClick getMoreGoalClick() {
         return moreGoalClick;

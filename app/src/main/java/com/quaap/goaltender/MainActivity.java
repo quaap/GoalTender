@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showEntryEditor(id, position);
+                handleEntryClick(id, position);
             }
         });
 
@@ -98,38 +99,79 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int startindex = 0;
-    private int lengthindex = 100;
+    private int lengthindex = 10;
+
+    private enum Viewing {Unmet, All, Goal};
+
+    Viewing viewing = Viewing.Unmet;
+    int moreentries = 0;
+
 
     private void populateList(Goal g) {
         currentGoal = g;
+        moreentries = 0;
         List<String> listitems = new ArrayList<>();
 
         TextView entries_list_title = (TextView)findViewById(R.id.entries_list_title);
         List<Entry> listentry = null;
-
+        String noitemtext = "";
         if (g == null) {
 
-            listentry = db.getUnmetEntries();
-            listentry.addAll(db.getAllEntriesCollapsed());
-            entries_list_title.setText(R.string.list_all_entries);
-        } else {
-            listentry = db.getAllEntries(g);
-            if (listentry.size()==0) {
-                Toast.makeText(this, getString(R.string.list_no_entries) + g.getName(), Toast.LENGTH_SHORT).show();
-                return;
+            if (viewing == Viewing.Unmet) {
+                listentry = db.getUnmetEntries();
+                entries_list_title.setText(R.string.viewing_todos);
+                noitemtext = "No ToDo Entries";
+            } else if (viewing == Viewing.All) {
+                Pair<List<Entry>, Integer> listdata = db.getAllEntriesCollapsed(startindex, lengthindex);
+                listentry = listdata.first;
+                moreentries = listdata.second;
+                entries_list_title.setText(R.string.list_all_entries);
+                noitemtext = "No Entries";
             }
+        } else {
+            Pair<List<Entry>, Integer> listdata =  db.getAllEntries(g, startindex, lengthindex);
+            listentry = listdata.first;
+            moreentries = listdata.second;
             entries_list_title.setText(getString(R.string.list_entries_goal) + g.getName());
+            noitemtext = "No Entries";
         }
-        for (Entry entry : listentry) {
-            listitems.add(entry.getGoal().getName() + " " + entry.getDate().toString());
+
+        if (listentry.size()==0) {
+            Toast.makeText(this, getString(R.string.list_no_entries), Toast.LENGTH_SHORT).show();
+
+            Entry noitem = new Entry();
+            noitem.setNav(1);
+            noitem.setComment(noitemtext);
+            listentry.add(noitem);
+
+        }
+
+
+        if (viewing == Viewing.Unmet) {
+            Entry navEntry = new Entry();
+            navEntry.setNav(1);
+            navEntry.setComment("See more entries");
+            listentry.add(navEntry);
+        } else if (viewing == Viewing.All) {
+            if (moreentries>0) {
+                Entry navEntry = new Entry();
+                navEntry.setNav(1);
+                navEntry.setComment("See older entries");
+                listentry.add(navEntry);
+
+            }
+            if (startindex>0) {
+                Entry navEntry = new Entry();
+                navEntry.setNav(-1);
+                navEntry.setComment("See newer entries");
+                listentry.add(0, navEntry);
+
+            }
         }
 
         ListView mainList = (ListView) findViewById(R.id.mainList);
 
-
-
-
-        listitemadapter = new EntryItemArrayAdapter(this, listitems.toArray(new String[0]), listentry);
+        listitemadapter = new EntryItemArrayAdapter(this, listentry);
         listitemadapter.setMoreGoalClick(new EntryItemArrayAdapter.OnMoreGoalClick() {
             @Override
             public void itemClicked(int goalid) {
@@ -139,7 +181,11 @@ public class MainActivity extends AppCompatActivity {
         listitemadapter.setGoallist(g!=null);
         mainList.setAdapter(listitemadapter);
 
+
+
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -147,16 +193,48 @@ public class MainActivity extends AppCompatActivity {
             populateList();
         } else {
 
-            super.onBackPressed();
+            if (startindex>0) {
+                startindex -= lengthindex;
+                populateList();
+            } else if (viewing == Viewing.All) {
+                startindex = 0;
+                viewing = Viewing.Unmet;
+                populateList();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
+
+    private void handleEntryClick(long id, int pos) {
+
+        Entry entry = null;
+        if (!listitemadapter.isEmpty() && pos >= 0) entry = listitemadapter.getItem(pos);
+
+        if (entry != null && entry.isNav()) {
+
+            if (viewing == Viewing.Unmet) {
+                viewing = Viewing.All;
+                startindex = 0;
+                populateList();
+            } else if (viewing == Viewing.All) {
+                //viewing = Viewing.All;
+                startindex += lengthindex*entry.getNav();
+                populateList();
+
+            }
+        } else {
+            showEntryEditor(id, pos);
+        }
+    }
+
 
     private int entry_edit_code = 1;
 
     private void showEntryEditor(long id, int pos) {
 
         Entry entry = null;
-        if (!listitemadapter.isEmpty() && pos >= 0) entry = listitemadapter.getEntry(pos);
+        if (!listitemadapter.isEmpty() && pos >= 0) entry = listitemadapter.getItem(pos);
 
         if (entry != null && entry.isCollapsed()) {
             populateList(entry.getGoal());

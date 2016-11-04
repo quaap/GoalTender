@@ -53,6 +53,8 @@ public class EditEntryActivity extends AppCompatActivity {
     private Entry entry = null;
     private Date date;
 
+    ArrayAdapter<Goal> goaladapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,14 +81,9 @@ public class EditEntryActivity extends AppCompatActivity {
         List<Goal> goals = db.getAllGoals(true);
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
 
-        List<String> goalnames = new ArrayList<>();
-        for (Goal g : goals) {
-            goalnames.add(g.getName());
-        }
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, goalnames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        goalid.setAdapter(adapter);
+        goaladapter = Goal.getArrayAdapter(this, android.R.layout.simple_spinner_item, goals);
+        goalid.setAdapter(goaladapter);
 
         goalid.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -138,7 +135,12 @@ public class EditEntryActivity extends AppCompatActivity {
 
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
-            goalid.setSelection(adapter.getPosition(entry.getGoal().getName()));
+            System.out.println(entry.getGoal());
+            System.out.println(goaladapter.getPosition(entry.getGoal()));
+            goalid.setSelection(goaladapter.getPosition(entry.getGoal()));
+
+
+            System.out.println(goalid.getSelectedItem());
 
             date = entry.getDate();
 
@@ -158,7 +160,7 @@ public class EditEntryActivity extends AppCompatActivity {
             delete.setVisibility(View.GONE);
             int goal_id = intent.getIntExtra(PASSINGGOALID, -1);
             if (goal_id >= 0) {
-                goalid.setSelection(adapter.getPosition(db.getGoal(goal_id).getName()));
+                goalid.setSelection(goaladapter.getPosition(db.getGoal(goal_id)));
             }
 
             date = new Date();
@@ -178,9 +180,10 @@ public class EditEntryActivity extends AppCompatActivity {
 
     private void goalChanged() {
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
-        GoalDB db = GoalTender.getDatabase();
-        Goal g = db.getGoal(goalid.getSelectedItem().toString());
+       // GoalDB db = GoalTender.getDatabase();
+        Goal g = (Goal)goalid.getSelectedItem();
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
+        //if (true) return;
         entry_units.setText(g.getUnits());
 
 

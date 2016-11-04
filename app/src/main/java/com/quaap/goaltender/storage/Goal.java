@@ -142,6 +142,41 @@ public class Goal {
         return goalname;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Goal && obj!=null) {
+            return this.getName().equals(((Goal) obj).getName());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return goalname.hashCode();
+    }
+
+    public static ArrayAdapter<Goal> getArrayAdapter(final Context context, int resource, final List<Goal> goals) {
+        ArrayAdapter<Goal> aa = new ArrayAdapter<Goal>(context, resource, goals) {
+
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv= new TextView(this.getContext());
+                tv.setText(goals.get(position).toString());
+                return tv;
+                //return super.getView(position, convertView, parent);
+            }
+
+            @Override
+            public long getItemId(int position) {
+                return getItem(position).getId();
+            }
+
+        };
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return aa;
+    }
+
     public enum MinMax {
         Minimum(0), Maximum(1);
         private int id;
