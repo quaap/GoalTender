@@ -52,5 +52,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="viewing_todos">Viewing ToDo\'s</string>
+    <string name="no_unmet_entries">No ToDo Entries</string>
+    <string name="no_entries">No Entries</string>
+    <string name="previous_entries">Previous entries</string>
+    <string name="older_entries">Older entries</string>
+    <string name="newer_entries">Newer entries</string>
 
 </resources>

@@ -64,14 +64,15 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
         View rowView = inflater.inflate(R.layout.itemrowlayout, parent, false);
 
 
+        ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
         TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
         Entry entry = this.getItem(position);
 
         if (entry.isNav()) {
 
             goaltext.setText(entry.getComment());
-            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
-            more_goal_click.setVisibility(View.INVISIBLE);
+            more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
+            more_goal_click.setVisibility(View.GONE);
             return rowView;
 
         }
@@ -90,7 +91,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
 
         if (moreGoalClick!=null && !goallist) {
             final int goalid = goal.getId();
-            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
             more_goal_click.setVisibility(View.VISIBLE);
             more_goal_click.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,7 +99,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
                 }
             });
         } else {
-            ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
+            more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
             more_goal_click.setVisibility(View.GONE);
         }
 

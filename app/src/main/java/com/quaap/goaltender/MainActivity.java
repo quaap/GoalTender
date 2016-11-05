@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int startindex = 0;
-    private int lengthindex = 10;
+    private int lengthindex = 50;
 
     private enum Viewing {Unmet, All, Goal};
 
@@ -120,25 +120,28 @@ public class MainActivity extends AppCompatActivity {
             if (viewing == Viewing.Unmet) {
                 listentry = db.getUnmetEntries();
                 entries_list_title.setText(R.string.viewing_todos);
-                noitemtext = "No ToDo Entries";
+                entries_list_title.setVisibility(View.VISIBLE);
+                noitemtext = getString(R.string.no_unmet_entries);
             } else if (viewing == Viewing.All) {
                 Pair<List<Entry>, Integer> listdata = db.getAllEntriesCollapsed(startindex, lengthindex);
                 listentry = listdata.first;
                 moreentries = listdata.second;
                 entries_list_title.setText(R.string.list_all_entries);
-                noitemtext = "No Entries";
+                entries_list_title.setVisibility(View.VISIBLE);
+                noitemtext = getString(R.string.no_entries);
             }
         } else {
             Pair<List<Entry>, Integer> listdata =  db.getAllEntries(g, startindex, lengthindex);
             listentry = listdata.first;
             moreentries = listdata.second;
             entries_list_title.setText(getString(R.string.list_entries_goal) + g.getName());
-            noitemtext = "No Entries";
+            entries_list_title.setVisibility(View.VISIBLE);
+            noitemtext = getString(R.string.no_entries);
         }
 
         if (listentry.size()==0) {
             Toast.makeText(this, getString(R.string.list_no_entries), Toast.LENGTH_SHORT).show();
-
+            entries_list_title.setVisibility(View.GONE);
             Entry noitem = new Entry();
             noitem.setNav(1);
             noitem.setComment(noitemtext);
@@ -150,20 +153,20 @@ public class MainActivity extends AppCompatActivity {
         if (viewing == Viewing.Unmet) {
             Entry navEntry = new Entry();
             navEntry.setNav(1);
-            navEntry.setComment("See more entries");
+            navEntry.setComment(getString(R.string.previous_entries));
             listentry.add(navEntry);
         } else if (viewing == Viewing.All) {
             if (moreentries>0) {
                 Entry navEntry = new Entry();
                 navEntry.setNav(1);
-                navEntry.setComment("See older entries");
+                navEntry.setComment(getString(R.string.older_entries));
                 listentry.add(navEntry);
 
             }
             if (startindex>0) {
                 Entry navEntry = new Entry();
                 navEntry.setNav(-1);
-                navEntry.setComment("See newer entries");
+                navEntry.setComment(getString(R.string.newer_entries));
                 listentry.add(0, navEntry);
 
             }
