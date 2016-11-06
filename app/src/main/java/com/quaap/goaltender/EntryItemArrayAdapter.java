@@ -34,7 +34,7 @@ import com.quaap.goaltender.storage.Goal;
 import java.util.List;
 
 
-class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
+class EntryItemArrayAdapter extends ArrayAdapter<Entry>  {
     private final Context context;
     //private final List<Entry> values;
 
@@ -55,25 +55,43 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
 //        return dateFormat.format(date);
 //    }
 
+    private static class ViewHolder {
+        ImageView more_goal_click;
+        TextView goaltext;
+        TextView valuetext;
+        TextView unittext;
+        TextView goaldiff;
+        TextView datetext;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.itemrowlayout, parent, false);
+        ViewHolder viewHolder;
+        if (convertView==null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.itemrowlayout, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.more_goal_click = (ImageView) convertView.findViewById(R.id.more_goal_click);
+            viewHolder.goaltext = (TextView) convertView.findViewById(R.id.goaltext);
+            viewHolder.valuetext = (TextView) convertView.findViewById(R.id.valuetext);
+            viewHolder.unittext = (TextView) convertView.findViewById(R.id.unittext);
+            viewHolder.goaldiff = (TextView) convertView.findViewById(R.id.goaldiff);
+            viewHolder.datetext = (TextView) convertView.findViewById(R.id.datetext);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder)convertView.getTag();
+        }
 
 
-        ImageView more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
-        TextView goaltext = (TextView) rowView.findViewById(R.id.goaltext);
         Entry entry = this.getItem(position);
 
         if (entry.isNav()) {
 
-            goaltext.setText(entry.getComment());
-            more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
-            more_goal_click.setVisibility(View.GONE);
-            return rowView;
+            viewHolder.goaltext.setText(entry.getComment());
+
+            viewHolder.more_goal_click.setVisibility(View.GONE);
+            return convertView;
 
         }
 
@@ -81,7 +99,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
 
         String period = "";
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
-            //rowView.setBackgroundColor(Color.rgb(245, 245, 245));
+            //convertView.setBackgroundColor(Color.rgb(245, 245, 245));
 
             if (goal.getType() == Goal.Type.Cumulative) {
                 period = " (" + goal.getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
@@ -91,42 +109,38 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
 
         if (moreGoalClick!=null && !goallist) {
             final int goalid = goal.getId();
-            more_goal_click.setVisibility(View.VISIBLE);
-            more_goal_click.setOnClickListener(new View.OnClickListener() {
+            viewHolder.more_goal_click.setVisibility(View.VISIBLE);
+            viewHolder.more_goal_click.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     moreGoalClick.itemClicked(goalid);
                 }
             });
         } else {
-            more_goal_click = (ImageView) rowView.findViewById(R.id.more_goal_click);
-            more_goal_click.setVisibility(View.GONE);
+            viewHolder.more_goal_click.setVisibility(View.GONE);
         }
 
-        goaltext.setText(goal.getName());
+        viewHolder.goaltext.setText(goal.getName());
 
-        TextView valuetext = (TextView) rowView.findViewById(R.id.valuetext);
         if (entry.isUnmet()) {
-            valuetext.setText(R.string.unmet_goal_label);
+            viewHolder.valuetext.setText(R.string.unmet_goal_label);
         } else {
             float value = entry.getValue();
             if (goal.getType() == Goal.Type.Checkbox) {
                 if (value>0) {
-                    valuetext.setText("\u2713");
+                    viewHolder.valuetext.setText("\u2713");
                 } else {
-                    valuetext.setText("\u2718");
+                    viewHolder.valuetext.setText("\u2718");
                 }
             } else if (value == (int) value) {
-                valuetext.setText((int) value + "");
+                viewHolder.valuetext.setText((int) value + "");
             } else {
-                valuetext.setText(value + "");
+                viewHolder.valuetext.setText(value + "");
             }
-            TextView unittext = (TextView) rowView.findViewById(R.id.unittext);
-            unittext.setText(goal.getUnits());
+            viewHolder.unittext.setText(goal.getUnits());
         }
 
 
-        TextView goaldiff = (TextView) rowView.findViewById(R.id.goaldiff);
 
         float diff = entry.getValue() - goal.getGoalnum();
         String difftext = diff + "";
@@ -135,29 +149,28 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> {
         }
 
         if (goal.getType() == Goal.Type.Cumulative && !entry.isCollapsed() || goal.getType() == Goal.Type.Checkbox || entry.isUnmet()) {
-            goaldiff.setText(" ");
+            viewHolder.goaldiff.setText(" ");
         } else {
             boolean max = goal.getMinmax() == Goal.MinMax.Maximum;
             int c;
             if (diff > 0) {
-                goaldiff.setText(difftext + context.getString(R.string.over_label));
+                viewHolder.goaldiff.setText(difftext + context.getString(R.string.over_label));
                 c = max ? Color.rgb(180,64,64) : Color.GREEN;
 
             } else if (diff < 0) {
-                goaldiff.setText(difftext + context.getString(R.string.under_label));
+                viewHolder.goaldiff.setText(difftext + context.getString(R.string.under_label));
                 c = max ? Color.GREEN : Color.rgb(180,64,64);
             } else { //==0
-                goaldiff.setText(" ");
+                viewHolder.goaldiff.setText(" ");
                 c = Color.GREEN;
             }
 
-            goaldiff.setTextColor(c);
+            viewHolder.goaldiff.setTextColor(c);
         }
 
-        TextView datetext = (TextView) rowView.findViewById(R.id.datetext);
-        datetext.setText(Utils.formatDateForDisplay(entry.getDate(), goal.getPeriod()) + period);
+        viewHolder.datetext.setText(Utils.formatDateForDisplay(entry.getDate(), goal.getPeriod()) + period);
 
-        return rowView;
+        return convertView;
     }
 
 //    public Entry getEntry(int position) {
