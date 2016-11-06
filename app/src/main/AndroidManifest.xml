@@ -48,7 +48,7 @@
             android:name=".service.GoalService"
             android:enabled="true"
             android:exported="true"></service>-->
-        <receiver android:name=".service.AutoStart">
+        <!--<receiver android:name=".service.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -59,7 +59,7 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-        <receiver android:process=":remote" android:name=".service.Alarm"/>
+        <receiver android:process=":remote" android:name=".service.Alarm"/>-->
     </application>
 
 </manifest>

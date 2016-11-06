@@ -80,10 +80,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent servintent = new Intent(this, GoalReminderService.class);
-        servintent.putExtra("killnotify", true);
-        startService(servintent);
+        killnotify();
+    }
 
+    public void killnotify() {
+//        Intent servintent = new Intent(this, GoalReminderService.class);
+//        servintent.putExtra("killnotify", true);
+//        startService(servintent);
+
+    }
+
+    @Override
+    protected void onResume() {
+        killnotify();
+        super.onResume();
     }
 
     private void handleFab() {

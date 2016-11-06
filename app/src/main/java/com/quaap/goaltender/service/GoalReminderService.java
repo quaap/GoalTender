@@ -22,6 +22,7 @@ public class GoalReminderService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         //Toast.makeText(this, "Alarm started!", Toast.LENGTH_LONG).show();
+
         alarm.setAlarm(this);
         return START_STICKY;
     }
