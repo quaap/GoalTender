@@ -34,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.goaltender.service.GoalReminderService;
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -78,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                 handleEntryClick(id, position);
             }
         });
+
+        Intent servintent = new Intent(this, GoalReminderService.class);
+        servintent.putExtra("killnotify", true);
+        startService(servintent);
 
     }
 

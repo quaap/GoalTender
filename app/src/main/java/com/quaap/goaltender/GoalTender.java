@@ -43,6 +43,7 @@ public class GoalTender  extends Application {
             makeDefault();
         }
 
+
         startService(new Intent(this, GoalReminderService.class));
 
     }

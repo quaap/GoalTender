@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.quaap.goaltender.GoalTender;
 import com.quaap.goaltender.MainActivity;
+import com.quaap.goaltender.R;
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.GoalDB;
 
@@ -36,6 +37,12 @@ public class Alarm extends BroadcastReceiver
  //       Toast.makeText(context, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
 
 //
+        boolean killnotify = intent.getBooleanExtra("killnotify", false);
+
+        if (killnotify) {
+            killnotify(context);
+            return;
+        }
 
         GoalDB db = GoalTender.getDatabase();
 
@@ -55,7 +62,7 @@ public class Alarm extends BroadcastReceiver
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
-                            .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                            .setSmallIcon(R.mipmap.goal_launcher)
                             .setContentTitle("ToDos")
                             .setContentText(text);
 
@@ -74,9 +81,16 @@ public class Alarm extends BroadcastReceiver
             // notificationID allows you to update the notification later on.
             mNotificationManager.notify(notificationID, mBuilder.build());
 
+        } else {
+            killnotify(context);
         }
 
         // wl.release();
+    }
+
+    public void killnotify(Context context) {
+        NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(notificationID);
     }
 
     public void setAlarm(Context context)
