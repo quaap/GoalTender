@@ -28,11 +28,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.quaap.goaltender.service.GoalReminderService;
 import com.quaap.goaltender.storage.Entry;
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         populateList();
 
-        ListView mainList = (ListView) findViewById(R.id.mainList);
+        final ListView mainList = (ListView) findViewById(R.id.mainList);
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private int startindex = 0;
-    private int lengthindex = 50;
+    private int lengthindex = 150;
 
     private enum Viewing {Unmet, All, Goal};
 

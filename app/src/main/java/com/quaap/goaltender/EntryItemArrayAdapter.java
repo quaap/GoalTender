@@ -22,11 +22,15 @@ package com.quaap.goaltender;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ViewFlipper;
+
 
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
@@ -34,7 +38,7 @@ import com.quaap.goaltender.storage.Goal;
 import java.util.List;
 
 
-class EntryItemArrayAdapter extends ArrayAdapter<Entry>  {
+class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchListener {
     private final Context context;
     //private final List<Entry> values;
 
@@ -84,6 +88,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  {
         }
 
 
+
         Entry entry = this.getItem(position);
 
         if (entry.isNav()) {
@@ -94,6 +99,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  {
             return convertView;
 
         }
+
+        convertView.setOnTouchListener(this);
 
         Goal goal = entry.getGoal();
 
@@ -208,5 +215,46 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  {
 
         void itemClicked(int goalid);
     }
+
+
+    //TODO: convert to gesturelistener.onfling
+    // http://codetheory.in/android-viewflipper-and-viewswitcher/
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
+
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        //Toast.makeText(this.getContext(), "touched it", Toast.LENGTH_SHORT).show ();
+        switch(motionEvent.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                x1 = motionEvent.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = motionEvent.getX();
+                float deltaX = x2 - x1;
+                ViewFlipper vs = (ViewFlipper)view;
+                if (deltaX > MIN_DISTANCE) {
+                    //Toast.makeText(this.getContext(), "left2right swipe", Toast.LENGTH_SHORT).show ();
+                    vs.setInAnimation(vs.getContext(), R.anim.right_in);
+                    vs.setOutAnimation(vs.getContext(), R.anim.right_out);
+
+                    vs.showNext();
+                    return true;
+                } else if (-deltaX > MIN_DISTANCE) {
+                    //Toast.makeText(this.getContext(), "right2left swipe", Toast.LENGTH_SHORT).show ();
+                    vs.setInAnimation(vs.getContext(), R.anim.left_in);
+                    vs.setOutAnimation(vs.getContext(), R.anim.left_out);
+
+                    vs.showPrevious();
+
+                } else {
+                    return false;
+                }
+        }
+
+        return true;
+
+    }
+
 
 }
