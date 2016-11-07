@@ -124,7 +124,7 @@ public class GoalDB extends SQLiteOpenHelper {
             goal.setId((int) db.insert(GOAL_TABLE, null, values));
         }
 
-        System.out.println(goal.getId() + " - " + goal.getName());
+       // System.out.println(goal.getId() + " - " + goal.getName());
 
         goals.put(goal.getId(), goal);
 
@@ -450,7 +450,7 @@ public class GoalDB extends SQLiteOpenHelper {
             if(goal.getType() != Goal.Type.Cumulative) {
                 key += entry.getId() + "";
             }
-            System.out.println(key + " " +entry.getDate() );
+           // System.out.println(key + " " +entry.getDate() );
             Entry e = collapsedmap.get(key);
             if (e!=null) {
                 e.setValue(e.getValue() + entry.getValue());
@@ -483,7 +483,7 @@ public class GoalDB extends SQLiteOpenHelper {
         if (end >= clen) {
             end = clen;
         }
-        System.err.format("List: start %d, length %d, end %d,  clen %d\n", start, length, end, clen);
+       // System.err.format("List: start %d, length %d, end %d,  clen %d\n", start, length, end, clen);
 
         return new Pair<List<Entry>, Integer>(list.subList(start, end), clen - end);
     }

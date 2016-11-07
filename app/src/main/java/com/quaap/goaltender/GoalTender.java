@@ -44,7 +44,7 @@ public class GoalTender  extends Application {
         }
 
 
-        startService(new Intent(this, GoalReminderService.class));
+       // startService(new Intent(this, GoalReminderService.class));
 
     }
 

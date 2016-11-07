@@ -136,12 +136,12 @@ public class EditEntryActivity extends AppCompatActivity {
 
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
-            System.out.println(entry.getGoal());
-            System.out.println(goaladapter.getPosition(entry.getGoal()));
+            //System.out.println(entry.getGoal());
+            //System.out.println(goaladapter.getPosition(entry.getGoal()));
             goalid.setSelection(goaladapter.getPosition(entry.getGoal()));
 
 
-            System.out.println(goalid.getSelectedItem());
+            //System.out.println(goalid.getSelectedItem());
 
             date = entry.getDate();
 
