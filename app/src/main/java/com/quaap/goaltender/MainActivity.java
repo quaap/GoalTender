@@ -41,7 +41,7 @@ import com.quaap.goaltender.storage.GoalDB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements EntryItemArrayAdapter.EntryItemClickListener {
 
     private EntryItemArrayAdapter listitemadapter;
 
@@ -71,13 +71,13 @@ public class MainActivity extends AppCompatActivity {
 
         populateList();
 
-        final ListView mainList = (ListView) findViewById(R.id.mainList);
-        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                handleEntryClick(id, position);
-            }
-        });
+//        final ListView mainList = (ListView) findViewById(R.id.mainList);
+//        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                handleEntryClick(id, position);
+//            }
+//        });
 
         killnotify();
     }
@@ -189,31 +189,7 @@ public class MainActivity extends AppCompatActivity {
         ListView mainList = (ListView) findViewById(R.id.mainList);
 
         listitemadapter = new EntryItemArrayAdapter(this, listentry);
-        listitemadapter.setOnViewAllGoalEntries(new EntryItemArrayAdapter.OnViewAllGoalEntriesClick() {
-            @Override
-            public void itemClicked(int goalid) {
-                populateList(goalid);
-            }
-        });
-        listitemadapter.setAddEntryClick(new EntryItemArrayAdapter.OnAddEntryClick() {
-            @Override
-            public void itemClicked(int goalid) {
-                showEntryEditorForGoal(goalid);
-            }
-        });
-        listitemadapter.setEditEntryClick(new EntryItemArrayAdapter.OnEditEntryClick() {
-            @Override
-            public void itemClicked(int entryid) {
-                showEntryEditor(entryid);
-            }
-        });
-        listitemadapter.setNavEntryClick(new EntryItemArrayAdapter.OnNavEntryClick() {
-            @Override
-            public void itemClicked(int navValue) {
-                navClicked(navValue);
-            }
-        });
-
+        listitemadapter.setEntryItemClickListener(this);
 
         listitemadapter.setGoallist(g!=null);
         mainList.setAdapter(listitemadapter);
@@ -222,7 +198,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public void viewAllGoalEntriesClick(int goalid) {
+        populateList(goalid);
+    }
+    @Override
+    public void addEntryClick(int goalid) {
+        showEntryEditorForGoal(goalid);
+    }
+    @Override
+    public void editEntryClick(int entryid) {
+        showEntryEditor(entryid);
+    }
+    @Override
+    public void navEntryClick(int navValue) {
+        navClicked(navValue);
+    }
 
     @Override
     public void onBackPressed() {

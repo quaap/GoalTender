@@ -21,6 +21,8 @@ package com.quaap.goaltender;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,14 +41,12 @@ import com.quaap.goaltender.storage.Goal;
 import java.util.List;
 
 
-class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchListener {
+class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouchListener {
     private final Context context;
     //private final List<Entry> values;
 
-    private OnViewAllGoalEntriesClick viewGoalClick;
-    private OnEditEntryClick editEntryClick;
-    private OnAddEntryClick addEntryClick;
-    private OnNavEntryClick navEntryClick;
+    private EntryItemClickListener entryItemClickListener;
+
 
 
     private boolean goallist;
@@ -54,32 +54,10 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     public EntryItemArrayAdapter(Context context, List<Entry> values) {
         super(context, -1, values);
         this.context = context;
+
         //this.values = values;
     }
 
-    public OnEditEntryClick getEditEntryClick() {
-        return editEntryClick;
-    }
-
-    public void setEditEntryClick(OnEditEntryClick editEntryClick) {
-        this.editEntryClick = editEntryClick;
-    }
-
-    public OnAddEntryClick getAddEntryClick() {
-        return addEntryClick;
-    }
-
-    public void setAddEntryClick(OnAddEntryClick addEntryClick) {
-        this.addEntryClick = addEntryClick;
-    }
-
-    public OnNavEntryClick getNavEntryClick() {
-        return navEntryClick;
-    }
-
-    public void setNavEntryClick(OnNavEntryClick navEntryClick) {
-        this.navEntryClick = navEntryClick;
-    }
 
 
 //    private static String formatDateTime(Date date) {
@@ -132,7 +110,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        LinearLayout listitem_layout = (LinearLayout)convertView.findViewById(R.id.listitem_layout);
+        //LinearLayout listitem_layout = (LinearLayout)convertView.findViewById(R.id.listitem_layout);
 
         Entry entry = this.getItem(position);
 
@@ -142,10 +120,10 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
             viewHolder.hide_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.goaltext.setText(entry.getComment());
             final int nav = entry.getNav();
-            listitem_layout.setOnClickListener(new View.OnClickListener() {
+            viewHolder.goaltext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    navEntryClick.itemClicked(nav);
+                    entryItemClickListener.navEntryClick(nav);
                 }
             });
 
@@ -155,6 +133,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         }
         viewHolder.show_ctrls.setVisibility(View.VISIBLE);
         viewHolder.hide_ctrls.setVisibility(View.VISIBLE);
+
+        convertView.setOnTouchListener(this);
 
         final ViewFlipper vs =  (ViewFlipper)convertView;
         viewHolder.show_ctrls.setOnClickListener(new View.OnClickListener() {
@@ -174,7 +154,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         });
 
 
-        convertView.setOnTouchListener(this);
 
         Goal goal = entry.getGoal();
         viewHolder.entry_item_ctrls_name.setText(goal.getName());
@@ -199,51 +178,41 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         }
 
         //System.out.println("entryid: " + entryid + " ");
-        if (viewGoalClick!=null) {
+        if (entryItemClickListener!=null) {
 
             viewHolder.view_all.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showControls(vs, true);
-                    viewGoalClick.itemClicked(goalid);
+                    entryItemClickListener.viewAllGoalEntriesClick(goalid);
                }
             });
 
-        }
-        if (addEntryClick!=null) {
             viewHolder.add_entry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showControls(vs, true);
-                    addEntryClick.itemClicked(goalid);
+                    entryItemClickListener.addEntryClick(goalid);
                 }
             });
 
-//            convertView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    addEntryClick.itemClicked(goalid);
-//                }
-//            });
 
-        }
-        if (editEntryClick!=null) {
             viewHolder.edit_entry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showControls(vs, true);
-                    editEntryClick.itemClicked(entryid);
+                    entryItemClickListener.editEntryClick(entryid);
                 }
             });
 
 
-            listitem_layout.setOnClickListener(new View.OnClickListener() {
+            viewHolder.goaltext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (entryid==-1) {
-                        addEntryClick.itemClicked(goalid);
+                        entryItemClickListener.addEntryClick(goalid);
                     } else {
-                        editEntryClick.itemClicked(entryid);
+                        entryItemClickListener.editEntryClick(entryid);
                     }
                 }
             });
@@ -317,12 +286,9 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 //        return true;
 //    }
 
-    public OnViewAllGoalEntriesClick getMoreGoalClick() {
-        return viewGoalClick;
-    }
 
-    public void setOnViewAllGoalEntries(OnViewAllGoalEntriesClick viewGoalClick) {
-        this.viewGoalClick = viewGoalClick;
+    public void setEntryItemClickListener(EntryItemClickListener entryItemClickListener) {
+        this.entryItemClickListener = entryItemClickListener;
     }
 
     public boolean isGoallist() {
@@ -334,20 +300,14 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     }
 
 
-    public interface OnViewAllGoalEntriesClick {
-        void itemClicked(int goalid);
-    }
+    public interface EntryItemClickListener {
+        void viewAllGoalEntriesClick(int goalid);
 
-    public interface OnEditEntryClick {
-        void itemClicked(int entryid);
-    }
+        void editEntryClick(int entryid);
 
-    public interface OnAddEntryClick {
-        void itemClicked(int goalid);
-    }
+        void addEntryClick(int goalid);
 
-    public interface OnNavEntryClick {
-        void itemClicked(int navValue);
+        void navEntryClick(int navValue);
     }
 
     //TODO: convert to gesturelistener.onfling
@@ -355,6 +315,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     private float x1,x2;
     static final int MIN_DISTANCE = 140;
 
+    @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         //Toast.makeText(this.getContext(), "touched it", Toast.LENGTH_SHORT).show ();
         switch(motionEvent.getAction())
@@ -390,6 +351,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         return true;
 
     }
+
+
 
     private void showControls(ViewFlipper vs, boolean backwards) {
         if (!backwards) {
