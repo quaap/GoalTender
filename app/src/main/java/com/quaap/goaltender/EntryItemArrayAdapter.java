@@ -26,9 +26,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 
@@ -42,7 +42,9 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     private final Context context;
     //private final List<Entry> values;
 
-    private OnMoreGoalClick moreGoalClick;
+    private OnViewAllGoalEntriesClick viewGoalClick;
+    private OnEditEntryClick editEntryClick;
+    private OnAddEntryClick addEntryClick;
 
     private boolean goallist;
 
@@ -50,6 +52,22 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         super(context, -1, values);
         this.context = context;
         //this.values = values;
+    }
+
+    public OnEditEntryClick getEditEntryClick() {
+        return editEntryClick;
+    }
+
+    public void setEditEntryClick(OnEditEntryClick editEntryClick) {
+        this.editEntryClick = editEntryClick;
+    }
+
+    public OnAddEntryClick getAddEntryClick() {
+        return addEntryClick;
+    }
+
+    public void setAddEntryClick(OnAddEntryClick addEntryClick) {
+        this.addEntryClick = addEntryClick;
     }
 
 
@@ -60,12 +78,19 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 //    }
 
     private static class ViewHolder {
-        ImageView more_goal_click;
+       // ImageView more_goal_click;
         TextView goaltext;
         TextView valuetext;
         TextView unittext;
         TextView goaldiff;
         TextView datetext;
+        ImageView show_ctrls;
+        ImageView hide_ctrls;
+        ImageButton view_all;
+        ImageButton add_entry;
+        ImageButton edit_entry;
+        TextView entry_item_ctrls_name;
+
     }
 
     @Override
@@ -76,12 +101,21 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         if (convertView==null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.itemrowlayout, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.more_goal_click = (ImageView) convertView.findViewById(R.id.more_goal_click);
+           // viewHolder.more_goal_click = (ImageView) convertView.findViewById(R.id.more_goal_click);
             viewHolder.goaltext = (TextView) convertView.findViewById(R.id.goaltext);
             viewHolder.valuetext = (TextView) convertView.findViewById(R.id.valuetext);
             viewHolder.unittext = (TextView) convertView.findViewById(R.id.unittext);
             viewHolder.goaldiff = (TextView) convertView.findViewById(R.id.goaldiff);
             viewHolder.datetext = (TextView) convertView.findViewById(R.id.datetext);
+
+            viewHolder.show_ctrls = (ImageView)convertView.findViewById(R.id.entry_item_show_ctrls);
+            viewHolder.hide_ctrls = (ImageView)convertView.findViewById(R.id.entry_item_hide_ctrls);
+
+            viewHolder.view_all = (ImageButton)convertView.findViewById(R.id.entry_button_view_all);
+            viewHolder.add_entry = (ImageButton)convertView.findViewById(R.id.entry_button_add_entry);
+            viewHolder.edit_entry = (ImageButton)convertView.findViewById(R.id.entry_button_edit_entry);
+
+            viewHolder.entry_item_ctrls_name = (TextView) convertView.findViewById(R.id.entry_item_ctrls_name);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder)convertView.getTag();
@@ -93,16 +127,38 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 
         if (entry.isNav()) {
 
+            viewHolder.show_ctrls.setVisibility(View.INVISIBLE);
+            viewHolder.hide_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.goaltext.setText(entry.getComment());
 
-            viewHolder.more_goal_click.setVisibility(View.GONE);
+            //viewHolder.more_goal_click.setVisibility(View.GONE);
             return convertView;
-
         }
+        viewHolder.show_ctrls.setVisibility(View.VISIBLE);
+        viewHolder.hide_ctrls.setVisibility(View.VISIBLE);
+
+        final ViewFlipper vs =  (ViewFlipper)convertView;
+        viewHolder.show_ctrls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showControls(vs, false);
+            }
+        });
+
+        viewHolder.hide_ctrls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showControls(vs, true);
+            }
+        });
+
 
         convertView.setOnTouchListener(this);
 
         Goal goal = entry.getGoal();
+        viewHolder.entry_item_ctrls_name.setText(goal.getName());
 
         String period = "";
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
@@ -114,17 +170,52 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 
         }
 
-        if (moreGoalClick!=null && !goallist) {
-            final int goalid = goal.getId();
-            viewHolder.more_goal_click.setVisibility(View.VISIBLE);
-            viewHolder.more_goal_click.setOnClickListener(new View.OnClickListener() {
+        final int goalid = goal.getId();
+        final int entryid = entry.getId();
+
+        if (entryid==-1 || entry.isUnmet()) {
+            viewHolder.edit_entry.setVisibility(View.GONE);
+        } else {
+            viewHolder.edit_entry.setVisibility(View.VISIBLE);
+        }
+
+        //System.out.println("entryid: " + entryid + " ");
+        if (viewGoalClick!=null) {
+
+            viewHolder.view_all.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    moreGoalClick.itemClicked(goalid);
+                    showControls(vs, true);
+                    viewGoalClick.itemClicked(goalid);
+               }
+            });
+
+        }
+        if (addEntryClick!=null) {
+            viewHolder.add_entry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showControls(vs, true);
+                    addEntryClick.itemClicked(goalid);
                 }
             });
-        } else {
-            viewHolder.more_goal_click.setVisibility(View.GONE);
+
+//            convertView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    addEntryClick.itemClicked(goalid);
+//                }
+//            });
+
+        }
+        if (editEntryClick!=null) {
+            viewHolder.edit_entry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showControls(vs, true);
+                    editEntryClick.itemClicked(entryid);
+                }
+            });
         }
 
         viewHolder.goaltext.setText(goal.getName());
@@ -194,12 +285,12 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 //        return true;
 //    }
 
-    public OnMoreGoalClick getMoreGoalClick() {
-        return moreGoalClick;
+    public OnViewAllGoalEntriesClick getMoreGoalClick() {
+        return viewGoalClick;
     }
 
-    public void setMoreGoalClick(OnMoreGoalClick moreGoalClick) {
-        this.moreGoalClick = moreGoalClick;
+    public void setOnViewAllGoalEntries(OnViewAllGoalEntriesClick viewGoalClick) {
+        this.viewGoalClick = viewGoalClick;
     }
 
     public boolean isGoallist() {
@@ -211,11 +302,17 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     }
 
 
-    public interface OnMoreGoalClick {
-
+    public interface OnViewAllGoalEntriesClick {
         void itemClicked(int goalid);
     }
 
+    public interface OnEditEntryClick {
+        void itemClicked(int entryid);
+    }
+
+    public interface OnAddEntryClick {
+        void itemClicked(int goalid);
+    }
 
     //TODO: convert to gesturelistener.onfling
     // http://codetheory.in/android-viewflipper-and-viewswitcher/
@@ -234,18 +331,20 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
                 float deltaX = x2 - x1;
                 ViewFlipper vs = (ViewFlipper)view;
                 if (deltaX > MIN_DISTANCE) {
+                    showControls(vs, false);
                     //Toast.makeText(this.getContext(), "left2right swipe", Toast.LENGTH_SHORT).show ();
-                    vs.setInAnimation(vs.getContext(), R.anim.right_in);
-                    vs.setOutAnimation(vs.getContext(), R.anim.right_out);
-
-                    vs.showNext();
-                    return true;
+//                    vs.setInAnimation(vs.getContext(), R.anim.right_in);
+//                    vs.setOutAnimation(vs.getContext(), R.anim.right_out);
+//
+//                    vs.showNext();
+//                    return true;
                 } else if (-deltaX > MIN_DISTANCE) {
+                    showControls(vs, true);
                     //Toast.makeText(this.getContext(), "right2left swipe", Toast.LENGTH_SHORT).show ();
-                    vs.setInAnimation(vs.getContext(), R.anim.left_in);
-                    vs.setOutAnimation(vs.getContext(), R.anim.left_out);
-
-                    vs.showPrevious();
+//                    vs.setInAnimation(vs.getContext(), R.anim.left_in);
+//                    vs.setOutAnimation(vs.getContext(), R.anim.left_out);
+//
+//                    vs.showPrevious();
 
                 } else {
                     return false;
@@ -256,5 +355,20 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 
     }
 
+    private void showControls(ViewFlipper vs, boolean backwards) {
+        if (!backwards) {
+            //Toast.makeText(this.getContext(), "left2right swipe", Toast.LENGTH_SHORT).show ();
+            vs.setInAnimation(vs.getContext(), R.anim.right_in);
+            vs.setOutAnimation(vs.getContext(), R.anim.right_out);
 
+            vs.showNext();
+        } else {
+            //Toast.makeText(this.getContext(), "right2left swipe", Toast.LENGTH_SHORT).show ();
+            vs.setInAnimation(vs.getContext(), R.anim.left_in);
+            vs.setOutAnimation(vs.getContext(), R.anim.left_out);
+
+            vs.showPrevious();
+
+        }
+    }
 }

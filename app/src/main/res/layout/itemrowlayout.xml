@@ -10,86 +10,90 @@
 
 
     <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-
-        <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:srcCompat="@android:drawable/ic_menu_more"
-                        android:id="@+id/more_goal_click"
-                        android:layout_weight="0.01"
-                        android:scaleX=".75"
-                        android:scaleY=".75"
-                        android:contentDescription="See all entries of this @string/entry_edit_goal"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/goaltext"
-                        android:layout_weight="1"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:textSize="24sp"
-                        android:gravity="start"
-                        android:layout_gravity="start"
-                        android:ellipsize="end"
-                        android:maxEms="7" />
-
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:id="@+id/valuetext"
-                        android:layout_weight="2"
-                        android:layout_gravity="fill_horizontal|end"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp"
-                        android:layout_width="wrap_content"
-                        android:textSize="24sp"
-                        android:textAlignment="viewEnd"
-                        android:maxLines="1" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/unittext"
-                        android:layout_weight=".1"
-                        android:layout_gravity="center_vertical|end" />
-
-        </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/swipe_right"
+            android:id="@+id/entry_item_show_ctrls"
+            android:layout_gravity="left|center_vertical"
+            android:minWidth="0dp"
+            android:clickable="true" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:layout_marginBottom="2dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/datetext"
-                android:layout_weight="1"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/goaldiff"
-                android:layout_weight="1"
-                android:gravity="end" />
+            <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0">
+
+                <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/goaltext"
+                            android:layout_weight="1"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:textSize="24sp"
+                            android:gravity="start"
+                            android:layout_gravity="start"
+                            android:ellipsize="end"
+                            android:maxEms="7" />
+
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:id="@+id/valuetext"
+                            android:layout_weight="2"
+                            android:layout_gravity="fill_horizontal|end"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:layout_width="wrap_content"
+                            android:textSize="24sp"
+                            android:textAlignment="viewEnd"
+                            android:maxLines="1" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/unittext"
+                            android:layout_weight=".1"
+                            android:layout_gravity="center_vertical|end" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/datetext"
+                    android:layout_weight="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/goaldiff"
+                    android:layout_weight="1"
+                    android:gravity="end" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
@@ -101,37 +105,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_input_add"
-            android:id="@+id/imageButton3"
-            android:layout_weight=".1"
-            android:layout_gravity="start" />
+            android:id="@+id/entry_button_add_entry"
+            android:layout_weight=".05"
+            android:layout_gravity="start"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_edit"
-            android:id="@+id/imageButton2"
-            android:layout_weight=".1"
-            android:layout_gravity="start" />
+            android:id="@+id/entry_button_edit_entry"
+            android:layout_weight=".05"
+            android:layout_gravity="start"/>
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_view"
-            android:id="@+id/imageButton"
-            android:layout_weight=".1"
-            android:layout_gravity="start" />
+            android:id="@+id/entry_button_view_all"
+            android:layout_weight=".05"
+            android:layout_gravity="start"
+            />
 
         <TextView
-            android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView4"
-            android:layout_weight=".1" />
+            android:id="@+id/entry_item_ctrls_name"
+            android:layout_weight=".05"
+            android:textSize="24sp" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/swipe_left"
+            android:id="@+id/entry_item_hide_ctrls"
+            android:layout_weight=".05"
+            android:layout_gravity="right|center_vertical"
+            android:clickable="true" />
     </LinearLayout>
 
 </ViewFlipper>

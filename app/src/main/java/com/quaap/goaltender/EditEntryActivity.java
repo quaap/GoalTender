@@ -132,6 +132,7 @@ public class EditEntryActivity extends AppCompatActivity {
         Intent intent = getIntent();
         entry_id = intent.getIntExtra(PASSINGENTRYID, -1);
 
+        //System.out.println("Entryid: " + entry_id);
 
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);

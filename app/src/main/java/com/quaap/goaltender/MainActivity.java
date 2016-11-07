@@ -28,15 +28,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
-import com.quaap.goaltender.service.GoalReminderService;
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.showOverflowMenu();
         } else {
-            showEntryEditor(currentGoal.getId());
+            showEntryEditorForGoal(currentGoal.getId());
         }
     }
 
@@ -192,12 +189,26 @@ public class MainActivity extends AppCompatActivity {
         ListView mainList = (ListView) findViewById(R.id.mainList);
 
         listitemadapter = new EntryItemArrayAdapter(this, listentry);
-        listitemadapter.setMoreGoalClick(new EntryItemArrayAdapter.OnMoreGoalClick() {
+        listitemadapter.setOnViewAllGoalEntries(new EntryItemArrayAdapter.OnViewAllGoalEntriesClick() {
             @Override
             public void itemClicked(int goalid) {
                 populateList(goalid);
             }
         });
+        listitemadapter.setAddEntryClick(new EntryItemArrayAdapter.OnAddEntryClick() {
+            @Override
+            public void itemClicked(int goalid) {
+                showEntryEditorForGoal(goalid);
+            }
+        });
+        listitemadapter.setEditEntryClick(new EntryItemArrayAdapter.OnEditEntryClick() {
+            @Override
+            public void itemClicked(int entryid) {
+                showEntryEditor(entryid);
+            }
+        });
+
+
         listitemadapter.setGoallist(g!=null);
         mainList.setAdapter(listitemadapter);
 
@@ -259,18 +270,28 @@ public class MainActivity extends AppCompatActivity {
         if (entry != null && entry.isCollapsed()) {
             populateList(entry.getGoal());
         } else {
-            Intent entry_edit = new Intent(this, EditEntryActivity.class);
-
-            entry_edit.putExtra(EditEntryActivity.PASSINGENTRYID, (int) id);
-            if (entry!=null) {
-                entry_edit.putExtra(EditEntryActivity.PASSINGGOALID, entry.getGoal().getId());
-            }
-
-            this.startActivityForResult(entry_edit, entry_edit_code);
+            showEntryEditor((int) id);
+//            Intent entry_edit = new Intent(this, EditEntryActivity.class);
+//
+//            entry_edit.putExtra(EditEntryActivity.PASSINGENTRYID, (int) id);
+////            if (entry!=null) {
+////                entry_edit.putExtra(EditEntryActivity.PASSINGGOALID, entry.getGoal().getId());
+////            }
+//
+//            this.startActivityForResult(entry_edit, entry_edit_code);
         }
     }
 
-    private void showEntryEditor(int goalid) {
+    private void showEntryEditor(int entryid) {
+
+        Intent entry_edit = new Intent(this, EditEntryActivity.class);
+
+        entry_edit.putExtra(EditEntryActivity.PASSINGENTRYID, entryid);
+
+        this.startActivityForResult(entry_edit, entry_edit_code);
+    }
+
+    private void showEntryEditorForGoal(int goalid) {
 
 
         Intent entry_edit = new Intent(this, EditEntryActivity.class);
@@ -349,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
             db.export();
         } else {
-            showEntryEditor(id - 1001);
+            showEntryEditorForGoal(id - 1001);
         }
 
         return super.onOptionsItemSelected(item);
