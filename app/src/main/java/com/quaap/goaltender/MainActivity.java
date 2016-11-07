@@ -207,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
                 showEntryEditor(entryid);
             }
         });
+        listitemadapter.setNavEntryClick(new EntryItemArrayAdapter.OnNavEntryClick() {
+            @Override
+            public void itemClicked(int navValue) {
+                navClicked(navValue);
+            }
+        });
 
 
         listitemadapter.setGoallist(g!=null);
@@ -237,6 +243,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void navClicked(int navValue) {
+        if (navValue==0) return;
+        if (viewing == Viewing.Unmet) {
+            viewing = Viewing.All;
+            startindex = 0;
+            populateList();
+        } else if (viewing == Viewing.All) {
+            //viewing = Viewing.All;
+            startindex += lengthindex*navValue;
+            populateList();
+
+        }
+    }
+
     private void handleEntryClick(long id, int pos) {
 
         Entry entry = null;
@@ -244,16 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (entry != null && entry.isNav()) {
 
-            if (viewing == Viewing.Unmet) {
-                viewing = Viewing.All;
-                startindex = 0;
-                populateList();
-            } else if (viewing == Viewing.All) {
-                //viewing = Viewing.All;
-                startindex += lengthindex*entry.getNav();
-                populateList();
-
-            }
+            navClicked(entry.getNav());
         } else {
             showEntryEditor(id, pos);
         }

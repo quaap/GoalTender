@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -45,6 +46,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
     private OnViewAllGoalEntriesClick viewGoalClick;
     private OnEditEntryClick editEntryClick;
     private OnAddEntryClick addEntryClick;
+    private OnNavEntryClick navEntryClick;
+
 
     private boolean goallist;
 
@@ -68,6 +71,14 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
 
     public void setAddEntryClick(OnAddEntryClick addEntryClick) {
         this.addEntryClick = addEntryClick;
+    }
+
+    public OnNavEntryClick getNavEntryClick() {
+        return navEntryClick;
+    }
+
+    public void setNavEntryClick(OnNavEntryClick navEntryClick) {
+        this.navEntryClick = navEntryClick;
     }
 
 
@@ -121,7 +132,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-
+        LinearLayout listitem_layout = (LinearLayout)convertView.findViewById(R.id.listitem_layout);
 
         Entry entry = this.getItem(position);
 
@@ -130,7 +141,15 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
             viewHolder.show_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.hide_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.goaltext.setText(entry.getComment());
+            final int nav = entry.getNav();
+            listitem_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    navEntryClick.itemClicked(nav);
+                }
+            });
 
+            //listitem_layout.setOnClickListener(null);
             //viewHolder.more_goal_click.setVisibility(View.GONE);
             return convertView;
         }
@@ -216,6 +235,19 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
                     editEntryClick.itemClicked(entryid);
                 }
             });
+
+
+            listitem_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (entryid==-1) {
+                        addEntryClick.itemClicked(goalid);
+                    } else {
+                        editEntryClick.itemClicked(entryid);
+                    }
+                }
+            });
+
         }
 
         viewHolder.goaltext.setText(goal.getName());
@@ -314,10 +346,14 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry> implements View.OnTouchL
         void itemClicked(int goalid);
     }
 
+    public interface OnNavEntryClick {
+        void itemClicked(int navValue);
+    }
+
     //TODO: convert to gesturelistener.onfling
     // http://codetheory.in/android-viewflipper-and-viewswitcher/
     private float x1,x2;
-    static final int MIN_DISTANCE = 150;
+    static final int MIN_DISTANCE = 140;
 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         //Toast.makeText(this.getContext(), "touched it", Toast.LENGTH_SHORT).show ();
