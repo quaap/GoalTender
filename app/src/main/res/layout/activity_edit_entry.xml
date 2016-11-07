@@ -79,7 +79,7 @@
             android:id="@+id/entry_showcomment"
             android:background="@android:color/transparent"
             android:layout_marginTop="10dp"
-            android:contentDescription="Show comment field" />
+            android:contentDescription="@string/show_comment_field" />
 
         <CheckBox
             android:text="@string/complete"

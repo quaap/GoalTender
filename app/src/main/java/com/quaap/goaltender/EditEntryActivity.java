@@ -40,7 +40,7 @@ import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class EditEntryActivity extends AppCompatActivity {
     private Entry entry = null;
     private Date date;
 
-    ArrayAdapter<Goal> goaladapter;
+    private ArrayAdapter<Goal> goaladapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,12 +136,8 @@ public class EditEntryActivity extends AppCompatActivity {
 
         if (entry_id >= 0) {
             entry = db.getEntry(entry_id);
-            //System.out.println(entry.getGoal());
-            //System.out.println(goaladapter.getPosition(entry.getGoal()));
+
             goalid.setSelection(goaladapter.getPosition(entry.getGoal()));
-
-
-            //System.out.println(goalid.getSelectedItem());
 
             date = entry.getDate();
 
@@ -181,10 +177,10 @@ public class EditEntryActivity extends AppCompatActivity {
 
     private void goalChanged() {
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
-       // GoalDB db = GoalTender.getDatabase();
+
         Goal g = (Goal)goalid.getSelectedItem();
         TextView entry_units = (TextView) findViewById(R.id.editentry_units);
-        //if (true) return;
+
         entry_units.setText(g.getUnits());
 
 
@@ -208,8 +204,6 @@ public class EditEntryActivity extends AppCompatActivity {
 
     private void pickdatetime() {
         Intent pickdatetime = new Intent(this, PickDateTimeActivity.class);
-
-        TextView entry_date = (TextView) findViewById(R.id.entry_date);
 
 
         if (date!=null) {
@@ -262,7 +256,6 @@ public class EditEntryActivity extends AppCompatActivity {
         Intent output = new Intent();
 
         Spinner goalid = (Spinner) findViewById(R.id.entry_goalid);
-        TextView entry_date = (TextView) findViewById(R.id.entry_date);
         CheckBox bool_goal_complete = (CheckBox) findViewById(R.id.bool_goal_complete);
         EditText entry_value = (EditText) findViewById(R.id.entry_value);
 
@@ -276,8 +269,6 @@ public class EditEntryActivity extends AppCompatActivity {
 
         GoalDB db = GoalTender.getDatabase();
 
-        //System.out.println(goalid.getSelectedItem().toString());
-       // System.out.println(goalid.getSelectedItemId());
 
 
         if (entry==null) entry = new Entry();

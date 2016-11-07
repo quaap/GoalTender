@@ -29,7 +29,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -71,13 +70,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
 
         populateList();
 
-//        final ListView mainList = (ListView) findViewById(R.id.mainList);
-//        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                handleEntryClick(id, position);
-//            }
-//        });
+
 
         killnotify();
     }
@@ -115,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     private int startindex = 0;
     private int lengthindex = 150;
 
-    private enum Viewing {Unmet, All, Goal};
+    private enum Viewing {Unmet, All, Goal}
 
     Viewing viewing = Viewing.Unmet;
     int moreentries = 0;
@@ -124,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     private void populateList(Goal g) {
         currentGoal = g;
         moreentries = 0;
-        List<String> listitems = new ArrayList<>();
 
         TextView entries_list_title = (TextView)findViewById(R.id.entries_list_title);
         List<Entry> listentry = null;
@@ -273,14 +265,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
             populateList(entry.getGoal());
         } else {
             showEntryEditor((int) id);
-//            Intent entry_edit = new Intent(this, EditEntryActivity.class);
-//
-//            entry_edit.putExtra(EditEntryActivity.PASSINGENTRYID, (int) id);
-////            if (entry!=null) {
-////                entry_edit.putExtra(EditEntryActivity.PASSINGGOALID, entry.getGoal().getId());
-////            }
-//
-//            this.startActivityForResult(entry_edit, entry_edit_code);
+
         }
     }
 

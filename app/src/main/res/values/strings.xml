@@ -57,5 +57,7 @@
     <string name="previous_entries">Previous entries</string>
     <string name="older_entries">Older entries</string>
     <string name="newer_entries">Newer entries</string>
+    <string name="period">Period</string>
+    <string name="show_comment_field">Show comment field</string>
 
 </resources>

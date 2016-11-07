@@ -1,10 +1,7 @@
 package com.quaap.goaltender;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 
-import com.quaap.goaltender.service.GoalReminderService;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 

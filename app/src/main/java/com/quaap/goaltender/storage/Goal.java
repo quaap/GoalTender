@@ -1,15 +1,12 @@
 package com.quaap.goaltender.storage;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.quaap.goaltender.GoalTender;
-import com.quaap.goaltender.MainActivity;
 import com.quaap.goaltender.R;
 
 import java.util.ArrayList;
@@ -160,7 +157,7 @@ public class Goal {
 
             @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                 TextView tv= new TextView(this.getContext());
                 tv.setText(goals.get(position).toString());
                 return tv;
@@ -297,7 +294,7 @@ public class Goal {
             ArrayAdapter<Type> aa = new ArrayAdapter<Type>(context, resource, Type.values()) {
                 @NonNull
                 @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
+                public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                     TextView tv= new TextView(this.getContext());
                     tv.setText(this.getContext().getText(this.getItem(position).displayid));
                     return tv;
@@ -338,7 +335,7 @@ public class Goal {
             ArrayAdapter<Period> aa = new ArrayAdapter<Period>(context, resource, Period.values()) {
                 @NonNull
                 @Override
-                public View getView(int position, View convertView, ViewGroup parent) {
+                public View getView(int position, View convertView, @NonNull ViewGroup parent) {
                     TextView tv= new TextView(this.getContext());
                     tv.setText(this.getContext().getText(this.getItem(position).displayid));
                     return tv;

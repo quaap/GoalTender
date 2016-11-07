@@ -4,10 +4,8 @@ package com.quaap.goaltender.service;
  * Created by tom on 11/4/16.
  */
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.widget.Toast;
 
 public class GoalReminderService extends Service
 {

@@ -21,8 +21,8 @@ package com.quaap.goaltender;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.GestureDetector;
+
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -43,11 +43,8 @@ import java.util.List;
 
 class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouchListener {
     private final Context context;
-    //private final List<Entry> values;
 
     private EntryItemClickListener entryItemClickListener;
-
-
 
     private boolean goallist;
 
@@ -55,19 +52,11 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         super(context, -1, values);
         this.context = context;
 
-        //this.values = values;
     }
 
 
-
-//    private static String formatDateTime(Date date) {
-//        if (date == null) return null;
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-//        return dateFormat.format(date);
-//    }
-
     private static class ViewHolder {
-       // ImageView more_goal_click;
+
         TextView goaltext;
         TextView valuetext;
         TextView unittext;
@@ -83,14 +72,14 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
 
         ViewHolder viewHolder;
         if (convertView==null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.itemrowlayout, parent, false);
             viewHolder = new ViewHolder();
-           // viewHolder.more_goal_click = (ImageView) convertView.findViewById(R.id.more_goal_click);
+
             viewHolder.goaltext = (TextView) convertView.findViewById(R.id.goaltext);
             viewHolder.valuetext = (TextView) convertView.findViewById(R.id.valuetext);
             viewHolder.unittext = (TextView) convertView.findViewById(R.id.unittext);
@@ -110,8 +99,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        //LinearLayout listitem_layout = (LinearLayout)convertView.findViewById(R.id.listitem_layout);
-
         Entry entry = this.getItem(position);
 
         if (entry.isNav()) {
@@ -127,8 +114,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
                 }
             });
 
-            //listitem_layout.setOnClickListener(null);
-            //viewHolder.more_goal_click.setVisibility(View.GONE);
+
             return convertView;
         }
         viewHolder.show_ctrls.setVisibility(View.VISIBLE);
@@ -160,7 +146,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
 
         String period = "";
         if (entry.isCollapsed() && entry.getCollapsednum() > 0) {
-            //convertView.setBackgroundColor(Color.rgb(245, 245, 245));
 
             if (goal.getType() == Goal.Type.Cumulative) {
                 period = " (" + goal.getPeriod().name() + ", " + entry.getCollapsednum() + " " + (entry.getCollapsednum()>1?"entries":"entry") +  ")";
@@ -272,19 +257,11 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         return convertView;
     }
 
-//    public Entry getEntry(int position) {
-//        return values.get(position);
-//    }
-//
+
     @Override
     public long getItemId(int position) {
         return getItem(position).getId();
     }
-//
-//    @Override
-//    public boolean hasStableIds() {
-//        return true;
-//    }
 
 
     public void setEntryItemClickListener(EntryItemClickListener entryItemClickListener) {
@@ -317,7 +294,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        //Toast.makeText(this.getContext(), "touched it", Toast.LENGTH_SHORT).show ();
+
         switch(motionEvent.getAction())
         {
             case MotionEvent.ACTION_DOWN:
@@ -329,20 +306,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
                 ViewFlipper vs = (ViewFlipper)view;
                 if (deltaX > MIN_DISTANCE) {
                     showControls(vs, false);
-                    //Toast.makeText(this.getContext(), "left2right swipe", Toast.LENGTH_SHORT).show ();
-//                    vs.setInAnimation(vs.getContext(), R.anim.right_in);
-//                    vs.setOutAnimation(vs.getContext(), R.anim.right_out);
-//
-//                    vs.showNext();
-//                    return true;
                 } else if (-deltaX > MIN_DISTANCE) {
                     showControls(vs, true);
-                    //Toast.makeText(this.getContext(), "right2left swipe", Toast.LENGTH_SHORT).show ();
-//                    vs.setInAnimation(vs.getContext(), R.anim.left_in);
-//                    vs.setOutAnimation(vs.getContext(), R.anim.left_out);
-//
-//                    vs.showPrevious();
-
                 } else {
                     return false;
                 }
@@ -356,13 +321,13 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
 
     private void showControls(ViewFlipper vs, boolean backwards) {
         if (!backwards) {
-            //Toast.makeText(this.getContext(), "left2right swipe", Toast.LENGTH_SHORT).show ();
+
             vs.setInAnimation(vs.getContext(), R.anim.right_in);
             vs.setOutAnimation(vs.getContext(), R.anim.right_out);
 
             vs.showNext();
         } else {
-            //Toast.makeText(this.getContext(), "right2left swipe", Toast.LENGTH_SHORT).show ();
+
             vs.setInAnimation(vs.getContext(), R.anim.left_in);
             vs.setOutAnimation(vs.getContext(), R.anim.left_out);
 
