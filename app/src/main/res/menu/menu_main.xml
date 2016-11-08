@@ -8,6 +8,10 @@
         android:title="@string/add_edit_goals"
         app:showAsAction="never" />
 
+    <item
+        android:title="Report"
+        android:orderInCategory="101"
+        android:id="@+id/menu_report" />
     <item android:title="@string/export_to_csv"
         android:id="@+id/export_csv"
         android:orderInCategory="101"

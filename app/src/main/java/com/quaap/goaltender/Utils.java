@@ -31,6 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -79,6 +80,34 @@ public class Utils {
 //        return new Date(date);
 //    }
 
+    public static Date getNextDate(Date date, Goal.Period period) {
+        if (date==null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date.getTime());
+
+        switch (period) {
+            case NamedDays:
+            case Daily: cal.add(Calendar.DAY_OF_YEAR,1); break;
+            case Weekly: cal.add(Calendar.WEEK_OF_YEAR,1); break;
+            case Monthly: cal.add(Calendar.MONTH,1); break;
+        }
+        return cal.getTime();
+    }
+
+    public static String formatDateForBucket(Date date, Goal.Period period) {
+        if (date==null) return null;
+
+        String format="yyyy-MM-dd HH:mm";
+        switch (period) {
+            case NamedDays:
+            case Daily: format="yyyy-MM-dd"; break;
+            case Weekly: format="yyyy 'W'w"; break;
+            case Monthly: format="yyyy-MM"; break;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        String fdate = dateFormat.format(date);
+        return fdate;
+    }
 
     public static String formatDateForDisplay(Date date, Goal.Period period) {
         if (date==null) return null;

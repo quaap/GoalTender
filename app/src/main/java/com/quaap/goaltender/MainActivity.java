@@ -356,6 +356,8 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
         } else if (id == R.id.export_csv) {
 
             db.export();
+        } else if (id == R.id.menu_report) {
+            showReport();
         } else {
             showEntryEditorForGoal(id - 1001);
         }
@@ -363,5 +365,9 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
         return super.onOptionsItemSelected(item);
     }
 
+    private void showReport() {
+        Intent report_intent = new Intent(this, ReportActivity.class);
+        this.startActivity(report_intent);
+    }
 
 }

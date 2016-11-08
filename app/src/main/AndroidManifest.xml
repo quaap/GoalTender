@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.quaap.goaltender">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <application
@@ -12,7 +12,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -44,11 +43,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DaysPickerActivity" />
 
-        <!--<service
+        <!--
+            <service
             android:name=".service.GoalService"
             android:enabled="true"
-            android:exported="true"></service>-->
-        <!--<receiver android:name=".service.AutoStart">
+            android:exported="true"></service>
+        -->
+        <!--
+        <receiver android:name=".service.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
@@ -59,7 +61,9 @@
             android:enabled="true"
             android:exported="true" >
         </service>
-        <receiver android:process=":remote" android:name=".service.Alarm"/>-->
+        <receiver android:process=":remote" android:name=".service.Alarm"/>
+        -->
+        <activity android:name=".ReportActivity"></activity>
     </application>
 
 </manifest>

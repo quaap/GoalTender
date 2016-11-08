@@ -484,6 +484,12 @@ public class GoalDB extends SQLiteOpenHelper {
         return new Pair<List<Entry>, Integer>(list.subList(start, end), clen - end);
     }
 
+    public List<Entry> getAllEntriesForGoal(Goal goal) {
+        Pair<List<Entry>, Integer> ents = getAllEntries(goal, 0, Integer.MAX_VALUE);
+
+        return ents.first;
+    }
+
     public Pair<List<Entry>, Integer> getAllEntries(Goal goal, int start, int length) {
         List<Entry> entries = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
