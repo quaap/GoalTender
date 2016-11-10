@@ -31,9 +31,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Utils {
 
@@ -103,6 +108,27 @@ public class Utils {
             case Daily: format="yyyy-MM-dd"; break;
             case Weekly: format="yyyy 'W'w"; break;
             case Monthly: format="yyyy-MM"; break;
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        String fdate = dateFormat.format(date);
+        return fdate;
+    }
+
+    public static String formatDateForShortDisplay(Date date, Goal.Period period) {
+        if (date==null) return null;
+
+
+        String format="MM-dd";
+        switch (period) {
+            case NamedDays:
+            case Daily: format="MMM d"; break;
+            case Weekly: format="MMM d";
+                Calendar cal=Calendar.getInstance();
+                cal.setTime(date);
+                cal.add( Calendar.DAY_OF_WEEK, -(cal.get(Calendar.DAY_OF_WEEK)-1));
+                date = cal.getTime();
+                break;
+            case Monthly: format="MMM"; break;
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         String fdate = dateFormat.format(date);
@@ -179,6 +205,40 @@ public class Utils {
             return value;
         }
         return "\"" + value.replaceAll("\"", "\"\"") + "\"";
+    }
+
+    public static class MapOfLists<K,V> {
+
+        private Map<K,List<V>> basemap = new HashMap<K,List<V>>();
+
+        public V put(K key, V value) {
+            List<V> values = basemap.get(key);
+            if (values == null) {
+                values = new ArrayList<>();
+                basemap.put(key, values);
+            }
+            values.add(value);
+
+            return value;
+        }
+
+        public V get(K key) {
+            List<V> values = basemap.get(key);
+            if (values==null) {
+                return null;
+            }
+            return values.get(values.size()-1);
+        }
+
+        public List<V> getAll(K key) {
+            List<V> values = basemap.get(key);
+            if (values==null) {
+                return null;
+            }
+            return Collections.unmodifiableList(values);
+        }
+
+
     }
 
 }
