@@ -162,6 +162,12 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
             viewHolder.edit_entry.setVisibility(View.VISIBLE);
         }
 
+        if (isGoallist()) {
+            viewHolder.view_all.setVisibility(View.GONE);
+        } else {
+            viewHolder.view_all.setVisibility(View.VISIBLE);
+        }
+
         //System.out.println("entryid: " + entryid + " ");
         if (entryItemClickListener!=null) {
 
