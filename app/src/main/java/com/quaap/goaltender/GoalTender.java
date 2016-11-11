@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  *   Copyright 2016 Tom Kliethermes
@@ -153,19 +155,35 @@ public class GoalTender  extends Application {
             Calendar now = Calendar.getInstance();
             now.setTime(new Date());
 
+            Map<Goal,Float> lasts = new HashMap<>();
             for (; cal.before(now); cal.add(Calendar.DAY_OF_YEAR, 1)) {
-                Entry e = new Entry();
-                e.setDate(cal.getTime());
-                Collections.shuffle(goals);
-                Goal ge = goals.get(0);
 
-                e.setGoal(ge);
-                float gnum = ge.getGoalnum();
-                e.setValue((float)(gnum + (Math.random() - .5)*gnum ) );
+                int num = Utils.getRand(1,3);
+                for (int i=0; i<num; i++) {
+                    Entry e = new Entry();
+                    e.setDate(cal.getTime());
+                    Collections.shuffle(goals);
+                    Goal ge = goals.get(0);
 
-                db.addEntry(e);
+                    e.setGoal(ge);
 
-                if (Math.random()>.9) cal.add(Calendar.DAY_OF_YEAR, (int)(Math.random()*9));
+                    Float gnum = lasts.get(ge);
+                    if (gnum==null) {
+                        gnum = ge.getGoalnum();
+                        gnum += (float)(Math.random() - .5)/4 * gnum;
+                    }
+                    float val = (float) (gnum + ((Math.random() - .5)/30) * gnum);
+
+                    if (ge.getType() == Goal.Type.Checkbox) {
+                        val = Utils.getRand(0,1);
+                    }
+                    e.setValue(val);
+
+                    lasts.put(ge,val);
+                    db.addEntry(e);
+                }
+
+                if (Math.random()>.9) cal.add(Calendar.DAY_OF_YEAR, (int)(Math.random()*4));
             }
 
         }

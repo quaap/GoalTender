@@ -434,15 +434,30 @@ public class GoalDB extends SQLiteOpenHelper {
 
     public Pair<List<Entry>, Integer> getAllEntriesCollapsed() {
         return getAllEntriesCollapsed(0,Integer.MAX_VALUE);
+
+    }
+
+    public List<Entry> getAllEntriesForGoalCollapsed(Goal goal) {
+        Pair<List<Entry>, Integer> all = getAllEntriesCollapsed(goal, 0, Integer.MAX_VALUE);
+        return all.first;
+
     }
 
     public Pair<List<Entry>, Integer> getAllEntriesCollapsed(int start, int length) {
+        return getAllEntriesCollapsed(null, start, length);
+    }
 
+    public Pair<List<Entry>, Integer> getAllEntriesCollapsed(Goal goal, int start, int length) {
         Map<String, Entry> collapsedmap = new TreeMap<>();
 
-        Pair<List<Entry>, Integer> all = getAllEntries(0, Integer.MAX_VALUE);
+        Pair<List<Entry>, Integer> all;
+        if (goal ==null) {
+            all = getAllEntries(0, Integer.MAX_VALUE);
+        } else {
+            all = getAllEntries(goal, 0, Integer.MAX_VALUE);
+        }
         for (Entry entry: all.first) {
-            Goal goal = entry.getGoal();
+            goal = entry.getGoal();
             if (!goal.isActive()) continue;
 
             String key = getRoundedDate(entry.getDate(), goal) + goal.getName() + goal.getType().name();

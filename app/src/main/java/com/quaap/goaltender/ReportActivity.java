@@ -16,7 +16,9 @@ import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReportActivity extends Activity implements CanvasView.OnDrawListener {
     Paint gbars = new Paint();
@@ -24,12 +26,21 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
     Paint gtext = new Paint();
 
     int lastXperiods = 5;
+    //Integer [] num_pers = {5, 7, 10, 12, 14, 21, 31, 62, 100, 365, 500, 1000, 0};
+
+    Map<Goal.Period,Integer[]> num_pers = new HashMap<>();
 
     Goal goal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
+
+        //{5, 7, 10, 12, 14, 21, 31, 62, 100, 365, 500, 1000, 0}
+        num_pers.put(Goal.Period.Daily, new Integer[] {5, 7, 14, 31, 62, 100, 365, 730, 1000, 0});
+        num_pers.put(Goal.Period.NamedDays, num_pers.get(Goal.Period.Daily));
+        num_pers.put(Goal.Period.Weekly, new Integer[] {2, 4, 8, 16, 32, 52, 104, 1000, 0});
+        num_pers.put(Goal.Period.Monthly, new Integer[] {2, 6, 12, 24, 48, 96, 1000, 0});
 
         final CanvasView canvasview = (CanvasView)findViewById(R.id.canvas_view);
         canvasview.setOnDrawListener(this);
@@ -42,9 +53,15 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
         gtext.setTextSize(26);
 
         List<Goal> goals = GoalTender.getDatabase().getAllGoals(false);
+
+        if (goals.size()>0) {
+            goal = goals.get(0);
+        }
+
         final Spinner goallist = (Spinner) findViewById(R.id.report_goallist);
 
 
+        final Spinner number_periods = (Spinner) findViewById(R.id.report_number_periods);
         final ArrayAdapter<Goal> adapter = new ArrayAdapter<Goal>(this, android.R.layout.simple_spinner_item, goals);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         goallist.setAdapter(adapter);
@@ -54,6 +71,11 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 goal = (Goal)goallist.getSelectedItem();
 
+                if (goal!=null) {
+                    number_periods.setAdapter(new ArrayAdapter<Integer>(ReportActivity.this, android.R.layout.simple_spinner_item, num_pers.get(goal.getPeriod())));
+                    lastXperiods = num_pers.get(goal.getPeriod())[2];
+                    number_periods.setSelection(2);
+                }
                 canvasview.postInvalidate();
             }
 
@@ -63,10 +85,11 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
             }
         });
 
-        final Spinner number_periods = (Spinner) findViewById(R.id.report_number_periods);
-
-        Integer [] num_pers = {5, 7, 10, 20, 31, 50, 100, 500, 1000, 0};
-        number_periods.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, num_pers));
+        if (goal!=null) {
+            number_periods.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, num_pers.get(goal.getPeriod())));
+            lastXperiods = num_pers.get(goal.getPeriod())[2];
+            number_periods.setSelection(2);
+        }
         number_periods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -80,6 +103,8 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
 
             }
         });
+
+
     }
 
     float max;
@@ -118,7 +143,7 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
 
         // Goal goal = db.getGoal("Walking");
 
-        List<Entry> entries = db.getAllEntriesForGoal(goal);
+        List<Entry> entries = db.getAllEntriesForGoalCollapsed(goal);
 
 //        if (entries.size()  > lastXperiods) {
 //            entries = entries.subList(0, lastXperiods);
@@ -213,7 +238,7 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
                     if (goal.getType()== Goal.Type.Cumulative) {
                         val += entry.getValue();
                     } else {
-                        val += entry.getValue();
+                        val = entry.getValue();
                         break;
                     }
                 }
