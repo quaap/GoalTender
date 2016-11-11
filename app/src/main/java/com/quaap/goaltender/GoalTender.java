@@ -2,10 +2,16 @@ package com.quaap.goaltender;
 
 import android.app.Application;
 
+import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  *   Copyright 2016 Tom Kliethermes
@@ -29,13 +35,23 @@ import java.util.Date;
 public class GoalTender  extends Application {
 
 
+    private final static boolean test = true;
+
     private static GoalDB db;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        db = new GoalDB(this);
+        if (test) {
+            this.deleteDatabase(GoalDB.DATABASE_NAME + "_test");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        db = new GoalDB(this, test);
         if (db.isFirstRun()) {
             makeDefault();
         }
@@ -64,10 +80,13 @@ public class GoalTender  extends Application {
         GoalDB db = getDatabase();
 
         String gname;
-        Goal g;
+        List<Goal> goals = new ArrayList<>();
+
+        boolean isUS = Locale.getDefault() == Locale.US;
+
 
         gname = "Clean kitchen";
-        g = db.getGoal(gname);
+        Goal g = db.getGoal(gname);
         if (g == null) {
             g = new Goal();
             g.setType(Goal.Type.Checkbox);
@@ -77,6 +96,7 @@ public class GoalTender  extends Application {
             g.setGoalnum(1);
             db.addGoal(g);
         }
+        goals.add(g);
 
         gname = "Walking";
         g = db.getGoal(gname);
@@ -92,6 +112,7 @@ public class GoalTender  extends Application {
             g.setMinmax(Goal.MinMax.Minimum);
             db.addGoal(g);
         }
+        goals.add(g);
 
         gname = "Calories";
         g = db.getGoal(gname);
@@ -101,11 +122,12 @@ public class GoalTender  extends Application {
             g.setPeriod(Goal.Period.Daily);
             g.setStartDate(new Date());
             g.setName(gname);
-            g.setGoalnum(2400);
+            g.setGoalnum(1800);
             g.setUnits("kcal");
             g.setMinmax(Goal.MinMax.Minimum);
             db.addGoal(g);
         }
+        goals.add(g);
 
         gname = "Weight";
         g = db.getGoal(gname);
@@ -116,18 +138,37 @@ public class GoalTender  extends Application {
 
             g.setStartDate(new Date());
             g.setName(gname);
-            g.setGoalnum(180);
-            g.setUnits("lbs");
+            g.setGoalnum(isUS?180:80);
+            g.setUnits(isUS?"lbs":"kg");
             g.setMinmax(Goal.MinMax.Maximum);
             db.addGoal(g);
         }
+        goals.add(g);
 
 
-        //        Entry e = new Entry();
-        //        e.setGoal(g);
-        //        e.setDate(new Date());
-        //        e.setValue(225);
-        //        e.setComment("OMG");
-        //        db.addEntry(e);
+        if (test) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR, -1);
+
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+
+            for (; cal.before(now); cal.add(Calendar.DAY_OF_YEAR, 1)) {
+                Entry e = new Entry();
+                e.setDate(cal.getTime());
+                Collections.shuffle(goals);
+                Goal ge = goals.get(0);
+
+                e.setGoal(ge);
+                float gnum = ge.getGoalnum();
+                e.setValue((float)(gnum + (Math.random() - .5)*gnum ) );
+
+                db.addEntry(e);
+
+                if (Math.random()>.9) cal.add(Calendar.DAY_OF_YEAR, (int)(Math.random()*9));
+            }
+
+        }
+
     }
 }

@@ -30,7 +30,7 @@ import java.util.TreeMap;
 
 public class GoalDB extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "Goals";
+    public static final String DATABASE_NAME = "Goals";
     private static final int DATABASE_VERSION = 1;
 
 
@@ -58,7 +58,11 @@ public class GoalDB extends SQLiteOpenHelper {
     private boolean firstRun = false;
 
     public GoalDB(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this(context, false);
+    }
+
+    public GoalDB(Context context, boolean test) {
+        super(context, test?DATABASE_NAME+"_test":DATABASE_NAME, null, DATABASE_VERSION);
         if (getAllGoals(true).size()==0) {
             setFirstRun(true);
         }

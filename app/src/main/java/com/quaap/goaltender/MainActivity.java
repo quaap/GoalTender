@@ -370,4 +370,9 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
         this.startActivity(report_intent);
     }
 
+    private void test() {
+
+
+    }
+
 }

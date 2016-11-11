@@ -222,10 +222,8 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
                 } else {
                     viewHolder.valuetext.setText("\u2718");
                 }
-            } else if (value == (int) value) {
-                viewHolder.valuetext.setText((int) value + "");
             } else {
-                viewHolder.valuetext.setText(value + "");
+                viewHolder.valuetext.setText(formatNumber(value));
             }
             viewHolder.unittext.setText(goal.getUnits());
         }
@@ -233,10 +231,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
 
 
         float diff = entry.getValue() - goal.getGoalnum();
-        String difftext = diff + "";
-        if (diff == (int) diff) {
-            difftext = (int) Math.abs(diff) + "";
-        }
+        String difftext = formatNumber(diff);
 
         if (goal.getType() == Goal.Type.Cumulative && !entry.isCollapsed() || goal.getType() == Goal.Type.Checkbox || entry.isUnmet()) {
             viewHolder.goaldiff.setText(" ");
@@ -263,6 +258,24 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         return convertView;
     }
 
+
+    private String formatNumber(double value) {
+        String format = "%10.0f";
+        if (value == (int)value) {
+            format = "%10.0f";
+        } else if (Math.abs(value)<1) {
+            format = "%4.3f";
+        } else if (Math.abs(value)<9) {
+            format = "%4.2f";
+        } else if (Math.abs(value)<99) {
+            format = "%4.1f";
+        } else if (Math.abs(value)<999) {
+            format = "%5.1f";
+        }
+
+
+        return String.format(format, value);
+    }
 
     @Override
     public long getItemId(int position) {
