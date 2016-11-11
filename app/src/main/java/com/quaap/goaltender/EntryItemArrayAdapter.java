@@ -64,9 +64,9 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         TextView datetext;
         ImageView show_ctrls;
         ImageView hide_ctrls;
-        ImageButton view_all;
-        ImageButton add_entry;
-        ImageButton edit_entry;
+        ImageView view_all;
+        ImageView add_entry;
+        ImageView edit_entry;
         TextView entry_item_ctrls_name;
 
     }
@@ -97,9 +97,9 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
             viewHolder.show_ctrls = (ImageView)convertView.findViewById(R.id.entry_item_show_ctrls);
             viewHolder.hide_ctrls = (ImageView)convertView.findViewById(R.id.entry_item_hide_ctrls);
 
-            viewHolder.view_all = (ImageButton)convertView.findViewById(R.id.entry_button_view_all);
-            viewHolder.add_entry = (ImageButton)convertView.findViewById(R.id.entry_button_add_entry);
-            viewHolder.edit_entry = (ImageButton)convertView.findViewById(R.id.entry_button_edit_entry);
+            viewHolder.view_all = (ImageView)convertView.findViewById(R.id.entry_button_view_all);
+            viewHolder.add_entry = (ImageView)convertView.findViewById(R.id.entry_button_add_entry);
+            viewHolder.edit_entry = (ImageView)convertView.findViewById(R.id.entry_button_edit_entry);
 
             viewHolder.entry_item_ctrls_name = (TextView) convertView.findViewById(R.id.entry_item_ctrls_name);
             convertView.setTag(viewHolder);
@@ -134,7 +134,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         viewHolder.show_ctrls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 showControls(vs, false);
             }
         });
@@ -142,7 +141,6 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         viewHolder.hide_ctrls.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 showControls(vs, true);
             }
         });
