@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.quaap.goaltender.storage.Entry;
@@ -22,6 +23,8 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
     Paint glines = new Paint();
     Paint gtext = new Paint();
 
+    int lastXperiods = 5;
+
     Goal goal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +35,11 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
         canvasview.setOnDrawListener(this);
 
         gbars.setColor(Color.RED);
-        gbars.setTextSize(30);
 
         glines.setColor(Color.BLACK);
-        glines.setTextSize(30);
 
         gtext.setColor(Color.BLUE);
-        gtext.setTextSize(30);
+        gtext.setTextSize(26);
 
         List<Goal> goals = GoalTender.getDatabase().getAllGoals(false);
         final Spinner goallist = (Spinner) findViewById(R.id.report_goallist);
@@ -62,6 +63,23 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
             }
         });
 
+        final Spinner number_periods = (Spinner) findViewById(R.id.report_number_periods);
+
+        Integer [] num_pers = {5, 7, 10, 20, 31, 50, 100, 500, 1000, 0};
+        number_periods.setAdapter(new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_item, num_pers));
+        number_periods.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                lastXperiods = (int)adapterView.getSelectedItem();
+
+                canvasview.postInvalidate();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     float max;
@@ -102,6 +120,10 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
 
         List<Entry> entries = db.getAllEntriesForGoal(goal);
 
+//        if (entries.size()  > lastXperiods) {
+//            entries = entries.subList(0, lastXperiods);
+//        }
+
         Goal.Period period = goal.getPeriod();
         gtype = goal.getType();
 
@@ -122,7 +144,7 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
 
 
         int xmin = 50;
-        int xmax = canvas.getWidth() - 10;
+        int xmax = canvas.getWidth() - 50;
         canvasheight = canvas.getHeight();
 
 
@@ -136,9 +158,9 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
 
 
         if (gtype != Goal.Type.Checkbox) {
-            float ystep = (max - getYmin()) / 5;
-            for (float y = getYmin(); y <= max; y += ystep) {
-                float h = valueYToCanvasY(y);
+            double ystep = ((double)max - getYmin()) / 5;
+            for (double y = getYmin(); y <= max; y += ystep) {
+                float h = valueYToCanvasY((float)y);
                 canvas.drawText((int) y + "", 2, h, gtext);
                 canvas.drawLine(xmin, h, xmax, h, glines);
             }
@@ -150,38 +172,54 @@ public class ReportActivity extends Activity implements CanvasView.OnDrawListene
         for (Date d=firstdate; d.before(now) || d.equals(now); d = Utils.getNextDate(d, period)) {
             xdatas++;
         }
-        float widthfac = (xmax - xmin) / xdatas;
 
-        float xpos = (float)(xmin * 1.5);
+        int skip = 0;
+        if (xdatas > lastXperiods) {
+            skip = xdatas - lastXperiods;
+            xdatas = lastXperiods;
+        }
+
+        double widthfac = ((double)xmax - (double)xmin) / (double)xdatas;
+
+        double xpos = xmin * 1.2;
 
 
-        float pad = widthfac/6;
+        double pad = widthfac/6;
 
         int xaccum = 90;
 
+        int i=0;
         for (Date d=firstdate; d.before(now); d = Utils.getNextDate(d, period)) {
             // System.out.println("Datebucket " + Utils.formatDateForBucket(d, period));
 
+            if (i++<skip) continue;
 
             if (xaccum>=90) {
-                canvas.drawText(Utils.formatDateForShortDisplay(d, period), xpos+4, valueYToCanvasY(getYmin())+29, gtext);
+                canvas.drawText(Utils.formatDateForShortDisplay(d, period), (float)xpos+4, valueYToCanvasY(getYmin())+29, gtext);
                 xaccum=0;
-                canvas.drawRect(xpos, valueYToCanvasY(getYmin()) - 10,
-                        xpos + 2, valueYToCanvasY(getYmin()) + 29, gtext);
+                canvas.drawRect((float)xpos, valueYToCanvasY(getYmin()) - 10,
+                        (float)xpos + 2, valueYToCanvasY(getYmin()) + 29, gtext);
 
             } else {
-                canvas.drawRect(xpos, valueYToCanvasY(getYmin()) - 10,
-                        xpos + 1, valueYToCanvasY(getYmin()) + 20, glines);
+                canvas.drawRect((float)xpos, valueYToCanvasY(getYmin()) - 10,
+                        (float)xpos + 1, valueYToCanvasY(getYmin()) + 5, glines);
             }
             xaccum+=widthfac;
 
             List<Entry> dateentries = dateToEntry.getAll(Utils.formatDateForBucket(d, period));
             if (dateentries!=null) {
+                float val = 0;
                 for(Entry entry: dateentries) {
-                    float val = entry.getValue();
-
-                    canvas.drawRect(xpos+pad, valueYToCanvasY(val), xpos + widthfac-pad, valueYToCanvasY(getYmin()), gbars);
+                    if (goal.getType()== Goal.Type.Cumulative) {
+                        val += entry.getValue();
+                    } else {
+                        val += entry.getValue();
+                        break;
+                    }
                 }
+
+
+                canvas.drawRect((float)(xpos+pad), valueYToCanvasY(val), (float)(xpos + widthfac-pad), valueYToCanvasY(getYmin()), gbars);
             }
             xpos += widthfac;
         }

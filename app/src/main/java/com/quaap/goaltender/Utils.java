@@ -117,7 +117,6 @@ public class Utils {
     public static String formatDateForShortDisplay(Date date, Goal.Period period) {
         if (date==null) return null;
 
-
         String format="MM-dd";
         switch (period) {
             case NamedDays:
@@ -237,7 +236,6 @@ public class Utils {
             }
             return Collections.unmodifiableList(values);
         }
-
 
     }
 
