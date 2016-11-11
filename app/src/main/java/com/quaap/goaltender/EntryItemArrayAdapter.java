@@ -71,6 +71,14 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
 
     }
 
+    private void clearViewHolder(ViewHolder viewHolder) {
+        viewHolder.goaltext.setText("");
+        viewHolder.valuetext.setText("");
+        viewHolder.unittext.setText("");
+        viewHolder.goaldiff.setText("");
+        viewHolder.datetext.setText("");
+    }
+
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
 
@@ -102,7 +110,7 @@ class EntryItemArrayAdapter extends ArrayAdapter<Entry>  implements View.OnTouch
         Entry entry = this.getItem(position);
 
         if (entry.isNav()) {
-
+            clearViewHolder(viewHolder);
             viewHolder.show_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.hide_ctrls.setVisibility(View.INVISIBLE);
             viewHolder.goaltext.setText(entry.getComment());
