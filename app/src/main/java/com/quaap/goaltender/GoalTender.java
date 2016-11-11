@@ -35,7 +35,7 @@ import java.util.Locale;
 public class GoalTender  extends Application {
 
 
-    private final static boolean test = true;
+    private final static boolean test = false;
 
     private static GoalDB db;
 
