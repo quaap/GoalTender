@@ -43,27 +43,19 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DaysPickerActivity" />
 
-        <!--
-            <service
-            android:name=".service.GoalService"
-            android:enabled="true"
-            android:exported="true"></service>
-        -->
-        <!--
-        <receiver android:name=".service.AutoStart">
+        <receiver android:name=".notify.AutoStart">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".service.GoalReminderService"
+            android:name=".notify.NotifyService"
             android:enabled="true"
             android:exported="true" >
         </service>
-        <receiver android:process=":remote" android:name=".service.Alarm"/>
-        -->
-        <activity android:name=".ReportActivity"></activity>
+
+        <activity android:name=".ReportActivity"/>
     </application>
 
 </manifest>
