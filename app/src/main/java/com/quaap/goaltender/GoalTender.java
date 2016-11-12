@@ -1,7 +1,10 @@
 package com.quaap.goaltender;
 
-import android.app.Application;
 
+import android.app.Application;
+import android.content.Intent;
+
+import com.quaap.goaltender.notify.NotifyService;
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -41,6 +44,16 @@ public class GoalTender  extends Application {
 
     private static GoalDB db;
 
+    private static boolean running;
+
+    public static boolean isRunning() {
+        return running;
+    }
+
+    public static void setRunning(boolean running) {
+        GoalTender.running = running;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -58,14 +71,20 @@ public class GoalTender  extends Application {
             makeDefault();
         }
 
+        Intent intent = new Intent(this, NotifyService.class);
+        intent.putExtra(NotifyService.CMD, NotifyService.CMD_SETALARM);
 
-       // startService(new Intent(this, GoalReminderService.class));
+        startService(intent);
 
     }
 
     @Override
     public void onTerminate() {
-        db.close();
+        try {
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();;
+        }
         super.onTerminate();
     }
 
@@ -76,6 +95,8 @@ public class GoalTender  extends Application {
         }
         return db;
     }
+
+
 
 
     private static void makeDefault() {

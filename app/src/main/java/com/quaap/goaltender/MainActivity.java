@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.quaap.goaltender.notify.NotifyService;
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
@@ -76,16 +77,39 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     }
 
     public void killnotify() {
-//        Intent servintent = new Intent(this, GoalReminderService.class);
-//        servintent.putExtra("killnotify", true);
-//        startService(servintent);
+        Intent servintent = new Intent(this, NotifyService.class);
+        servintent.putExtra(NotifyService.CMD, NotifyService.CMD_KILLNOTIFY);
+        startService(servintent);
 
     }
 
     @Override
     protected void onResume() {
         killnotify();
+        GoalTender.setRunning(true);
         super.onResume();
+    }
+
+    /**
+     * Dispatch onPause() to fragments.
+     */
+    @Override
+    protected void onPause() {
+        GoalTender.setRunning(false);
+        super.onPause();
+    }
+
+
+    @Override
+    protected void onStop() {
+        GoalTender.setRunning(false);
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        GoalTender.setRunning(false);
+        super.onDestroy();
     }
 
     private void handleFab() {
