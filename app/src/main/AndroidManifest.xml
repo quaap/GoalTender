@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.quaap.goaltender">
+    package="com.quaap.goaltender"
+    android:versionCode="1"
+    android:versionName="0.1">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
@@ -48,6 +50,11 @@
             android:label="@string/title_activity_edit_goal"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DaysPickerActivity" />
+
+        <activity android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".HelpActivity"
+            android:parentActivityName=".MainActivity" />
 
         <receiver android:name=".notify.AutoStart">
             <intent-filter>

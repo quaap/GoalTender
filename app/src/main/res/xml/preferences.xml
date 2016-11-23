@@ -23,4 +23,13 @@
             android:targetPackage="com.quaap.goaltender"
             android:targetClass="com.quaap.goaltender.EditGoalActivity"/>
     </PreferenceScreen>
+
+    <PreferenceScreen
+        android:title="About"
+        android:summary="Help and about">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.goaltender"
+            android:targetClass="com.quaap.goaltender.AboutActivity"/>
+    </PreferenceScreen>
 </PreferenceScreen>
