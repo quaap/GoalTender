@@ -14,4 +14,13 @@
         android:entryValues="@array/hours"
         android:key="notify_hours"
         android:summary="@string/pref_notifyhours_summary" />
+
+    <PreferenceScreen
+        android:title="Add/Edit Goal"
+        android:summary="Add or Edit a Goal">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.quaap.goaltender"
+            android:targetClass="com.quaap.goaltender.EditGoalActivity"/>
+    </PreferenceScreen>
 </PreferenceScreen>

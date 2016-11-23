@@ -6,7 +6,8 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/add_edit_goals"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false" />
 
     <item
         android:title="Report"
