@@ -3,6 +3,7 @@ package com.quaap.goaltender;
 
 import android.app.Application;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 
 import com.quaap.goaltender.notify.NotifyService;
 import com.quaap.goaltender.storage.Entry;
@@ -57,6 +58,8 @@ public class GoalTender  extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
         if (test) {
             this.deleteDatabase(GoalDB.DATABASE_NAME + "_test");

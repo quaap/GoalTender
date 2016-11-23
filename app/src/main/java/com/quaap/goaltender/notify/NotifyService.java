@@ -7,7 +7,9 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -21,7 +23,22 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by tom on 11/11/16.
+ *   Copyright 2016 Tom Kliethermes
+ *
+ *   This file is part of GoalTender.
+ *
+ *   GoalTender is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   GoalTender is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with GoalTender.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 public class NotifyService extends Service {
@@ -36,11 +53,26 @@ public class NotifyService extends Service {
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent = null;
 
+    private boolean notify = true;
+    private int notifyhours = 12;
+    private boolean notifyhourschanged = false;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        notify = appPreferences.getBoolean("notify", true);
+
+        int hours = Integer.parseInt(appPreferences.getString("notify_hours", "12"));
+        if (notifyhours!=hours) {
+            notifyhourschanged = true;
+            notifyhours = hours;
+        }
+
         int cmd = intent.getIntExtra(CMD, 0);
         System.out.println("NotifyService.onStartCommand cmd=" + cmd);
+//        System.out.println("notify=" + notify);
+//        System.out.println("notifyhours=" + notifyhours);
         if (cmd==CMD_SETALARM) {
             setAlarm();
         } else if (cmd==CMD_KILLALARM) {
@@ -68,23 +100,28 @@ public class NotifyService extends Service {
     public void setAlarm() {
 
         killAlarm();
-        alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
 
-        Intent notifyintent = new Intent(this.getApplicationContext(), AutoStart.class);
+        if (notify) {
+            alarmMgr = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
 
-        notifyintent.putExtra(NotifyService.CMD, NotifyService.CMD_NOTIFY);
+            Intent notifyintent = new Intent(this.getApplicationContext(), AutoStart.class);
 
-        alarmIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notifyintent, 0);
+            notifyintent.putExtra(NotifyService.CMD, NotifyService.CMD_NOTIFY);
 
-        // Set the alarm to start at 8:30 a.m.
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 30);
+            alarmIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, notifyintent, 0);
 
-        alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_HALF_DAY, alarmIntent);
-        System.out.println("alarm set");
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            calendar.add(Calendar.HOUR_OF_DAY, 1);
+            calendar.set(Calendar.MINUTE, 1);
+
+
+
+            alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                    AlarmManager.INTERVAL_HOUR*notifyhours, alarmIntent);
+            System.out.println("alarm set");
+        }
     }
 
     public void killNotify() {
@@ -93,6 +130,20 @@ public class NotifyService extends Service {
     }
 
     public void showNotify() {
+
+        if (!notify) {
+            killAlarm();
+            killNotify();
+            return;
+        }
+        if (notifyhourschanged) {
+            killAlarm();
+            setAlarm();
+        }
+
+        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean notify = appPreferences.getBoolean("notify", true);
+
         GoalDB db = GoalTender.getDatabase();
 
         List<Entry> unmets = db.getUnmetEntries();

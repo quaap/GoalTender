@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="applicationPreference">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:title="@string/pref_donotify"
+        android:key="notify"
+        android:summary="@string/pref_donotify_summary" />
+    <ListPreference
+        android:defaultValue="12"
+        android:title="@string/pref_notifyhours"
+        android:entries="@array/hours"
+        android:entryValues="@array/hours"
+        android:key="notify_hours"
+        android:summary="@string/pref_notifyhours_summary" />
+</PreferenceScreen>

@@ -80,7 +80,12 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
         Intent servintent = new Intent(this, NotifyService.class);
         servintent.putExtra(NotifyService.CMD, NotifyService.CMD_KILLNOTIFY);
         startService(servintent);
+    }
 
+    public void setalarm() {
+        Intent servintent = new Intent(this, NotifyService.class);
+        servintent.putExtra(NotifyService.CMD, NotifyService.CMD_SETALARM);
+        startService(servintent);
     }
 
     @Override
@@ -321,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
 
         goal_edit.putExtra(EditGoalActivity.PASSINGGOALID, (int)id);
 
-        this.startActivityForResult(goal_edit, 2);
+        this.startActivityForResult(goal_edit, goal_edit_code);
     }
 
     @Override
@@ -338,7 +343,11 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
             Toast.makeText(this, "Entry " + action, Toast.LENGTH_SHORT).show();
         } else if (requestCode == goal_edit_code && resultCode == RESULT_OK) {
             Toast.makeText(this, "Goal " + action, Toast.LENGTH_SHORT).show();
+        } else if (requestCode == settings_code) {
+            setalarm();
         }
+
+
         populateList();
         invalidateOptionsMenu();
     }
@@ -382,6 +391,10 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
             db.export();
         } else if (id == R.id.menu_report) {
             showReport();
+        } else if (id == R.id.menu_settings) {
+
+            showSettings();
+
         } else {
             showEntryEditorForGoal(id - 1001);
         }
@@ -392,6 +405,13 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     private void showReport() {
         Intent report_intent = new Intent(this, ReportActivity.class);
         this.startActivity(report_intent);
+    }
+
+    private int settings_code = 23;
+    private void showSettings() {
+        Intent settings_intent = new Intent(this, SettingsActivity.class);
+        this.startActivityForResult(settings_intent, settings_code);
+
     }
 
     private void test() {
