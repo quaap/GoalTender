@@ -13,13 +13,13 @@ public class GoalReminderService extends Service
     public void onCreate()
     {
         super.onCreate();
-        //Toast.makeText(this, "Alarm created!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "AutoStart created!", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        //Toast.makeText(this, "Alarm started!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "AutoStart started!", Toast.LENGTH_LONG).show();
 
         alarm.setAlarm(this);
         return START_STICKY;

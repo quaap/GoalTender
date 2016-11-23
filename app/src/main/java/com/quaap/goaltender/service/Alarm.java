@@ -32,7 +32,7 @@ public class Alarm extends BroadcastReceiver
 //        wl.acquire();
 
         // Put here YOUR code.
- //       Toast.makeText(context, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
+ //       Toast.makeText(context, "AutoStart !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
 
 //
         boolean killnotify = intent.getBooleanExtra("killnotify", false);
