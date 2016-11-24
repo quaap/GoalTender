@@ -114,7 +114,7 @@ public class NotifyService extends Service {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.add(Calendar.HOUR_OF_DAY, 1);
-            calendar.set(Calendar.MINUTE, 1);
+            calendar.set(Calendar.MINUTE, 26);
 
 
 
@@ -141,17 +141,29 @@ public class NotifyService extends Service {
             setAlarm();
         }
 
-        SharedPreferences appPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean notify = appPreferences.getBoolean("notify", true);
 
         GoalDB db = GoalTender.getDatabase();
 
         List<Entry> unmets = db.getUnmetEntries();
 
+        int dayofweek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        if (dayofweek % 2 == 0) {
+            for (int i = 0; i < unmets.size(); i++) {
+                switch (unmets.get(i).getGoal().getPeriod()) {
+                    case Weekly:
+                    case Monthly:
+                        unmets.remove(i);
+                        //only remind weekly and monthly goals every other day
+                }
+            }
+        }
+
         if (unmets.size()>0) {
 
             String text = unmets.size() + " todo's: ";
+
             int end = unmets.size();
+
             if (end > 2) end = 2;
             for (int i = 0; i < end; i++) {
                 Entry entry = unmets.get(i);
@@ -162,7 +174,7 @@ public class NotifyService extends Service {
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.mipmap.goal_launcher)
+                            .setSmallIcon(R.drawable.goal_launcher)
                             .setContentTitle("ToDos")
                             .setContentText(text);
 
