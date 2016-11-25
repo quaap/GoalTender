@@ -55,7 +55,7 @@ public class NotifyService extends Service {
 
     private boolean notify = true;
     private int notifyhours = 12;
-    private boolean notifyhourschanged = false;
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -65,8 +65,10 @@ public class NotifyService extends Service {
 
         int hours = Integer.parseInt(appPreferences.getString("notify_hours", "12"));
         if (notifyhours!=hours) {
-            notifyhourschanged = true;
+
             notifyhours = hours;
+            killAlarm();
+            setAlarm();
         }
 
         int cmd = intent.getIntExtra(CMD, 0);
@@ -99,6 +101,7 @@ public class NotifyService extends Service {
 
     public void setAlarm() {
 
+        killNotify();
         killAlarm();
 
         if (notify) {
@@ -131,14 +134,10 @@ public class NotifyService extends Service {
 
     public void showNotify() {
 
+        killNotify();
         if (!notify) {
             killAlarm();
-            killNotify();
             return;
-        }
-        if (notifyhourschanged) {
-            killAlarm();
-            setAlarm();
         }
 
 
@@ -176,7 +175,8 @@ public class NotifyService extends Service {
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.goal_launcher)
                             .setContentTitle("ToDos")
-                            .setContentText(text);
+                            .setContentText(text)
+                            .setAutoCancel(true);
 
             Intent resultIntent = new Intent(this, MainActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
