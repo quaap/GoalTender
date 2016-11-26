@@ -21,19 +21,15 @@ package com.quaap.goaltender;
 
 import android.content.Context;
 import android.graphics.Color;
-
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-
 import android.widget.TextView;
 import android.widget.ViewFlipper;
-
 
 import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;

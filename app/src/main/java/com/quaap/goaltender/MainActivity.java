@@ -38,7 +38,6 @@ import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.Goal;
 import com.quaap.goaltender.storage.GoalDB;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements EntryItemArrayAdapter.EntryItemClickListener {
@@ -71,9 +70,8 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
 
         populateList();
 
-
-
         killnotify();
+        GoalTender.setRunning(true);
     }
 
     public void killnotify() {
@@ -92,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     protected void onResume() {
         killnotify();
         GoalTender.setRunning(true);
+        setalarm();
         super.onResume();
     }
 

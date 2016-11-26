@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 
 import com.quaap.goaltender.storage.Entry;
@@ -19,6 +18,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ *   Copyright 2016 Tom Kliethermes
+ *
+ *   This file is part of GoalTender.
+ *
+ *   GoalTender is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   GoalTender is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with GoalTender.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 
 public class ReportActivity extends Activity implements CanvasView.OnDrawListener {
     Paint gbars = new Paint();
