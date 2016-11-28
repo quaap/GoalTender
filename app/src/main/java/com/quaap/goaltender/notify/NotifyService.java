@@ -20,7 +20,10 @@ import com.quaap.goaltender.storage.Entry;
 import com.quaap.goaltender.storage.GoalDB;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *   Copyright 2016 Tom Kliethermes
@@ -132,6 +135,9 @@ public class NotifyService extends Service {
         mNotificationManager.cancel(notificationID);
     }
 
+
+    Map<String,Long> seen = new HashMap<>();
+
     public void showNotify() {
 
         killNotify();
@@ -146,14 +152,19 @@ public class NotifyService extends Service {
         List<Entry> unmets = db.getUnmetEntries();
 
         int dayofweek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-        if (dayofweek % 2 == 0) {
-            for (int i = 0; i < unmets.size(); i++) {
-                switch (unmets.get(i).getGoal().getPeriod()) {
-                    case Weekly:
-                    case Monthly:
+
+        for (int i = 0; i < unmets.size(); i++) {
+            String gname = unmets.get(i).getGoal().getName();
+            switch (unmets.get(i).getGoal().getPeriod()) {
+                case Weekly:
+                case Monthly:
+                    Long sw = seen.get(gname);
+                    if (dayofweek % 2 == 0 || sw != null && (sw - 24*60*60*1000 < 23) ) {
                         unmets.remove(i);
                         //only remind weekly and monthly goals every other day
-                }
+                    } else {
+                        seen.put(gname, System.currentTimeMillis());
+                    }
             }
         }
 
