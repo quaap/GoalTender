@@ -23,7 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/entry_goalid_lab"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp" />
 
         <Spinner
             android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView2"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_marginEnd="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,7 +59,8 @@
             android:id="@+id/value_label"
             android:textSize="18sp"
             android:labelFor="@+id/entry_value"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp" />
 
         <EditText
             android:layout_width="wrap_content"
