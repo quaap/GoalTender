@@ -184,7 +184,7 @@ public class NotifyService extends Service {
 
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.goal_launcher)
+                            .setSmallIcon(R.mipmap.goaltender)
                             .setContentTitle("ToDos")
                             .setContentText(text)
                             .setAutoCancel(true);

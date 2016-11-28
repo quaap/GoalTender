@@ -1,6 +1,6 @@
 Category:Writing,Sports & Health
 License:GPLv3+
-Web Site:http://quaap.com/D/GoalTender
+Web Site:https://github.com/quaap/GoalTender
 
 Source Code:https://github.com/quaap/GoalTender
 Issue Tracker:https://github.com/quaap/GoalTender/issues
@@ -18,5 +18,5 @@ Several goal types are available:
 * Periods of Daily, Weekly, or Monthly, or named days during the week.
 .
 
-Auto Update Mode:Version v%v
+Auto Update Mode:v%v
 Update Check Mode:Tags

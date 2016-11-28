@@ -10,7 +10,7 @@
     <application
         android:name=".GoalTender"
         android:allowBackup="true"
-        android:icon="@mipmap/goal_launcher"
+        android:icon="@mipmap/goaltender"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
