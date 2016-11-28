@@ -62,7 +62,7 @@
     <string name="pref_donotify">Send notifications</string>
     <string name="pref_donotify_summary">If checked, you will receive notifications of todo goals</string>
     <string name="pref_notifyhours">Notification frequency (hours)</string>
-    <string name="pref_notifyhours_summary">Send notification every X hours</string>
+    <string name="pref_notifyhours_summary">Send notification every %s hours</string>
     <string name="title_activity_settings">Settings</string>
 
     <string name="name_link"><![CDATA[This program was written by <a href=\'http://quaap.com/D/programming-index?from=goaltender\'>Tom Kliethermes</a>]]></string>
