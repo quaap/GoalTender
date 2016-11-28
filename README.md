@@ -50,11 +50,18 @@ Notifications
 When you open GoalTender, it will show the list of Goals you have not yet met for the Day, Week, and Month.
 Simply click on the name to create an entry for that Goal. If you have met all the goals for the current period,
 it will instead show a list of the entries you've already made. If you miss a day (or other time period), the app
-will not list those missed entries as "todo".  These are *Goals*, not scheduled activities.  You can manually add
+will not list those missed entries as "todo" (these are *Goals*, not scheduled activities).  You can manually add
 past activities by using the menu and setting the date to a day in the past.
 
 Optionally, GoalTender can send Android notifications on a regular schedule, from once a day to many times a day (configurable).
 
+
+Support
+-------
+GoalTender should be considered "alpha, but usable": it is still in development and may/will change
+significantly, but every effort will be taken to make your data upgradable.
+
+Please report any bugs you find or suggestions on how you'd like the program to work.
 
 
 Future
@@ -64,3 +71,5 @@ For now, GoalTender does not allow finer granularity than "Daily". Making half-d
 feels beyond the scope of what this app is for, namely, to help you keep track of your long-term goals.  A spreadsheet, scheduler, or
 alarm app is more on target for finer-grained scheduling and tracking.  But you can sort of get there by making your
 multi-times-a-day goals Daily and Cumulative.
+
+With that in mind, suggestions and feed back are welcome!
