@@ -30,7 +30,7 @@ A "Value" goal is a simple numerical value you record, such as your weekly weigh
 
 A "Cumulative" goal is numerical value you record that is cumulative: such as minutes spent walking, calories eaten, time spent studying, etc.
 
-A "Checkbox" goal is just a "I did that" goal, such as "Clean the kitchen" or "Read the news".
+A "Checkbox" goal is just a "I did that" goal, such as "Clean the kitchen" or "Organize one room".
 
 
 So, for example, if you create a goal called "Walking", and set it to be "Daily" and "Cumulative",
@@ -49,7 +49,18 @@ Notifications
 
 When you open GoalTender, it will show the list of Goals you have not yet met for the Day, Week, and Month.
 Simply click on the name to create an entry for that Goal. If you have met all the goals for the current period,
-it will instead show a list of the entries you've already made.
+it will instead show a list of the entries you've already made. If you miss a day (or other time period), the app
+will not list those missed entries as "todo".  These are *Goals*, not scheduled activities.  You can manually add
+past activities by using the menu and setting the date to a day in the past.
 
-Optionally, GoalTender can send Android notifications on a regular schedule, from once a day to many times (configurable).
+Optionally, GoalTender can send Android notifications on a regular schedule, from once a day to many times a day (configurable).
 
+
+
+Future
+------
+
+For now, GoalTender does not allow finer granularity than "Daily". Making half-day or hourly goals, or sending reminders at specific times
+feels beyond the scope of what this app is for, namely, to help you keep track of your long-term goals.  A spreadsheet, scheduler, or
+alarm app is more on target for finer-grained scheduling and tracking.  But you can sort of get there by making your
+multi-times-a-day goals Daily and Cumulative.
