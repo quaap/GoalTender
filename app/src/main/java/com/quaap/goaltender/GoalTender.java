@@ -4,6 +4,7 @@ package com.quaap.goaltender;
 import android.app.Application;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 
 import com.quaap.goaltender.notify.NotifyService;
 import com.quaap.goaltender.storage.Entry;
@@ -59,6 +60,8 @@ public class GoalTender  extends Application {
     public void onCreate() {
         super.onCreate();
 
+
+
         PreferenceManager.setDefaultValues(getApplicationContext(), R.xml.preferences, false);
 
         if (test) {
@@ -71,7 +74,16 @@ public class GoalTender  extends Application {
         }
         db = new GoalDB(this, test);
         if (db.isFirstRun()) {
-            makeDefault();
+            String cc = "gg";
+            TelephonyManager tm = (TelephonyManager)getSystemService(getApplicationContext().TELEPHONY_SERVICE);
+            if (tm!=null) {
+                cc = tm.getNetworkCountryIso();
+            }
+            if (cc==null || cc=="") {
+                cc = Locale.getDefault().getCountry();
+            }
+
+            makeDefault(cc);
         }
 
         Intent intent = new Intent(this, NotifyService.class);
@@ -86,7 +98,7 @@ public class GoalTender  extends Application {
         try {
             db.close();
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
         super.onTerminate();
     }
@@ -102,13 +114,16 @@ public class GoalTender  extends Application {
 
 
 
-    private static void makeDefault() {
+    private static void makeDefault(String cc) {
         GoalDB db = getDatabase();
 
         String gname;
         List<Goal> goals = new ArrayList<>();
 
-        boolean isUS = Locale.getDefault() == Locale.US;
+//        boolean isUS = Locale.getDefault() == Locale.US;
+
+        boolean isUS = cc.toLowerCase() == "us";
+
 
 
         gname = "Clean kitchen";
