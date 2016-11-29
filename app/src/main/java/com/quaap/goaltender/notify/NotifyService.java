@@ -95,11 +95,13 @@ public class NotifyService extends Service {
 
     public void  killAlarm() {
 
+        alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
         if (alarmIntent!= null ) {
-            alarmMgr = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
             alarmMgr.cancel(alarmIntent);
             alarmIntent = null;
         }
+        //remove any old alarms we didn't manage to cancel
+        alarmMgr.cancel(PendingIntent.getBroadcast(this.getApplicationContext(), 0, new Intent(this.getApplicationContext(), AutoStart.class), 0));
     }
 
 
@@ -121,12 +123,22 @@ public class NotifyService extends Service {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
 
-            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            int basetime = 7; //7:15.
+            int nowhour = calendar.get(Calendar.HOUR_OF_DAY);
+            int start=0;
+            for (int i=0; i<24; i++) {  //find the next interval to set.
+                                        //probably an easier way but brain not finding it.
+                start = basetime + notifyhours*i;
+                if (start>nowhour) {
+                    calendar.set(Calendar.HOUR_OF_DAY, start);
+                    break;
+                }
+            }
             calendar.set(Calendar.MINUTE, 15);
 
             alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_HOUR*notifyhours, alarmIntent);
-            Log.d("Ns", "alarm set");
+            Log.d("Ns", "alarm set " + nowhour + " " + start);
         }
     }
 
@@ -147,7 +159,7 @@ public class NotifyService extends Service {
         }
 
         //Don't show notification if the UI is up.
-        if (!GoalTender.isRunning()) return;
+        if (GoalTender.isRunning()) return;
 
         GoalDB db = GoalTender.getDatabase();
 

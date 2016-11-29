@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GoalTender.setRunning(true);
 
         db = GoalTender.getDatabase();
 
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements EntryItemArrayAda
         populateList();
 
         killnotify();
-        GoalTender.setRunning(true);
     }
 
     public void killnotify() {
