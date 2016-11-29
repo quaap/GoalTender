@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.quaap.goaltender.GoalTender;
 import com.quaap.goaltender.MainActivity;
@@ -75,15 +76,15 @@ public class NotifyService extends Service {
         }
 
         int cmd = intent.getIntExtra(CMD, 0);
-        System.out.println("NotifyService.onStartCommand cmd=" + cmd);
-//        System.out.println("notify=" + notify);
-//        System.out.println("notifyhours=" + notifyhours);
+        Log.d("Ns", "NotifyService.onStartCommand cmd=" + cmd);
+//        Log.d("Ns", "notify=" + notify);
+//        Log.d("Ns", "notifyhours=" + notifyhours);
         if (cmd==CMD_SETALARM) {
             setAlarm();
         } else if (cmd==CMD_KILLALARM) {
             killAlarm();
         } else if (cmd==CMD_NOTIFY) {
-            if (!GoalTender.isRunning()) showNotify();
+            showNotify();
         } else if (cmd==CMD_KILLNOTIFY) {
             killNotify();
         }
@@ -119,14 +120,13 @@ public class NotifyService extends Service {
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.add(Calendar.HOUR_OF_DAY, 1);
-            calendar.set(Calendar.MINUTE, 26);
 
-
+            calendar.set(Calendar.HOUR_OF_DAY, 7);
+            calendar.set(Calendar.MINUTE, 15);
 
             alarmMgr.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
                     AlarmManager.INTERVAL_HOUR*notifyhours, alarmIntent);
-            System.out.println("alarm set");
+            Log.d("Ns", "alarm set");
         }
     }
 
@@ -136,7 +136,7 @@ public class NotifyService extends Service {
     }
 
 
-    Map<String,Long> seen = new HashMap<>();
+    private static Map<String,Long> seen = new HashMap<>();
 
     public void showNotify() {
 
@@ -146,6 +146,8 @@ public class NotifyService extends Service {
             return;
         }
 
+        //Don't show notification if the UI is up.
+        if (!GoalTender.isRunning()) return;
 
         GoalDB db = GoalTender.getDatabase();
 
@@ -155,11 +157,13 @@ public class NotifyService extends Service {
 
         for (int i = 0; i < unmets.size(); i++) {
             String gname = unmets.get(i).getGoal().getName();
+            boolean rmday = dayofweek % 2 == 0;
             switch (unmets.get(i).getGoal().getPeriod()) {
-                case Weekly:
                 case Monthly:
+                    rmday = dayofweek > 1;
+                case Weekly:
                     Long sw = seen.get(gname);
-                    if (dayofweek % 2 == 0 || sw != null && (sw - 24*60*60*1000 < 23) ) {
+                    if (rmday || sw != null && (sw - 24*60*60*1000 < 23) ) {
                         unmets.remove(i);
                         //only remind weekly and monthly goals every other day
                     } else {
@@ -168,11 +172,11 @@ public class NotifyService extends Service {
             }
         }
 
-        if (unmets.size()>0) {
+        int end = unmets.size();
+        if (end>0) {
 
-            String text = unmets.size() + " todo's: ";
-
-            int end = unmets.size();
+            String title = end + " todo item" + (end>1?"s":"");
+            String text = "";
 
             if (end > 2) end = 2;
             for (int i = 0; i < end; i++) {
@@ -185,7 +189,7 @@ public class NotifyService extends Service {
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.mipmap.goaltender)
-                            .setContentTitle("ToDos")
+                            .setContentTitle(title)
                             .setContentText(text)
                             .setAutoCancel(true);
 
